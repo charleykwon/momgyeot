@@ -659,7 +659,13 @@
         }
 
         .global-input::placeholder { color: var(--text-light); }
-        .global-input-prefix { color: var(--olive); font-weight: 600; font-size: 15px; }
+        .global-input-prefix { 
+            color: var(--olive); 
+            font-weight: 600; 
+            font-size: 15px; 
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
 
         /* Wispr Flow 스타일 음성 버튼 */
         .voice-btn {
@@ -1633,6 +1639,7 @@
         let isRecording = false;
         let isVoiceMode = false;
         let isSpeaking = false;
+        let isGlobalInputVoice = false; // globalInput에서 음성인식 시작 여부
 
         // ==================== MATE CONFIG ====================
         const mateConfig = {
@@ -1806,11 +1813,19 @@
                 
                 if (isVoiceMode) {
                     document.getElementById('voiceTranscript').textContent = transcript;
+                } else if (isGlobalInputVoice) {
+                    // globalInput에 실시간 표시
+                    document.getElementById('globalInput').value = transcript;
                 }
 
                 if (event.results[event.resultIndex].isFinal) {
                     if (isVoiceMode) {
                         processVoiceInput(transcript);
+                    } else if (isGlobalInputVoice) {
+                        // globalInput에 최종 결과 입력 후 리셋
+                        document.getElementById('globalInput').value = transcript;
+                        isGlobalInputVoice = false;
+                        updateGlobalVoiceUI(false);
                     } else {
                         document.getElementById('chatInput').value = transcript;
                         sendMessage(true);
@@ -1820,12 +1835,20 @@
 
             recognition.onend = () => {
                 isRecording = false;
+                if (isGlobalInputVoice) {
+                    isGlobalInputVoice = false;
+                    updateGlobalVoiceUI(false);
+                }
                 updateRecordingUI();
             };
 
             recognition.onerror = (event) => {
                 console.log('Speech recognition error:', event.error);
                 isRecording = false;
+                if (isGlobalInputVoice) {
+                    isGlobalInputVoice = false;
+                    updateGlobalVoiceUI(false);
+                }
                 updateRecordingUI();
             };
 
@@ -1934,15 +1957,35 @@
         function startGlobalVoice() {
             const saved = localStorage.getItem('myMateData');
             
-            if (saved) {
-                // 이미 맘곁이 있으면 바로 음성 모드
-                const data = JSON.parse(saved);
-                currentMate = data.type;
-                onboardingData.nickname = data.nickname;
-                openVoiceMode();
-            } else {
-                // 맘곁이 없으면 선택하라고 안내
+            if (!saved) {
                 alert('먼저 맘곁을 선택해주세요!');
+                return;
+            }
+            
+            // 이미 녹음 중이면 중지
+            if (isGlobalInputVoice) {
+                stopRecording();
+                isGlobalInputVoice = false;
+                updateGlobalVoiceUI(false);
+                return;
+            }
+            
+            // globalInput 음성인식 시작
+            isGlobalInputVoice = true;
+            updateGlobalVoiceUI(true);
+            startRecording();
+        }
+        
+        function updateGlobalVoiceUI(isActive) {
+            const voiceBtn = document.querySelector('.global-input-wrap .voice-btn');
+            if (voiceBtn) {
+                if (isActive) {
+                    voiceBtn.style.background = '#FF6B6B';
+                    voiceBtn.innerHTML = '🎙️';
+                } else {
+                    voiceBtn.style.background = 'var(--olive-light)';
+                    voiceBtn.innerHTML = '🎤';
+                }
             }
         }
 
