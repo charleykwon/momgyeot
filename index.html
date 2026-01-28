@@ -1,0 +1,2907 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💚 맘곁 - 엄마 마음 곁에</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --olive: #5E6B3A;
+            --olive-light: #7A8B52;
+            --olive-dark: #4A5530;
+            --pink: #E8B4B8;
+            --pink-light: #F5D5D8;
+            --purple: #9B8AA6;
+            --purple-light: #C4B8CE;
+            --cream: #FDF8F5;
+            --cream-dark: #F0EBE6;
+            --text-dark: #2D2D2D;
+            --text-medium: #5A5A5A;
+            --text-light: #8A8A8A;
+            --white: #FFFFFF;
+            --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            --card-shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #F5F5F5;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            background: var(--white);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==================== HOME SCREEN ==================== */
+        .home-screen {
+            background: linear-gradient(180deg, 
+                #E8F0E3 0%, 
+                #F5E6E8 30%,
+                #EDE8F0 60%,
+                #FFFFFF 100%
+            );
+        }
+
+        .home-header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .home-header-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .home-header-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        /* Side Menu */
+        .side-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .side-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--white);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .side-menu.active {
+            right: 0;
+        }
+
+        .side-menu-header {
+            padding: 18px 16px;
+            background: linear-gradient(135deg, var(--mothers-olive), var(--mothers-olive-light));
+            color: white;
+        }
+
+        .side-menu-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .side-menu-header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .side-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 16px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .side-menu-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 0;
+        }
+
+        .side-menu-section {
+            padding: 6px 16px;
+        }
+
+        .side-menu-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        .side-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .side-menu-item:hover {
+            background: var(--mothers-olive-light);
+            transform: translateX(4px);
+        }
+
+        .side-menu-item .item-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--white);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+        }
+
+        .side-menu-item .item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .side-menu-item .item-name {
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .side-menu-item .item-desc {
+            display: none;
+        }
+
+        .side-menu-item .item-arrow {
+            color: var(--text-light);
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .side-menu-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 10px 16px;
+        }
+
+        .home-greeting {
+            padding: 20px 24px 32px;
+            text-align: center;
+        }
+
+        .home-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 24px 32px;
+            align-items: center;
+        }
+
+        .quick-action-btn {
+            background: var(--white);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .quick-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        /* 온보딩 완료 후 가로형 Quick Actions */
+        .quick-actions-mini {
+            display: flex;
+            gap: 10px;
+            padding: 0 20px 24px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .quick-actions-mini::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quick-action-mini-btn {
+            background: var(--white);
+            border: 1.5px solid var(--mothers-olive-light);
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .quick-action-mini-btn .icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .quick-action-mini-btn .icon.green {
+            background: linear-gradient(135deg, #5E6B3A, #7A8A4A);
+            color: white;
+        }
+
+        .quick-action-mini-btn .icon.pink {
+            background: linear-gradient(135deg, #E8B4B8, #D9A5A9);
+            color: white;
+        }
+
+        .quick-action-mini-btn .icon.olive {
+            background: linear-gradient(135deg, #8B9A5C, #A8B878);
+            color: white;
+        }
+
+        .quick-action-mini-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--mothers-olive);
+        }
+
+        .quick-action-mini-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 메인 맘곁 카드 (크게) */
+        .main-mate-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 24px;
+            margin: 0 20px 20px;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .main-mate-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .main-mate-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .main-mate-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+
+        .main-mate-avatar.olive { background: linear-gradient(135deg, #E8F0E3 0%, #D4E4CC 100%); }
+        .main-mate-avatar.purple { background: linear-gradient(135deg, #EDE8F0 0%, #DDD4E4 100%); }
+        .main-mate-avatar.pink { background: linear-gradient(135deg, #F5E6E8 0%, #EEDAD8 100%); }
+
+        .main-mate-info { flex: 1; }
+
+        .main-mate-greeting {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .main-mate-name {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .main-mate-message {
+            font-size: 15px;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: var(--bg-light);
+            padding: 14px 16px;
+            border-radius: 16px;
+        }
+
+        .main-mate-action {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+
+        .main-mate-btn {
+            background: var(--olive);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .main-mate-btn:hover {
+            background: var(--olive-dark);
+        }
+
+        /* 오늘의 한마디 카드 */
+        .tip-card {
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFF5D6 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 0 20px 24px;
+        }
+
+        .tip-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .tip-card-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #B8860B;
+        }
+
+        .tip-card-content {
+            font-size: 15px;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* 개인화 인사 */
+        .personalized-greeting {
+            padding: 32px 24px 24px;
+            text-align: center;
+        }
+
+        .personalized-greeting h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .personalized-greeting p {
+            font-size: 15px;
+            color: var(--text-light);
+        }
+
+        .section {
+            padding: 0 20px 24px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 14px;
+        }
+
+        .section-title .highlight {
+            color: var(--olive);
+        }
+
+        .my-mate-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mate-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .mate-avatar.olive { background: linear-gradient(135deg, #E8F0E3 0%, #D4E4CC 100%); }
+        .mate-avatar.purple { background: linear-gradient(135deg, #EDE8F0 0%, #DDD4E4 100%); }
+        .mate-avatar.pink { background: linear-gradient(135deg, #F5E6E8 0%, #EEDAD8 100%); }
+
+        .my-mate-info { flex: 1; min-width: 0; }
+
+        .my-mate-message {
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.5;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .my-mate-meta {
+            font-size: 13px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .my-mate-name { font-weight: 500; color: var(--text-medium); }
+
+        .mate-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mate-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 16px 18px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.2s;
+        }
+
+        .mate-card-info { flex: 1; min-width: 0; }
+
+        .mate-card-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mate-card-name .badge {
+            background: var(--olive);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .mate-card-desc {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .mate-card-btn {
+            background: var(--cream);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            flex-shrink: 0;
+        }
+
+        .mate-card-btn:hover {
+            background: var(--olive);
+            color: white;
+        }
+
+        .bottom-input-area {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: var(--white);
+            padding: 12px 16px;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .global-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #F5F5F5;
+            border-radius: 24px;
+            padding: 6px 6px 6px 20px;
+        }
+
+        .global-input {
+            flex: 1;
+            border: none;
+            background: none;
+            font-size: 15px;
+            color: var(--text-dark);
+            font-family: inherit;
+            outline: none;
+        }
+
+        .global-input::placeholder { color: var(--text-light); }
+        .global-input-prefix { color: var(--olive); font-weight: 600; font-size: 15px; }
+
+        /* Wispr Flow 스타일 음성 버튼 */
+        .voice-btn {
+            width: 42px;
+            height: 42px;
+            background: var(--text-dark);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .voice-btn.recording {
+            background: #FF4757;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.4); }
+            50% { box-shadow: 0 0 0 12px rgba(255, 71, 87, 0); }
+        }
+
+        /* Sound Wave Icon */
+        .sound-wave {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            height: 20px;
+        }
+
+        .sound-wave .bar {
+            width: 3px;
+            background: white;
+            border-radius: 2px;
+            transition: height 0.1s;
+        }
+
+        .sound-wave .bar:nth-child(1) { height: 8px; }
+        .sound-wave .bar:nth-child(2) { height: 14px; }
+        .sound-wave .bar:nth-child(3) { height: 20px; }
+        .sound-wave .bar:nth-child(4) { height: 14px; }
+        .sound-wave .bar:nth-child(5) { height: 8px; }
+
+        .voice-btn.recording .sound-wave .bar {
+            animation: soundWave 0.5s infinite ease-in-out alternate;
+        }
+
+        .voice-btn.recording .sound-wave .bar:nth-child(1) { animation-delay: 0s; }
+        .voice-btn.recording .sound-wave .bar:nth-child(2) { animation-delay: 0.1s; }
+        .voice-btn.recording .sound-wave .bar:nth-child(3) { animation-delay: 0.2s; }
+        .voice-btn.recording .sound-wave .bar:nth-child(4) { animation-delay: 0.3s; }
+        .voice-btn.recording .sound-wave .bar:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes soundWave {
+            0% { height: 6px; }
+            100% { height: 20px; }
+        }
+
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 0;
+            margin-top: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 16px;
+            font-family: inherit;
+        }
+
+        .nav-item .icon { font-size: 20px; opacity: 0.4; }
+        .nav-item.active .icon { opacity: 1; }
+
+        .home-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 140px;
+        }
+
+        .empty-my-mate {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+        }
+
+        .empty-my-mate p {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* ==================== ONBOARDING SCREEN ==================== */
+        .onboarding-screen {
+            background: linear-gradient(180deg, #E8F0E3 0%, #F5E6E8 40%, #FFFFFF 100%);
+            padding: 60px 24px 40px;
+        }
+
+        .onboarding-screen.purple-theme {
+            background: linear-gradient(180deg, #EDE8F0 0%, #F5E6E8 40%, #FFFFFF 100%);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .onboarding-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .onboarding-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .onboarding-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .onboarding-step {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .onboarding-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .onboarding-subtitle {
+            font-size: 14px;
+            color: var(--text-medium);
+            margin-top: 8px;
+        }
+
+        .onboarding-form {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 17px;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            background: var(--white);
+            color: var(--text-dark);
+            text-align: center;
+            font-family: inherit;
+            box-shadow: var(--card-shadow);
+            transition: all 0.2s;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--olive);
+        }
+
+        .text-input::placeholder { color: #B5B5B5; }
+
+        .input-hint {
+            font-size: 13px;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: var(--white);
+            border: 2px solid transparent;
+            padding: 16px 20px;
+            border-radius: 16px;
+            font-size: 15px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            text-align: left;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-btn:hover {
+            border-color: var(--olive-light);
+            background: #FAFAFA;
+        }
+
+        .option-btn.selected {
+            border-color: var(--olive);
+            background: linear-gradient(135deg, #F5F8F2 0%, #FFFFFF 100%);
+        }
+
+        .option-btn.selected.purple {
+            border-color: var(--purple);
+            background: linear-gradient(135deg, #F5F2F8 0%, #FFFFFF 100%);
+        }
+
+        .option-icon { font-size: 20px; }
+        .option-text { flex: 1; }
+
+        .option-check {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #DDD;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: transparent;
+            transition: all 0.2s;
+        }
+
+        .option-btn.selected .option-check {
+            border-color: var(--olive);
+            background: var(--olive);
+            color: white;
+        }
+
+        .option-btn.selected.purple .option-check {
+            border-color: var(--purple);
+            background: var(--purple);
+        }
+
+        .number-input-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .number-input {
+            width: 100px;
+            padding: 16px;
+            font-size: 24px;
+            font-weight: 600;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            background: var(--white);
+            color: var(--text-dark);
+            text-align: center;
+            font-family: inherit;
+            box-shadow: var(--card-shadow);
+        }
+
+        .number-input:focus {
+            outline: none;
+            border-color: var(--olive);
+        }
+
+        .number-suffix {
+            font-size: 18px;
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+
+        .onboarding-footer { padding-top: 20px; }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--olive);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover { background: var(--olive-dark); }
+        .btn-primary:disabled { background: #CCC; cursor: not-allowed; }
+        .btn-primary.purple { background: var(--purple); }
+        .btn-primary.purple:hover { background: #8A7995; }
+
+        /* ==================== CHAT SCREEN ==================== */
+        .chat-screen { background: #F8F8F8; }
+
+        .chat-header {
+            background: var(--white);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #F0F0F0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .chat-back-btn {
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+        }
+
+        .chat-header-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .chat-header-name {
+            flex: 1;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .chat-menu-btn {
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-medium);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 16px;
+            padding-bottom: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .chat-date {
+            text-align: center;
+            padding: 8px 16px;
+        }
+
+        .chat-date span {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            animation: slideUp 0.3s ease;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            max-width: 85%;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            max-width: 80%;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            align-self: flex-start;
+        }
+
+        .message-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .message-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-medium);
+            margin-left: 4px;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .message.ai .message-bubble {
+            background: var(--white);
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-bubble {
+            background: var(--olive);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-left: 4px;
+        }
+
+        .message.user .message-time {
+            text-align: right;
+            margin-right: 4px;
+        }
+
+        /* 음성 메시지 표시 */
+        .message-voice-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
+            margin-left: 4px;
+        }
+
+        .message-voice-indicator svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .profile-link {
+            text-align: center;
+            padding: 16px;
+            margin-top: 8px;
+        }
+
+        .profile-link p {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .profile-link a {
+            font-size: 14px;
+            color: var(--text-medium);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 14px 18px;
+            background: var(--white);
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            margin-left: 46px;
+        }
+
+        .typing-indicator.show {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #C0C0C0;
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .chat-input-area {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: var(--white);
+            padding: 12px 16px;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .chat-input-wrap {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .chat-input-left {
+            width: 36px;
+            height: 36px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-medium);
+            flex-shrink: 0;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 15px;
+            border: none;
+            background: #F5F5F5;
+            border-radius: 20px;
+            color: var(--text-dark);
+            font-family: inherit;
+            resize: none;
+            max-height: 100px;
+            line-height: 1.4;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            background: #EFEFEF;
+        }
+
+        .chat-input::placeholder { color: var(--text-light); }
+
+        .chat-voice-btn {
+            width: 42px;
+            height: 42px;
+            background: var(--text-dark);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .chat-voice-btn svg { width: 20px; height: 20px; fill: white; }
+        .chat-voice-btn.send-mode { background: var(--olive); }
+
+        .chat-voice-btn.recording {
+            background: #FF4757;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* ==================== VOICE MODE OVERLAY ==================== */
+        .voice-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .voice-overlay.active {
+            display: flex;
+        }
+
+        .voice-overlay-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .voice-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            margin-bottom: 24px;
+        }
+
+        .voice-status {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .voice-status .listening {
+            color: #FF4757;
+        }
+
+        .voice-status .speaking {
+            color: #4ECDC4;
+        }
+
+        .voice-visualizer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            height: 80px;
+            margin-bottom: 40px;
+        }
+
+        .voice-visualizer .bar {
+            width: 6px;
+            background: white;
+            border-radius: 3px;
+            transition: height 0.1s;
+        }
+
+        .voice-visualizer.listening .bar {
+            animation: voiceWave 0.5s infinite ease-in-out alternate;
+        }
+
+        .voice-visualizer .bar:nth-child(1) { animation-delay: 0s; height: 20px; }
+        .voice-visualizer .bar:nth-child(2) { animation-delay: 0.1s; height: 35px; }
+        .voice-visualizer .bar:nth-child(3) { animation-delay: 0.2s; height: 50px; }
+        .voice-visualizer .bar:nth-child(4) { animation-delay: 0.15s; height: 40px; }
+        .voice-visualizer .bar:nth-child(5) { animation-delay: 0.25s; height: 55px; }
+        .voice-visualizer .bar:nth-child(6) { animation-delay: 0.1s; height: 45px; }
+        .voice-visualizer .bar:nth-child(7) { animation-delay: 0.2s; height: 30px; }
+
+        @keyframes voiceWave {
+            0% { transform: scaleY(0.3); opacity: 0.5; }
+            100% { transform: scaleY(1); opacity: 1; }
+        }
+
+        .voice-visualizer.speaking .bar {
+            background: #4ECDC4;
+            animation: speakWave 0.8s infinite ease-in-out alternate;
+        }
+
+        @keyframes speakWave {
+            0% { transform: scaleY(0.5); }
+            100% { transform: scaleY(1); }
+        }
+
+        .voice-transcript {
+            max-width: 300px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            line-height: 1.6;
+            min-height: 50px;
+        }
+
+        .voice-mic-btn {
+            width: 80px;
+            height: 80px;
+            background: #FF4757;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: all 0.2s;
+        }
+
+        .voice-mic-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .voice-mic-btn.listening {
+            animation: pulse 1.5s infinite;
+        }
+
+        .voice-mic-btn svg {
+            width: 36px;
+            height: 36px;
+            fill: white;
+        }
+
+        .voice-hint {
+            position: absolute;
+            bottom: 40px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        /* TTS 재생 중 표시 */
+        .speaking-indicator {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--olive);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .speaking-indicator.show {
+            display: flex;
+        }
+
+        .speaking-indicator .mini-wave {
+            display: flex;
+            gap: 2px;
+        }
+
+        .speaking-indicator .mini-wave span {
+            width: 3px;
+            height: 12px;
+            background: white;
+            border-radius: 2px;
+            animation: miniWave 0.5s infinite ease-in-out alternate;
+        }
+
+        .speaking-indicator .mini-wave span:nth-child(1) { animation-delay: 0s; }
+        .speaking-indicator .mini-wave span:nth-child(2) { animation-delay: 0.1s; }
+        .speaking-indicator .mini-wave span:nth-child(3) { animation-delay: 0.2s; }
+
+        @keyframes miniWave {
+            0% { height: 6px; }
+            100% { height: 14px; }
+        }
+
+        @media (max-width: 380px) {
+            .home-title { font-size: 22px; }
+            .onboarding-title { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- ==================== HOME SCREEN ==================== -->
+        <div class="screen home-screen active" id="homeScreen">
+            <div class="home-header">
+                <button class="home-header-btn" onclick="openSideMenu()" id="menuBtn">☰</button>
+            </div>
+
+            <div class="home-content" id="homeContent">
+                <!-- 동적으로 렌더링됨 -->
+            </div>
+
+            <!-- Side Menu -->
+            <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
+            <div class="side-menu" id="sideMenu">
+                <div class="side-menu-header">
+                    <button class="side-menu-close" onclick="closeSideMenu()">×</button>
+                    <h2>마더스베이비</h2>
+                    <p>엄마의 모든 여정을 함께</p>
+                </div>
+                <div class="side-menu-content" id="sideMenuContent">
+                    <!-- 동적으로 렌더링됨 -->
+                </div>
+            </div>
+
+            <div class="bottom-input-area">
+                <div class="global-input-wrap">
+                    <span class="global-input-prefix">@맘곁</span>
+                    <input type="text" class="global-input" placeholder="에게 이야기해보세요" id="globalInput">
+                    <button class="voice-btn" onclick="startGlobalVoice()">
+                        <div class="sound-wave">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ONBOARDING SCREEN ==================== -->
+        <div class="screen onboarding-screen" id="onboardingScreen">
+            <button class="back-btn" onclick="goBack()">←</button>
+            
+            <div class="onboarding-content">
+                <div class="onboarding-header">
+                    <div class="onboarding-avatar" id="onboardingAvatar">💚</div>
+                    <div class="onboarding-step" id="onboardingStep">1/3</div>
+                    <h2 class="onboarding-title" id="onboardingTitle">질문</h2>
+                    <p class="onboarding-subtitle" id="onboardingSubtitle"></p>
+                </div>
+
+                <div class="onboarding-form" id="onboardingForm"></div>
+
+                <div class="onboarding-footer">
+                    <button class="btn-primary" id="onboardingNextBtn" onclick="nextStep()">다음</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CHAT SCREEN ==================== -->
+        <div class="screen chat-screen" id="chatScreen">
+            <div class="chat-header">
+                <button class="chat-back-btn" onclick="goToHome()">‹</button>
+                <div class="chat-header-avatar" id="chatAvatar">💚</div>
+                <div class="chat-header-name" id="chatHeaderName">맘곁</div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-date"><span id="chatDate"></span></div>
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+
+            <div class="speaking-indicator" id="speakingIndicator">
+                <div class="mini-wave">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span>맘곁이 말하고 있어요...</span>
+            </div>
+
+            <div class="chat-input-area">
+                <div class="chat-input-wrap">
+                    <button class="chat-input-left">+</button>
+                    <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요." rows="1"></textarea>
+                    <button class="chat-voice-btn" id="chatSendBtn" onclick="handleChatButton()">
+                        <div class="sound-wave" id="chatBtnWave">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VOICE OVERLAY ==================== -->
+        <div class="voice-overlay" id="voiceOverlay">
+            <button class="voice-overlay-close" onclick="closeVoiceMode()">✕</button>
+            
+            <div class="voice-avatar" id="voiceAvatar">💚</div>
+            
+            <div class="voice-status" id="voiceStatus">
+                <span class="listening">듣고 있어요...</span>
+            </div>
+
+            <div class="voice-visualizer listening" id="voiceVisualizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+
+            <div class="voice-transcript" id="voiceTranscript"></div>
+
+            <button class="voice-mic-btn listening" id="voiceMicBtn" onclick="toggleVoiceRecording()">
+                <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1 1.93c-3.94-.49-7-3.85-7-7.93h2c0 3.31 2.69 6 6 6s6-2.69 6-6h2c0 4.08-3.06 7.44-7 7.93V20h4v2H8v-2h4v-4.07z"/></svg>
+            </button>
+
+            <div class="voice-hint">마이크 버튼을 눌러 대화하세요</div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== STATE ====================
+        let currentMate = null;
+        let currentStep = 0;
+        let currentQuickAction = null; // Quick Action 맥락 저장
+        let onboardingData = {};
+        let conversationHistory = [];
+        let isLoading = false;
+
+        // Voice state
+        let recognition = null;
+        let synthesis = window.speechSynthesis;
+        let isRecording = false;
+        let isVoiceMode = false;
+        let isSpeaking = false;
+
+        // ==================== MATE CONFIG ====================
+        const mateConfig = {
+            prep: {
+                name: '예비맘곁',
+                emoji: '💜',
+                avatarClass: 'purple',
+                isPurple: true,
+                steps: [
+                    { type: 'text', key: 'nickname', title: '편하게 불러드릴\n이름을 알려주세요', subtitle: '이름이나 닉네임 모두 좋아요', placeholder: '예: 하늘, 보미', hint: '한글, 영문 2~10자' },
+                    { type: 'select', key: 'duration', title: '준비하신 지\n얼마나 되셨어요?', options: [
+                        { value: 'start', label: '이제 막 시작했어요', icon: '🌱' },
+                        { value: '6months', label: '6개월 정도 됐어요', icon: '🍃' },
+                        { value: '1year', label: '1년 정도 됐어요', icon: '🌿' },
+                        { value: 'over1year', label: '1년 넘었어요', icon: '🌳' }
+                    ]},
+                    { type: 'select', key: 'situation', title: '지금 어떤 상황이세요?', options: [
+                        { value: 'natural', label: '자연 임신 시도 중이에요', icon: '🤍' },
+                        { value: 'hospital', label: '병원 상담/검사 중이에요', icon: '🏥' },
+                        { value: 'treatment', label: '시술 준비 또는 진행 중이에요', icon: '💉' },
+                        { value: 'rest', label: '잠시 쉬고 있어요', icon: '☁️' }
+                    ]},
+                    { type: 'select', key: 'need', title: '저한테 어떤 도움이\n필요하세요?', options: [
+                        { value: 'info', label: '정보가 궁금해요', icon: '📚' },
+                        { value: 'talk', label: '마음을 나누고 싶어요', icon: '💜' },
+                        { value: 'company', label: '그냥 곁에 있어주세요', icon: '🤗' }
+                    ]}
+                ],
+                getWelcome: (data) => `안녕하세요 ${data.nickname}, 저는 예비맘곁이에요.\n\n${getDurationText(data.duration)} 준비해오셨군요.\n${getSituationText(data.situation)}\n\n어떤 이야기든 편하게 나눠주세요.\n저는 항상 여기 있을게요 💜`
+            },
+            pregnancy: {
+                name: '임신맘곁',
+                emoji: '🤰',
+                avatarClass: 'pink',
+                isPurple: false,
+                steps: [
+                    { type: 'text', key: 'nickname', title: '어떻게 불러드릴까요?', subtitle: '태명이나 닉네임 모두 좋아요', placeholder: '예: 채림맘, 콩이맘', hint: '한글, 영문 2~10자' },
+                    { type: 'number', key: 'weeks', title: '현재 임신 몇 주차이세요?', suffix: '주', min: 4, max: 42 },
+                    { type: 'select', key: 'firstBaby', title: '첫 아이인가요?', options: [
+                        { value: 'yes', label: '네, 첫 아이예요', icon: '👶' },
+                        { value: 'no', label: '아니요, 둘째/셋째예요', icon: '👨‍👩‍👧' }
+                    ]},
+                    { type: 'select', key: 'concern', title: '요즘 가장 신경 쓰이는 건\n무엇인가요?', options: [
+                        { value: 'body', label: '입덧/몸의 변화', icon: '🤢' },
+                        { value: 'health', label: '검사/태아 건강', icon: '🏥' },
+                        { value: 'birth', label: '출산 준비', icon: '🍼' },
+                        { value: 'emotion', label: '마음이 힘들어요', icon: '💚' }
+                    ]}
+                ],
+                getWelcome: (data) => `안녕하세요 ${data.nickname}, 저는 임신맘곁이에요.\n\n${data.weeks}주차시군요! ${getWeeksComment(data.weeks)}\n\n열 달의 여정, 설렘과 걱정 모두 함께 나눠요.\n앞으로 즐겁게 함께해요! 💚`
+            },
+            infant: {
+                name: '새싹맘곁',
+                emoji: '👶',
+                avatarClass: 'olive',
+                isPurple: false,
+                steps: [
+                    { type: 'text', key: 'nickname', title: '어떻게 불러드릴까요?', subtitle: '아이 이름이나 닉네임 모두 좋아요', placeholder: '예: 하준맘, 서아맘', hint: '한글, 영문 2~10자' },
+                    { type: 'select', key: 'babyAge', title: '아기가 태어난 지\n얼마나 됐나요?', options: [
+                        { value: 'newborn', label: '신생아 (0~3개월)', icon: '🐣' },
+                        { value: '4-6', label: '4~6개월', icon: '🐥' },
+                        { value: '7-12', label: '7~12개월', icon: '🐤' },
+                        { value: '13-24', label: '13~24개월', icon: '🐔' }
+                    ]},
+                    { type: 'select', key: 'feeding', title: '수유 방법은 어떻게 되세요?', options: [
+                        { value: 'breast', label: '완전 모유수유', icon: '🤱' },
+                        { value: 'mixed', label: '혼합 수유', icon: '🍼' },
+                        { value: 'formula', label: '분유 수유', icon: '🧴' },
+                        { value: 'weaning', label: '이유식 진행 중', icon: '🥣' }
+                    ]},
+                    { type: 'select', key: 'concern', title: '요즘 가장 고민인 건\n무엇인가요?', options: [
+                        { value: 'feeding', label: '수유/이유식', icon: '🍼' },
+                        { value: 'sleep', label: '수면', icon: '😴' },
+                        { value: 'development', label: '발달/건강', icon: '📈' },
+                        { value: 'tired', label: '육아 피로', icon: '😮‍💨' }
+                    ]}
+                ],
+                getWelcome: (data) => `안녕하세요 ${data.nickname}, 저는 새싹맘곁이에요.\n\n${getBabyAgeText(data.babyAge)} 아기를 키우고 계시군요.\n육아의 하루하루, 정말 고생 많으세요.\n\n앞으로 즐겁게 함께해요! 💚`
+            },
+            toddler: {
+                name: '우리맘곁',
+                emoji: '🧒',
+                avatarClass: 'olive',
+                isPurple: false,
+                steps: [
+                    { type: 'text', key: 'nickname', title: '어떻게 불러드릴까요?', subtitle: '아이 이름이나 닉네임 모두 좋아요', placeholder: '예: 지우맘, 민서맘', hint: '한글, 영문 2~10자' },
+                    { type: 'select', key: 'childAge', title: '아이 나이가 어떻게 되나요?', options: [
+                        { value: '2-3', label: '2~3세', icon: '👶' },
+                        { value: '4-5', label: '4~5세', icon: '🧒' },
+                        { value: '6-7', label: '6~7세', icon: '👦' }
+                    ]},
+                    { type: 'select', key: 'institution', title: '기관에 다니고 있나요?', options: [
+                        { value: 'daycare', label: '어린이집 다녀요', icon: '🏫' },
+                        { value: 'kindergarten', label: '유치원 다녀요', icon: '🎒' },
+                        { value: 'none', label: '아직 안 다녀요', icon: '🏠' }
+                    ]},
+                    { type: 'select', key: 'concern', title: '요즘 가장 고민인 건\n무엇인가요?', options: [
+                        { value: 'discipline', label: '훈육/떼쓰기', icon: '😤' },
+                        { value: 'adaptation', label: '기관 적응', icon: '🏫' },
+                        { value: 'sibling', label: '형제 관계', icon: '👧👦' },
+                        { value: 'development', label: '발달 고민', icon: '📊' }
+                    ]}
+                ],
+                getWelcome: (data) => `안녕하세요 ${data.nickname}, 저는 우리맘곁이에요.\n\n${getChildAgeText(data.childAge)} 아이를 키우고 계시군요.\n아이와 함께 성장하는 요즘, 많이 바쁘시죠?\n\n앞으로 즐겁게 함께해요! 💚`
+            }
+        };
+
+        // Helper functions
+        function getDurationText(val) {
+            const map = { 'start': '이제 막', '6months': '6개월 정도', '1year': '1년 정도', 'over1year': '1년 넘게' };
+            return map[val] || '';
+        }
+        function getSituationText(val) {
+            const map = {
+                'natural': '자연 임신을 시도하고 계시는군요.',
+                'hospital': '병원에서 상담받고 계시는군요.',
+                'treatment': '시술을 준비하거나 진행 중이시군요.',
+                'rest': '잠시 쉬면서 마음을 추스르는 중이시군요.'
+            };
+            return map[val] || '';
+        }
+        function getWeeksComment(weeks) {
+            if (weeks <= 12) return '초기라 조심스러운 시기죠.';
+            if (weeks <= 27) return '안정기에 접어드셨네요.';
+            return '이제 막바지네요!';
+        }
+        function getBabyAgeText(val) {
+            const map = { 'newborn': '신생아', '4-6': '4~6개월 된', '7-12': '7~12개월 된', '13-24': '돌 지난' };
+            return map[val] || '';
+        }
+        function getChildAgeText(val) {
+            const map = { '2-3': '2~3세', '4-5': '4~5세', '6-7': '6~7세' };
+            return map[val] || '';
+        }
+
+        // System prompts
+        const systemPrompts = {
+            base: `당신은 "맘곁"입니다. 마더스베이비의 AI 동반자입니다.
+## 핵심 역할
+- 정서적 공감과 지지
+- 판단 없이 모든 선택 존중
+## 말투
+- 편안한 존댓말, 부드러운 어미
+- 짧은 문장, 3-5줄
+## 위기 감지
+"죽고싶", "사라지고싶" 감지 시 → 공감 + 자살예방상담전화 1393 안내`,
+            prep: `\n## 예비맘곁 규칙\n- 이모지: 💜 🤍 🌸\n- 금지: 👶 🍼 🤰, "긍정적으로", "다음엔 될 거예요"\n- 마무리: 💜`,
+            pregnancy: `\n## 임신맘곁 규칙\n- 의학적 조언은 병원 권유\n- 마무리: 💚`,
+            infant: `\n## 새싹맘곁 규칙\n- "그것도 방법이에요" 자주 사용\n- 마무리: 💚`,
+            toddler: `\n## 우리맘곁 규칙\n- 양육 방식 비판 금지\n- 마무리: 💚`
+        };
+
+        // ==================== VOICE RECOGNITION ====================
+        function initSpeechRecognition() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                console.log('Speech recognition not supported');
+                return false;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'ko-KR';
+            recognition.continuous = false;
+            recognition.interimResults = true;
+
+            recognition.onresult = (event) => {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                
+                if (isVoiceMode) {
+                    document.getElementById('voiceTranscript').textContent = transcript;
+                }
+
+                if (event.results[event.resultIndex].isFinal) {
+                    if (isVoiceMode) {
+                        processVoiceInput(transcript);
+                    } else {
+                        document.getElementById('chatInput').value = transcript;
+                        sendMessage(true);
+                    }
+                }
+            };
+
+            recognition.onend = () => {
+                isRecording = false;
+                updateRecordingUI();
+            };
+
+            recognition.onerror = (event) => {
+                console.log('Speech recognition error:', event.error);
+                isRecording = false;
+                updateRecordingUI();
+            };
+
+            return true;
+        }
+
+        function startRecording() {
+            if (!recognition && !initSpeechRecognition()) {
+                alert('음성 인식을 지원하지 않는 브라우저입니다.');
+                return;
+            }
+
+            try {
+                recognition.start();
+                isRecording = true;
+                updateRecordingUI();
+            } catch (e) {
+                console.log('Recognition error:', e);
+            }
+        }
+
+        function stopRecording() {
+            if (recognition) {
+                recognition.stop();
+            }
+            isRecording = false;
+            updateRecordingUI();
+        }
+
+        function updateRecordingUI() {
+            const chatBtn = document.getElementById('chatSendBtn');
+            const voiceMicBtn = document.getElementById('voiceMicBtn');
+            const voiceVisualizer = document.getElementById('voiceVisualizer');
+
+            if (isRecording) {
+                if (chatBtn) chatBtn.classList.add('recording');
+                if (voiceMicBtn) voiceMicBtn.classList.add('listening');
+                if (voiceVisualizer) {
+                    voiceVisualizer.classList.add('listening');
+                    voiceVisualizer.classList.remove('speaking');
+                }
+            } else {
+                if (chatBtn) chatBtn.classList.remove('recording');
+                if (voiceMicBtn) voiceMicBtn.classList.remove('listening');
+                if (voiceVisualizer) voiceVisualizer.classList.remove('listening');
+            }
+        }
+
+        // ==================== TEXT TO SPEECH ====================
+        function speak(text) {
+            if (!synthesis) return;
+
+            synthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ko-KR';
+            utterance.rate = 0.95;
+            utterance.pitch = 1.1;
+
+            utterance.onstart = () => {
+                isSpeaking = true;
+                const indicator = document.getElementById('speakingIndicator');
+                if (indicator) indicator.classList.add('show');
+                
+                if (isVoiceMode) {
+                    const status = document.getElementById('voiceStatus');
+                    const visualizer = document.getElementById('voiceVisualizer');
+                    if (status) status.innerHTML = '<span class="speaking">말하고 있어요...</span>';
+                    if (visualizer) {
+                        visualizer.classList.remove('listening');
+                        visualizer.classList.add('speaking');
+                    }
+                }
+            };
+
+            utterance.onend = () => {
+                isSpeaking = false;
+                const indicator = document.getElementById('speakingIndicator');
+                if (indicator) indicator.classList.remove('show');
+                
+                if (isVoiceMode) {
+                    const status = document.getElementById('voiceStatus');
+                    const visualizer = document.getElementById('voiceVisualizer');
+                    if (status) status.innerHTML = '<span class="listening">듣고 있어요...</span>';
+                    if (visualizer) visualizer.classList.remove('speaking');
+                    // 자동으로 다시 듣기 시작
+                    setTimeout(() => {
+                        if (isVoiceMode) startRecording();
+                    }, 500);
+                }
+            };
+
+            synthesis.speak(utterance);
+        }
+
+        function stopSpeaking() {
+            if (synthesis) {
+                synthesis.cancel();
+            }
+            isSpeaking = false;
+            const indicator = document.getElementById('speakingIndicator');
+            if (indicator) indicator.classList.remove('show');
+        }
+
+        // ==================== VOICE MODE ====================
+        function startGlobalVoice() {
+            const saved = localStorage.getItem('myMateData');
+            
+            if (saved) {
+                // 이미 맘곁이 있으면 바로 음성 모드
+                const data = JSON.parse(saved);
+                currentMate = data.type;
+                onboardingData.nickname = data.nickname;
+                openVoiceMode();
+            } else {
+                // 맘곁이 없으면 선택하라고 안내
+                alert('먼저 맘곁을 선택해주세요!');
+            }
+        }
+
+        function openVoiceMode() {
+            isVoiceMode = true;
+            const mate = mateConfig[currentMate];
+            
+            const overlay = document.getElementById('voiceOverlay');
+            const avatar = document.getElementById('voiceAvatar');
+            const transcript = document.getElementById('voiceTranscript');
+            const status = document.getElementById('voiceStatus');
+            
+            if (overlay && avatar && transcript && status) {
+                overlay.classList.add('active');
+                avatar.textContent = mate.emoji;
+                avatar.className = `voice-avatar ${mate.avatarClass}`;
+                transcript.textContent = '';
+                status.innerHTML = '<span class="listening">듣고 있어요...</span>';
+                
+                setTimeout(() => startRecording(), 500);
+            }
+        }
+
+        function closeVoiceMode() {
+            isVoiceMode = false;
+            stopRecording();
+            stopSpeaking();
+            document.getElementById('voiceOverlay').classList.remove('active');
+        }
+
+        function toggleVoiceRecording() {
+            if (isSpeaking) {
+                stopSpeaking();
+                return;
+            }
+
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        async function processVoiceInput(text) {
+            if (!text.trim()) return;
+
+            stopRecording();
+            
+            const status = document.getElementById('voiceStatus');
+            const visualizer = document.getElementById('voiceVisualizer');
+            if (status) status.innerHTML = '<span>생각하고 있어요...</span>';
+            if (visualizer) visualizer.classList.remove('listening');
+            
+            addMessage(text, 'user', true);
+            conversationHistory.push({ role: 'user', content: text });
+
+            try {
+                const response = await callClaudeAPI(text);
+                addMessage(response, 'ai');
+                conversationHistory.push({ role: 'assistant', content: response });
+                saveMyMateData(response);
+                
+                if (isVoiceMode) {
+                    speak(response);
+                }
+            } catch (error) {
+                const emoji = currentMate === 'prep' ? '💜' : '💚';
+                const errorMsg = `죄송해요, 잠시 연결이 불안정하네요. ${emoji}`;
+                addMessage(errorMsg, 'ai');
+                
+                if (isVoiceMode) {
+                    speak(errorMsg);
+                }
+            }
+        }
+
+        // ==================== NAVIGATION ====================
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function selectMate(mateType) {
+            currentMate = mateType;
+            currentStep = 0;
+            onboardingData = {};
+            
+            const mate = mateConfig[mateType];
+            const screen = document.getElementById('onboardingScreen');
+            
+            screen.classList.toggle('purple-theme', mate.isPurple);
+            renderStep();
+            showScreen('onboardingScreen');
+        }
+
+        function goBack() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderStep();
+            } else {
+                showScreen('homeScreen');
+            }
+        }
+
+        function goToHome() {
+            saveMyMateData();
+            closeVoiceMode();
+            showScreen('homeScreen');
+            updateMyMateSection();
+        }
+
+        // ==================== ONBOARDING ====================
+        function renderStep() {
+            const mate = mateConfig[currentMate];
+            if (!mate || !mate.steps || !mate.steps[currentStep]) {
+                console.error('renderStep: invalid mate or step', currentMate, currentStep);
+                return;
+            }
+            const step = mate.steps[currentStep];
+            const totalSteps = mate.steps.length;
+            
+            document.getElementById('onboardingAvatar').textContent = mate.emoji;
+            document.getElementById('onboardingAvatar').className = `onboarding-avatar ${mate.avatarClass}`;
+            document.getElementById('onboardingStep').textContent = `${currentStep + 1}/${totalSteps}`;
+            document.getElementById('onboardingTitle').innerHTML = step.title.replace(/\n/g, '<br>');
+            document.getElementById('onboardingSubtitle').textContent = step.subtitle || '';
+            
+            const btn = document.getElementById('onboardingNextBtn');
+            btn.textContent = currentStep === totalSteps - 1 ? '대화 시작하기' : '다음';
+            btn.className = mate.isPurple ? 'btn-primary purple' : 'btn-primary';
+            
+            const form = document.getElementById('onboardingForm');
+            
+            if (step.type === 'text') {
+                form.innerHTML = `
+                    <div class="form-group">
+                        <input type="text" class="text-input" id="stepInput" placeholder="${step.placeholder}" value="${onboardingData[step.key] || ''}" maxlength="10">
+                        <p class="input-hint">${step.hint || ''}</p>
+                    </div>
+                `;
+                const input = document.getElementById('stepInput');
+                input.focus();
+                input.addEventListener('input', () => { onboardingData[step.key] = input.value.trim(); updateNextButton(); });
+                input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) nextStep(); });
+            } else if (step.type === 'number') {
+                form.innerHTML = `
+                    <div class="form-group">
+                        <div class="number-input-wrap">
+                            <input type="number" class="number-input" id="stepInput" min="${step.min}" max="${step.max}" value="${onboardingData[step.key] || ''}" placeholder="00">
+                            <span class="number-suffix">${step.suffix}</span>
+                        </div>
+                    </div>
+                `;
+                const input = document.getElementById('stepInput');
+                input.focus();
+                input.addEventListener('input', () => { onboardingData[step.key] = input.value; updateNextButton(); });
+                input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) nextStep(); });
+            } else if (step.type === 'select') {
+                const purpleClass = mate.isPurple ? ' purple' : '';
+                form.innerHTML = `
+                    <div class="options-list">
+                        ${step.options.map(opt => `
+                            <button class="option-btn${onboardingData[step.key] === opt.value ? ' selected' + purpleClass : ''}" onclick="selectOption('${step.key}', '${opt.value}', this)">
+                                <span class="option-icon">${opt.icon}</span>
+                                <span class="option-text">${opt.label}</span>
+                                <span class="option-check">✓</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            updateNextButton();
+        }
+
+        function selectOption(key, value, btn) {
+            onboardingData[key] = value;
+            
+            // 선택 표시만 업데이트 (전체 리렌더링 하지 않음)
+            document.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('selected', 'purple');
+            });
+            btn.classList.add('selected');
+            
+            const mate = mateConfig[currentMate];
+            if (mate.isPurple) {
+                btn.classList.add('purple');
+            }
+            
+            // 체크 아이콘 업데이트
+            btn.querySelector('.option-check').style.borderColor = mate.isPurple ? 'var(--purple)' : 'var(--olive)';
+            btn.querySelector('.option-check').style.background = mate.isPurple ? 'var(--purple)' : 'var(--olive)';
+            btn.querySelector('.option-check').style.color = 'white';
+            
+            // 0.3초 후 다음 단계
+            setTimeout(() => {
+                nextStep();
+            }, 300);
+        }
+
+        function updateNextButton() {
+            const mate = mateConfig[currentMate];
+            if (!mate || !mate.steps || !mate.steps[currentStep]) return;
+            const step = mate.steps[currentStep];
+            const btn = document.getElementById('onboardingNextBtn');
+            if (!btn) return;
+            
+            let isValid = false;
+            if (step.type === 'text') {
+                isValid = (onboardingData[step.key] || '').length >= 2;
+            } else if (step.type === 'number') {
+                const val = parseInt(onboardingData[step.key]);
+                isValid = val >= step.min && val <= step.max;
+            } else if (step.type === 'select') {
+                isValid = !!onboardingData[step.key];
+            }
+            btn.disabled = !isValid;
+        }
+
+        function nextStep() {
+            const mate = mateConfig[currentMate];
+            if (!mate || !mate.steps) return;
+            if (currentStep < mate.steps.length - 1) {
+                currentStep++;
+                renderStep();
+            } else {
+                startChat();
+            }
+        }
+
+        // ==================== CHAT ====================
+        function startChat() {
+            const mate = mateConfig[currentMate];
+            if (!mate) {
+                console.error('startChat: mate not found for', currentMate);
+                return;
+            }
+            
+            const avatarEl = document.getElementById('chatAvatar');
+            const nameEl = document.getElementById('chatHeaderName');
+            if (avatarEl) {
+                avatarEl.textContent = mate.emoji;
+                avatarEl.className = `chat-header-avatar ${mate.avatarClass}`;
+            }
+            if (nameEl) nameEl.textContent = mate.name;
+            
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = `
+                <div class="chat-date"><span>${getTodayDateStr()}</span></div>
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            
+            conversationHistory = [];
+            currentQuickAction = null; // Quick Action 맥락 리셋
+            showScreen('chatScreen');
+            
+            setTimeout(() => {
+                const welcomeMsg = mate.getWelcome(onboardingData);
+                addMessage(welcomeMsg, 'ai');
+                addProfileLink();
+            }, 500);
+        }
+
+        function getTodayDateStr() {
+            const today = new Date();
+            const days = ['일', '월', '화', '수', '목', '금', '토'];
+            return `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일 ${days[today.getDay()]}요일`;
+        }
+
+        function addMessage(text, type, isVoice = false) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const mate = mateConfig[currentMate];
+            const time = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: true });
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const voiceIndicator = isVoice ? `
+                <div class="message-voice-indicator">
+                    <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/></svg>
+                    음성 메시지
+                </div>
+            ` : '';
+            
+            if (type === 'ai') {
+                messageDiv.innerHTML = `
+                    <div class="message-avatar ${mate.avatarClass}">${mate.emoji}</div>
+                    <div class="message-content">
+                        <div class="message-name">${mate.name}</div>
+                        <div class="message-bubble">${escapeHtml(text)}</div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-bubble">${escapeHtml(text)}</div>
+                        ${voiceIndicator}
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+            }
+            
+            messagesContainer.insertBefore(messageDiv, typingIndicator);
+            scrollToBottom();
+            
+            // 대화 히스토리 저장
+            saveChatHistory(text, type);
+        }
+
+        function addProfileLink() {
+            // 프로필 기능 없음 - 비활성화
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('chatMessages');
+            setTimeout(() => { container.scrollTop = container.scrollHeight; }, 100);
+        }
+
+        function showTyping() {
+            document.getElementById('typingIndicator').classList.add('show');
+            scrollToBottom();
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').classList.remove('show');
+        }
+
+        function handleChatButton() {
+            const input = document.getElementById('chatInput');
+            const hasText = input.value.trim().length > 0;
+            
+            if (hasText) {
+                sendMessage();
+            } else {
+                if (isRecording) {
+                    stopRecording();
+                } else {
+                    startRecording();
+                }
+            }
+        }
+
+        async function sendMessage(isVoice = false) {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            
+            if (!text || isLoading) return;
+
+            addMessage(text, 'user', isVoice);
+            input.value = '';
+            autoResizeInput();
+
+            conversationHistory.push({ role: 'user', content: text });
+
+            isLoading = true;
+            showTyping();
+            updateSendButton();
+
+            try {
+                const response = await callClaudeAPI(text);
+                hideTyping();
+                addMessage(response, 'ai');
+                conversationHistory.push({ role: 'assistant', content: response });
+                saveMyMateData(response);
+            } catch (error) {
+                hideTyping();
+                const emoji = currentMate === 'prep' ? '💜' : '💚';
+                addMessage(`죄송해요, 잠시 연결이 불안정하네요. ${emoji}`, 'ai');
+            }
+
+            isLoading = false;
+            updateSendButton();
+        }
+
+        async function callClaudeAPI(userMessage) {
+            const stagePrompt = systemPrompts[currentMate] || '';
+            let contextInfo = `\n\n## 사용자: ${onboardingData.nickname}`;
+            
+            // Quick Action 맥락 추가
+            if (currentQuickAction && currentQuickAction.context) {
+                contextInfo += `\n\n## 현재 대화 맥락:\n${currentQuickAction.context}`;
+            }
+            
+            const fullSystemPrompt = systemPrompts.base + stagePrompt + contextInfo;
+
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-20250514',
+                    max_tokens: 1024,
+                    system: fullSystemPrompt,
+                    messages: conversationHistory
+                })
+            });
+
+            if (!response.ok) throw new Error(`API error: ${response.status}`);
+            const data = await response.json();
+            return data.content[0].text;
+        }
+
+        function autoResizeInput() {
+            const input = document.getElementById('chatInput');
+            input.style.height = 'auto';
+            input.style.height = Math.min(input.scrollHeight, 100) + 'px';
+            updateSendButton();
+        }
+
+        function updateSendButton() {
+            const btn = document.getElementById('chatSendBtn');
+            const waveDiv = document.getElementById('chatBtnWave');
+            const input = document.getElementById('chatInput');
+            const hasText = input.value.trim().length > 0;
+            
+            if (hasText) {
+                btn.classList.add('send-mode');
+                btn.classList.remove('recording');
+                btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>';
+            } else {
+                btn.classList.remove('send-mode');
+                btn.innerHTML = `
+                    <div class="sound-wave" id="chatBtnWave">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                `;
+            }
+        }
+
+        // ==================== SIDE MENU ====================
+        function openSideMenu() {
+            document.getElementById('sideMenuOverlay').classList.add('active');
+            document.getElementById('sideMenu').classList.add('active');
+            renderSideMenuContent();
+        }
+
+        function closeSideMenu() {
+            document.getElementById('sideMenuOverlay').classList.remove('active');
+            document.getElementById('sideMenu').classList.remove('active');
+        }
+
+        function renderSideMenuContent() {
+            const saved = localStorage.getItem('myMateData');
+            const container = document.getElementById('sideMenuContent');
+            
+            if (!saved) return;
+            
+            const data = JSON.parse(saved);
+            const mateType = data.type;
+            
+            // 맘곁별 메뉴 링크 설정
+            const menuLinks = [
+                { icon: '🤰', name: '맘곁 태교·태담', url: 'https://www.momgyeot.com' },
+                { icon: '📖', name: '새로 쓰는 태교신기', url: 'https://mktaegyo.replit.app' },
+                { icon: '📚', name: '모유수유 리얼가이드', url: 'https://breastfeedingrealguide-10.replit.app' },
+                { icon: '🤱', name: '육아 컴패니언', url: 'https://mothersbaby-ai.vercel.app/' },
+                { icon: '🛒', name: '마더스베이비 쇼핑몰', url: 'https://www.mothersbaby.co.kr' }
+            ];
+
+            let linksHTML = menuLinks.map(link => `
+                <a class="side-menu-item" href="${link.url}" target="_blank" onclick="closeSideMenu()">
+                    <div class="item-icon">${link.icon}</div>
+                    <div class="item-info">
+                        <div class="item-name">${link.name}</div>
+                    </div>
+                    <span class="item-arrow">›</span>
+                </a>
+            `).join('');
+
+            // 다른 맘곁 만나기 섹션
+            const otherMates = Object.entries(mateConfig)
+                .filter(([key]) => key !== mateType)
+                .map(([key, mate]) => `
+                    <a class="side-menu-item" href="#" onclick="switchMate('${key}'); return false;">
+                        <div class="item-icon">${mate.emoji}</div>
+                        <div class="item-info">
+                            <div class="item-name">${mate.name}</div>
+                        </div>
+                        <span class="item-arrow">›</span>
+                    </a>
+                `).join('');
+
+            container.innerHTML = `
+                <div class="side-menu-section">
+                    <div class="side-menu-section-title">마더스베이비 서비스</div>
+                    ${linksHTML}
+                </div>
+                <div class="side-menu-divider"></div>
+                <div class="side-menu-section">
+                    <div class="side-menu-section-title">다른 맘곁 만나기</div>
+                    ${otherMates}
+                </div>
+            `;
+        }
+
+        function switchMate(mateType) {
+            closeSideMenu();
+            // 기존 데이터 초기화하고 새 맘곁 선택
+            localStorage.removeItem('myMateData');
+            selectMate(mateType);
+        }
+
+        // ==================== MY MATE ====================
+        function saveMyMateData(lastMessage = null) {
+            if (!currentMate || !onboardingData.nickname) return;
+            
+            const mate = mateConfig[currentMate];
+            const data = {
+                type: currentMate,
+                name: mate.name,
+                emoji: mate.emoji,
+                avatarClass: mate.avatarClass,
+                onboardingData: onboardingData,
+                lastMessage: lastMessage || mate.getWelcome(onboardingData),
+                date: new Date().toLocaleDateString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' }).replace(/\. /g, '.').slice(0, -1)
+            };
+            localStorage.setItem('myMateData', JSON.stringify(data));
+        }
+
+        // 오늘의 한마디 (랜덤)
+        const dailyTips = [
+            "오늘 하루도 충분히 잘 하고 있어요 💚",
+            "완벽하지 않아도 괜찮아요. 그게 우리 모습이에요.",
+            "잠깐 멈춰서 숨 한번 깊게 쉬어보세요.",
+            "당신은 최고의 엄마예요. 늘 그랬어요.",
+            "오늘 나를 위한 5분, 만들어보는 건 어때요?",
+            "힘들 땐 힘들다고 말해도 괜찮아요.",
+            "아이에게 필요한 건 완벽한 엄마가 아니라 행복한 엄마예요.",
+            "지금 이 순간, 당신은 충분해요 💚"
+        ];
+
+        function getRandomTip() {
+            const today = new Date().toDateString();
+            const saved = localStorage.getItem('dailyTip');
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data.date === today) return data.tip;
+            }
+            const tip = dailyTips[Math.floor(Math.random() * dailyTips.length)];
+            localStorage.setItem('dailyTip', JSON.stringify({ date: today, tip }));
+            return tip;
+        }
+
+        function renderHomeScreen() {
+            const container = document.getElementById('homeContent');
+            const saved = localStorage.getItem('myMateData');
+            
+            if (saved) {
+                // 온보딩 완료 후 - 개인화된 홈
+                const data = JSON.parse(saved);
+                const mate = mateConfig[data.type];
+                const nickname = data.onboardingData?.nickname || '맘';
+                
+                // 메뉴 버튼 표시
+                const menuBtn = document.getElementById('menuBtn');
+                if (menuBtn) {
+                    menuBtn.style.display = 'flex';
+                }
+                
+                container.innerHTML = `
+                    <div class="personalized-greeting">
+                        <h1>${nickname}, 오늘 하루는 어떠세요?</h1>
+                        <p>언제든 이야기 나눌 준비가 되어있어요</p>
+                    </div>
+
+                    <div class="main-mate-card" onclick="resumeChat()">
+                        <div class="main-mate-header">
+                            <div class="main-mate-avatar ${data.avatarClass}">${data.emoji}</div>
+                            <div class="main-mate-info">
+                                <div class="main-mate-greeting">나의 ${data.name}</div>
+                                <div class="main-mate-name">${data.date}에 대화함</div>
+                            </div>
+                        </div>
+                        <div class="main-mate-message">${truncate(data.lastMessage, 60)}</div>
+                        <div class="main-mate-action">
+                            <button class="main-mate-btn">이어서 대화하기</button>
+                        </div>
+                    </div>
+
+                    <div class="tip-card">
+                        <div class="tip-card-header">
+                            <span>💛</span>
+                            <span class="tip-card-label">오늘의 한마디</span>
+                        </div>
+                        <div class="tip-card-content">${getRandomTip()}</div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">바로가기</h2>
+                        <div class="quick-actions-mini">
+                            <button class="quick-action-mini-btn" onclick="quickAction('status')">
+                                <span class="icon green">💚</span>
+                                <span>마음 체크</span>
+                            </button>
+                            <button class="quick-action-mini-btn" onclick="quickAction('worry')">
+                                <span class="icon pink">✏️</span>
+                                <span>걱정 정리</span>
+                            </button>
+                            <button class="quick-action-mini-btn" onclick="quickAction('today')">
+                                <span class="icon olive">⏰</span>
+                                <span>오늘 할 일</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // 온보딩 전 - 기본 홈
+                // 메뉴 버튼 숨기기
+                const menuBtn = document.getElementById('menuBtn');
+                if (menuBtn) {
+                    menuBtn.style.display = 'none';
+                }
+                
+                container.innerHTML = `
+                    <div class="home-greeting">
+                        <h1 class="home-title">오늘 어떤 마음이세요?<br>함께 나눠볼까요</h1>
+                    </div>
+
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="quickAction('status')">
+                            <span class="icon">💚</span>
+                            <span>지금 내 마음 체크</span>
+                        </button>
+                        <button class="quick-action-btn" onclick="quickAction('worry')">
+                            <span class="icon">📝</span>
+                            <span>걱정되는 것 정리</span>
+                        </button>
+                        <button class="quick-action-btn" onclick="quickAction('today')">
+                            <span class="icon">🎯</span>
+                            <span>오늘 할 일 정하기</span>
+                        </button>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">나의 <span class="highlight">맘곁</span></h2>
+                        <div class="empty-my-mate">
+                            <p>아직 대화한 맘곁이 없어요.<br>아래에서 맘곁을 선택해보세요!</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title"><span class="highlight">추천</span> 맘곁</h2>
+                        <div class="mate-list">
+                            <div class="mate-card">
+                                <div class="mate-avatar purple">💜</div>
+                                <div class="mate-card-info">
+                                    <div class="mate-card-name">예비맘곁</div>
+                                    <div class="mate-card-desc">기다림의 여정을 함께해요.<br>어떤 마음이든 괜찮아요.</div>
+                                </div>
+                                <button class="mate-card-btn" onclick="selectMate('prep')">대화</button>
+                            </div>
+
+                            <div class="mate-card">
+                                <div class="mate-avatar pink">🤰</div>
+                                <div class="mate-card-info">
+                                    <div class="mate-card-name">임신맘곁 <span class="badge">NEW</span></div>
+                                    <div class="mate-card-desc">열 달의 여정,<br>설렘과 걱정을 함께 나눠요.</div>
+                                </div>
+                                <button class="mate-card-btn" onclick="selectMate('pregnancy')">대화</button>
+                            </div>
+
+                            <div class="mate-card">
+                                <div class="mate-avatar olive">👶</div>
+                                <div class="mate-card-info">
+                                    <div class="mate-card-name">새싹맘곁</div>
+                                    <div class="mate-card-desc">육아 초보의 하루하루,<br>든든한 곁이 되어드릴게요.</div>
+                                </div>
+                                <button class="mate-card-btn" onclick="selectMate('infant')">대화</button>
+                            </div>
+
+                            <div class="mate-card">
+                                <div class="mate-avatar olive">🧒</div>
+                                <div class="mate-card-info">
+                                    <div class="mate-card-name">우리맘곁</div>
+                                    <div class="mate-card-desc">성장하는 아이와 함께,<br>육아 고민을 나눠요.</div>
+                                </div>
+                                <button class="mate-card-btn" onclick="selectMate('toddler')">대화</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderOtherMates(currentType) {
+            const mates = [
+                { type: 'prep', emoji: '💜', avatarClass: 'purple', name: '예비맘곁', desc: '기다림의 여정을 함께해요.' },
+                { type: 'pregnancy', emoji: '🤰', avatarClass: 'pink', name: '임신맘곁', desc: '열 달의 설렘과 걱정을 나눠요.', badge: 'NEW' },
+                { type: 'infant', emoji: '👶', avatarClass: 'olive', name: '새싹맘곁', desc: '육아 초보의 든든한 곁.' },
+                { type: 'toddler', emoji: '🧒', avatarClass: 'olive', name: '우리맘곁', desc: '성장하는 아이와 함께.' }
+            ];
+            
+            return mates
+                .filter(m => m.type !== currentType)
+                .map(m => `
+                    <div class="mate-card">
+                        <div class="mate-avatar ${m.avatarClass}">${m.emoji}</div>
+                        <div class="mate-card-info">
+                            <div class="mate-card-name">${m.name}${m.badge ? ` <span class="badge">${m.badge}</span>` : ''}</div>
+                            <div class="mate-card-desc">${m.desc}</div>
+                        </div>
+                        <button class="mate-card-btn" onclick="selectMate('${m.type}')">대화</button>
+                    </div>
+                `).join('');
+        }
+
+        function updateMyMateSection() {
+            // 기존 함수는 renderHomeScreen으로 대체
+            renderHomeScreen();
+        }
+
+        function truncate(text, length) {
+            if (!text) return '';
+            if (text.length <= length) return text;
+            return text.substring(0, length) + '...';
+        }
+
+        function resumeChat() {
+            const saved = localStorage.getItem('myMateData');
+            if (!saved) return;
+            
+            const data = JSON.parse(saved);
+            currentMate = data.type;
+            onboardingData = data.onboardingData;
+            
+            // 저장된 대화 히스토리 확인
+            const savedHistory = localStorage.getItem('chatHistory_' + currentMate);
+            if (savedHistory) {
+                restoreChat(JSON.parse(savedHistory));
+            } else {
+                startChat();
+            }
+        }
+        
+        // 대화 복원 함수
+        function restoreChat(history) {
+            const mate = mateConfig[currentMate];
+            if (!mate) {
+                console.error('restoreChat: mate not found for', currentMate);
+                return;
+            }
+            
+            const avatarEl = document.getElementById('chatAvatar');
+            const nameEl = document.getElementById('chatHeaderName');
+            if (avatarEl) {
+                avatarEl.textContent = mate.emoji;
+                avatarEl.className = `chat-header-avatar ${mate.avatarClass}`;
+            }
+            if (nameEl) nameEl.textContent = mate.name;
+            
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = `
+                <div class="chat-date"><span>${getTodayDateStr()}</span></div>
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            
+            conversationHistory = [];
+            currentQuickAction = null; // Quick Action 맥락 리셋
+            showScreen('chatScreen');
+            
+            // 저장된 메시지들 복원
+            history.forEach(msg => {
+                addMessageWithoutSave(msg.text, msg.type, msg.time);
+                conversationHistory.push({
+                    role: msg.type === 'user' ? 'user' : 'assistant',
+                    content: msg.text
+                });
+            });
+            
+            // 스크롤 맨 아래로
+            setTimeout(() => {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 100);
+        }
+        
+        // 저장 없이 메시지 추가 (복원용)
+        function addMessageWithoutSave(text, type, savedTime) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const mate = mateConfig[currentMate];
+            const time = savedTime || new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: true });
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            if (type === 'ai') {
+                messageDiv.innerHTML = `
+                    <div class="message-avatar ${mate.avatarClass}">${mate.emoji}</div>
+                    <div class="message-content">
+                        <div class="message-name">${mate.name}</div>
+                        <div class="message-bubble">${escapeHtml(text)}</div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-bubble">${escapeHtml(text)}</div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+            }
+            
+            messagesContainer.insertBefore(messageDiv, typingIndicator);
+        }
+        
+        // 대화 히스토리 저장
+        function saveChatHistory(text, type) {
+            if (!currentMate) return;
+            
+            const key = 'chatHistory_' + currentMate;
+            let history = [];
+            
+            try {
+                const saved = localStorage.getItem(key);
+                if (saved) history = JSON.parse(saved);
+            } catch(e) {}
+            
+            const time = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: true });
+            history.push({ text, type, time });
+            
+            // 최근 50개만 유지
+            if (history.length > 50) {
+                history = history.slice(-50);
+            }
+            
+            try {
+                localStorage.setItem(key, JSON.stringify(history));
+            } catch(e) {
+                console.log('Failed to save chat history');
+            }
+        }
+
+        // Quick Action 프롬프트
+        const quickActionPrompts = {
+            status: {
+                mate: 'infant',
+                initialMessage: '오늘 기분이 어떠세요?\n\n1점(힘들어요)부터 10점(최고예요)까지,\n숫자로 표현해볼까요? 💚\n\n숫자만 말씀해주셔도 좋고,\n그냥 편하게 이야기해주셔도 좋아요.',
+                context: '사용자가 "마음 체크" 기능을 사용 중입니다. 1~10점 사이의 숫자로 오늘 기분을 표현하도록 요청했습니다. 사용자가 숫자만 답하면 그것은 기분 점수입니다. 예: "7" = 7점(꽤 좋음), "3" = 3점(힘듦). 점수에 공감하며 따뜻하게 반응해주세요.'
+            },
+            worry: {
+                mate: 'infant', 
+                initialMessage: '요즘 마음에 걸리는 게 있으신가요?\n\n크든 작든 상관없어요.\n말로 꺼내놓으면 조금은 가벼워지기도 하더라고요.\n\n편하게 이야기해주세요 💚',
+                context: '사용자가 "걱정 정리" 기능을 사용 중입니다. 걱정거리를 말하면 공감하고, 정리하는 것을 도와주세요. 해결책을 강요하지 말고 들어주는 것에 집중하세요.'
+            },
+            today: {
+                mate: 'infant',
+                initialMessage: '오늘 하루, 딱 하나만 한다면\n뭘 하고 싶으세요?\n\n거창한 게 아니어도 괜찮아요.\n"커피 한 잔 마시기"도 좋고,\n"5분 눈 붙이기"도 좋아요 💚',
+                context: '사용자가 "오늘 할 일 정하기" 기능을 사용 중입니다. 오늘 하고 싶은 것 하나를 정하도록 도와주세요. 작은 것도 괜찮다고 격려해주세요.'
+            }
+        };
+
+        function quickAction(type) {
+            console.log('🎯 quickAction called:', type);
+            
+            const action = quickActionPrompts[type];
+            if (!action) {
+                console.error('No action found for type:', type);
+                return;
+            }
+            
+            // Quick Action 맥락 저장
+            currentQuickAction = action;
+            
+            console.log('Action found:', action);
+            
+            // 기본 mate 설정 (새싹맘곁)
+            currentMate = action.mate;
+            onboardingData = { nickname: '맘' }; // 기본 닉네임
+            
+            // 저장된 데이터가 있으면 사용
+            try {
+                const saved = localStorage.getItem('myMateData');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data.type && mateConfig[data.type]) {
+                        currentMate = data.type;
+                    }
+                    if (data.onboardingData) {
+                        onboardingData = data.onboardingData;
+                    }
+                }
+            } catch (e) {
+                console.error('Error loading saved data:', e);
+            }
+            
+            console.log('currentMate:', currentMate, 'onboardingData:', onboardingData);
+            
+            const mate = mateConfig[currentMate];
+            if (!mate) {
+                console.error('No mate config for:', currentMate);
+                return;
+            }
+            
+            const avatarEl = document.getElementById('chatAvatar');
+            const nameEl = document.getElementById('chatHeaderName');
+            if (avatarEl) {
+                avatarEl.textContent = mate.emoji;
+                avatarEl.className = `chat-header-avatar ${mate.avatarClass}`;
+            }
+            if (nameEl) nameEl.textContent = mate.name;
+            
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = `
+                <div class="chat-date"><span>${getTodayDateStr()}</span></div>
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            
+            conversationHistory = [];
+            showScreen('chatScreen');
+            
+            // Quick Action 전용 메시지 표시
+            setTimeout(() => {
+                addMessage(action.initialMessage, 'ai');
+            }, 500);
+        }
+
+        // ==================== INIT ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHomeScreen();
+            initSpeechRecognition();
+            
+            document.getElementById('chatInput').addEventListener('input', autoResizeInput);
+            document.getElementById('chatInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            document.getElementById('globalInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.isComposing) {
+                    const text = e.target.value.trim();
+                    if (text) selectMate('infant');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

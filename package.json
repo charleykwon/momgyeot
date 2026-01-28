@@ -1,0 +1,14 @@
+{
+  "name": "momgyeot",
+  "version": "4.0.0",
+  "description": "맘곁 - 태담 커뮤니케이션 앱",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build required'",
+    "deploy": "vercel --prod"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
