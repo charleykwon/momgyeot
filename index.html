@@ -1867,6 +1867,7 @@
         let currentQuickAction = null; // Quick Action 맥락 저장
         let onboardingData = {};
         let conversationHistory = [];
+        let visitorId = null; // 사용자 식별자
         let isLoading = false;
 
         // Voice state
@@ -1876,8 +1877,40 @@
         let isVoiceMode = false;
         let isSpeaking = false;
         let isGlobalInputVoice = false; // globalInput에서 음성인식 시작 여부
+// 사용자 고유 ID 생성/가져오기
+        function getVisitorId() {
+            let id = localStorage.getItem('momgyeot_visitor_id');
+            if (!id) {
+                id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('momgyeot_visitor_id', id);
+            }
+            return id;
+        }
 
-        // ==================== MATE CONFIG ====================
+        // 대화 기록 서버에 저장
+        async function saveMessage(role, content) {
+            try {
+                await fetch('/api/history', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: visitorId, role, content })
+                });
+            } catch (e) {
+                console.error('메시지 저장 실패:', e);
+            }
+        }
+
+        // 대화 기록 불러오기
+        async function loadHistory() {
+            try {
+                const res = await fetch(`/api/history?user_id=${visitorId}`);
+                const data = await res.json();
+                return data.messages || [];
+            } catch (e) {
+                console.error('기록 불러오기 실패:', e);
+                return [];
+            }
+        }        // ==================== MATE CONFIG ====================
         const mateConfig = {
             prep: {
                 name: '예비맘곁',
