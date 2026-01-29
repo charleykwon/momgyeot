@@ -3112,7 +3112,42 @@ saveMessage('user', text); // 서버에 저장            isLoading = true;
                 console.log('Failed to save chat history');
             }
         }
-        
+        // 서버에서 대화 기록 로드 후 로컬에 병합
+        async function loadServerHistory() {
+            if (!visitorId) return;
+            try {
+                const messages = await loadHistory();
+                if (messages && messages.length > 0) {
+                    // 서버 데이터를 로컬 형식으로 변환하여 저장
+                    const grouped = {};
+                    messages.forEach(msg => {
+                        const date = new Date(msg.created_at).toLocaleDateString();
+                        if (!grouped[date]) grouped[date] = [];
+                        grouped[date].push({
+                            role: msg.role,
+                            content: msg.content,
+                            time: new Date(msg.created_at).toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit'}),
+                            timestamp: msg.created_at
+                        });
+                    });
+                    // 현재 맘곁 타입으로 저장
+                    if (currentMate) {
+                        const key = 'chatHistory_' + currentMate;
+                        localStorage.setItem(key, JSON.stringify(
+                            messages.map(m => ({
+                                role: m.role === 'assistant' ? 'ai' : m.role,
+                                text: m.content,
+                                time: new Date(m.created_at).toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit'}),
+                                timestamp: m.created_at
+                            }))
+                        ));
+                    }
+                    console.log('서버 히스토리 로드 완료:', messages.length, '개');
+                }
+            } catch (e) {
+                console.error('서버 히스토리 로드 실패:', e);
+            }
+        }
         // ==================== 대화 히스토리 관리 함수들 ====================
         
         // 모든 대화 히스토리 가져오기
