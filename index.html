@@ -2903,77 +2903,52 @@ saveMessage('user', text); // 서버에 저장            isLoading = true;
                     </div>
                 `;
             }
-            container.innerHTML = `
-                    <div class="home-greeting">
-                        <h1 class="home-title">오늘 어떤 마음이세요?<br>함께 나눠볼까요</h1>
-                    </div>
-
-                    <div class="quick-actions">
-                        <button class="quick-action-btn" onclick="quickAction('status')">
-                            <span class="icon">💚</span>
-                            <span>지금 내 마음 체크</span>
-                        </button>
-                        <button class="quick-action-btn" onclick="quickAction('worry')">
-                            <span class="icon">📝</span>
-                            <span>걱정되는 것 정리</span>
-                        </button>
-                        <button class="quick-action-btn" onclick="quickAction('today')">
-                            <span class="icon">🎯</span>
-                            <span>오늘 할 일 정하기</span>
-                        </button>
-                    </div>
-
-                    <div class="section">
-                        <h2 class="section-title">나의 <span class="highlight">맘곁</span></h2>
-                        <div class="empty-my-mate">
-                            <p>아직 대화한 맘곁이 없어요.<br>아래에서 맘곁을 선택해보세요!</p>
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <h2 class="section-title"><span class="highlight">추천</span> 맘곁</h2>
-                        <div class="mate-list">
-                            <div class="mate-card">
-                                <div class="mate-avatar purple">💜</div>
-                                <div class="mate-card-info">
-                                    <div class="mate-card-name">예비맘곁</div>
-                                    <div class="mate-card-desc">기다림의 여정을 함께해요.<br>어떤 마음이든 괜찮아요.</div>
-                                </div>
-                                <button class="mate-card-btn" onclick="selectMate('prep')">대화</button>
-                            </div>
-
-                            <div class="mate-card">
-                                <div class="mate-avatar pink">🤰</div>
-                                <div class="mate-card-info">
-                                    <div class="mate-card-name">임신맘곁 <span class="badge">NEW</span></div>
-                                    <div class="mate-card-desc">열 달의 여정,<br>설렘과 걱정을 함께 나눠요.</div>
-                                </div>
-                                <button class="mate-card-btn" onclick="selectMate('pregnancy')">대화</button>
-                            </div>
-
-                            <div class="mate-card">
-                                <div class="mate-avatar olive">👶</div>
-                                <div class="mate-card-info">
-                                    <div class="mate-card-name">새싹맘곁</div>
-                                    <div class="mate-card-desc">육아 초보의 하루하루,<br>든든한 곁이 되어드릴게요.</div>
-                                </div>
-                                <button class="mate-card-btn" onclick="selectMate('infant')">대화</button>
-                            </div>
-
-                            <div class="mate-card">
-                                <div class="mate-avatar olive">🧒</div>
-                                <div class="mate-card-info">
-                                    <div class="mate-card-name">우리맘곁</div>
-                                    <div class="mate-card-desc">성장하는 아이와 함께,<br>육아 고민을 나눠요.</div>
-                                </div>
-                                <button class="mate-card-btn" onclick="selectMate('toddler')">대화</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
         }
+function showMateSelection() {
+            const container = document.getElementById('homeContent');
+            container.innerHTML = `
+                <div style="padding: 20px;">
+                    <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px;">어떤 맘곁과 대화할까요?</h2>
+                    <div class="mate-list">
+                        <div class="mate-card">
+                            <div class="mate-avatar purple">💜</div>
+                            <div class="mate-card-info">
+                                <div class="mate-card-name">예비맘곁</div>
+                                <div class="mate-card-desc">기다림의 여정을 함께해요.<br>어떤 마음이든 괜찮아요.</div>
+                            </div>
+                            <button class="mate-card-btn" onclick="selectMate('prep')">선택</button>
+                        </div>
 
+                        <div class="mate-card">
+                            <div class="mate-avatar pink">🤰</div>
+                            <div class="mate-card-info">
+                                <div class="mate-card-name">임신맘곁</div>
+                                <div class="mate-card-desc">열 달의 여정,<br>설렘과 걱정을 함께 나눠요.</div>
+                            </div>
+                            <button class="mate-card-btn" onclick="selectMate('pregnancy')">선택</button>
+                        </div>
+
+                        <div class="mate-card">
+                            <div class="mate-avatar olive">👶</div>
+                            <div class="mate-card-info">
+                                <div class="mate-card-name">새싹맘곁</div>
+                                <div class="mate-card-desc">육아 초보의 하루하루,<br>든든한 곁이 되어드릴게요.</div>
+                            </div>
+                            <button class="mate-card-btn" onclick="selectMate('infant')">선택</button>
+                        </div>
+
+                        <div class="mate-card">
+                            <div class="mate-avatar olive">🧒</div>
+                            <div class="mate-card-info">
+                                <div class="mate-card-name">우리맘곁</div>
+                                <div class="mate-card-desc">성장하는 아이와 함께,<br>육아 고민을 나눠요.</div>
+                            </div>
+                            <button class="mate-card-btn" onclick="selectMate('toddler')">선택</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
         function renderOtherMates(currentType) {
             const mates = [
                 { type: 'prep', emoji: '💜', avatarClass: 'purple', name: '예비맘곁', desc: '기다림의 여정을 함께해요.' },
