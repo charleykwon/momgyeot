@@ -2090,13 +2090,13 @@
                 
                 if (isVoiceMode) {
                     document.getElementById('voiceTranscript').textContent = transcript;
-                } else if (isGlobalInputVoice) {
-                  // globalInput에 최종 결과 입력 후 리셋
-                        document.getElementById('globalInput').value = transcript;
-                        isGlobalInputVoice = false;
-                        updateGlobalVoiceUI(false);
+               } else if (isGlobalInputVoice) {
+                    // globalInput에 실시간 표시
+                    document.getElementById('globalInput').value = transcript;
+                }
+
                 if (event.results[event.resultIndex].isFinal) {
-                    if (isVoiceMode) {
+                if (isVoiceMode) {
                         processVoiceInput(transcript);
                     } else if (isGlobalInputVoice) {
                         // globalInput에 최종 결과 입력 후 리셋
