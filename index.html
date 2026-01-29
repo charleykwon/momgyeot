@@ -2095,9 +2095,11 @@
                         document.getElementById('globalInput').value = transcript;
                         isGlobalInputVoice = false;
                         updateGlobalVoiceUI(false);
-                    } else {
+                 } else {
                         document.getElementById('chatInput').value = transcript;
-                        sendMessage(true);
+                        // 자동 전송 제거 - 전송 버튼 표시로 전환
+                        autoResizeInput();
+                        updateSendButton();
                     }
                 }
             };
