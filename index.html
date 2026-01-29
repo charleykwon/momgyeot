@@ -2339,23 +2339,24 @@
 
 function selectMate(mateType) {
             currentMate = mateType;
-            onboardingData = { nickname: '맘' };
-            conversationHistory = [];
+            currentStep = 0;
+            onboardingData = {};
             
-            // 바로 채팅 화면으로 이동
-            showScreen('chatScreen');
+            const mate = mateConfig[mateType];
+            const screen = document.getElementById('onboardingScreen');
             
-            // 저장된 대화 있으면 복원
+            // 이미 대화한 적 있으면 바로 채팅으로
             const savedHistory = localStorage.getItem('chatHistory_' + mateType);
             if (savedHistory) {
+                onboardingData = { nickname: '맘' };
+                conversationHistory = [];
+                showScreen('chatScreen');
                 restoreChat(JSON.parse(savedHistory));
             } else {
-                // 새 대화면 환영 메시지 표시
-                const mate = mateConfig[mateType];
-                const welcomeMsg = mate.welcomeMessage || `안녕하세요, 맘! 😊\n무엇이든 편하게 이야기해주세요. 곁에서 함께할게요. 💚`;
-                setTimeout(() => {
-                    addMessage(welcomeMsg, 'ai');
-                }, 500);
+                // 첫 진입이면 온보딩 진행
+                screen.classList.toggle('purple-theme', mate.isPurple);
+                renderStep();
+                showScreen('onboardingScreen');
             }
         }
         function goToHome() {
