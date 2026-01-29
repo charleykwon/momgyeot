@@ -1734,18 +1734,11 @@
             </div>
 
             <div class="bottom-input-area">
-                <div class="global-input-wrap">
+       <div class="global-input-wrap">
                     <span class="global-input-prefix">@맘곁</span>
-                    <input type="text" class="global-input" placeholder="에게 이야기해보세요" id="globalInput">
-                    <button class="voice-btn" onclick="startGlobalVoice()">
-                        <div class="sound-wave">
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                        </div>
-                    </button>
+                    <input type="text" class="global-input" placeholder="에게 이야기해보세요" id="globalInput" oninput="updateGlobalSendBtn()">
+                    <button class="voice-btn" id="globalVoiceBtn" onclick="startGlobalVoice()">🎤</button>
+                    <button class="send-btn" id="globalSendBtn" onclick="sendGlobalMessage()" style="display:none;">➡️</button>
                 </div>
             </div>
         </div>
