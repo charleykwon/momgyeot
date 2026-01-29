@@ -2354,7 +2354,7 @@ function selectMate(mateType) {
                 const mate = mateConfig[mateType];
                 const welcomeMsg = mate.welcomeMessage || `안녕하세요, 맘! 😊\n무엇이든 편하게 이야기해주세요. 곁에서 함께할게요. 💚`;
                 setTimeout(() => {
-                    addMessage('ai', welcomeMsg);
+                    addMessage(welcomeMsg, 'ai');
                 }, 500);
             }
         }
