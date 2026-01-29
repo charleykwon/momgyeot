@@ -2878,15 +2878,32 @@ saveMessage('user', text); // 서버에 저장            isLoading = true;
                         </div>
                     </div>
                 `;
-            } else {
-                // 온보딩 전 - 기본 홈
-                // 메뉴 버튼 숨기기
+           } else {
+                // 온보딩 전 - 심플 홈
                 const menuBtn = document.getElementById('menuBtn');
                 if (menuBtn) {
                     menuBtn.style.display = 'none';
                 }
                 
                 container.innerHTML = `
+                    <div class="home-greeting" style="text-align: center; padding: 60px 20px;">
+                        <h1 class="home-title" style="font-size: 24px; margin-bottom: 12px;">맘, 오늘 하루는 어떠세요?</h1>
+                        <p style="color: #666; margin-bottom: 40px;">언제든 이야기 나눌 준비가 되어있어요</p>
+                        <button onclick="showMateSelection()" style="
+                            background: linear-gradient(135deg, #5E6B3A, #7A8B4A);
+                            color: white;
+                            border: none;
+                            padding: 16px 40px;
+                            border-radius: 30px;
+                            font-size: 16px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            box-shadow: 0 4px 15px rgba(94, 107, 58, 0.3);
+                        ">대화 시작하기</button>
+                    </div>
+                `;
+            }
+            container.innerHTML = `
                     <div class="home-greeting">
                         <h1 class="home-title">오늘 어떤 마음이세요?<br>함께 나눠볼까요</h1>
                     </div>
