@@ -2232,7 +2232,8 @@
             const indicator = document.getElementById('speakingIndicator');
             if (indicator) indicator.classList.remove('show');
         }
-function updateGlobalSendBtn() {
+            
+        function updateGlobalSendBtn() {
             const input = document.getElementById('globalInput');
             const voiceBtn = document.getElementById('globalVoiceBtn');
             const sendBtn = document.getElementById('globalSendBtn');
@@ -2247,18 +2248,15 @@ function updateGlobalSendBtn() {
             const text = input.value.trim();
             if (!text) return;
             
-            // 저장된 맘곁 데이터 확인
             const saved = localStorage.getItem('myMateData');
             if (saved) {
                 const data = JSON.parse(saved);
                 currentMate = data.type;
                 onboardingData = data.onboardingData || {};
                 
-                // 채팅 화면으로 이동
                 showScreen('chatScreen');
                 initChatScreen();
                 
-                // 입력창에 텍스트 넣고 전송
                 setTimeout(() => {
                     document.getElementById('chatInput').value = text;
                     input.value = '';
@@ -2266,13 +2264,15 @@ function updateGlobalSendBtn() {
                     sendMessage();
                 }, 300);
             } else {
-                // 맘곁 선택 안됨 - 선택 화면으로
                 alert('먼저 맘곁을 선택해주세요!');
                 showMateSelection();
             }
         }
-            // ==================== VOICE MODE ====================
-        function startGlobalVoice() {
+
+        // ==================== VOICE MODE ====================  
+
+        // ==================== VOICE MODE ====================           // ==================== VOICE MODE ====================
+            function startGlobalVoice() {
             const saved = localStorage.getItem('myMateData');
             
             if (!saved) {
