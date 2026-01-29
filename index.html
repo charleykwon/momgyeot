@@ -3420,6 +3420,8 @@ saveMessage('user', text); // 서버에 저장            isLoading = true;
 
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
+            // 사용자 ID 초기화
+            visitorId = getVisitorId();           
             renderHomeScreen();
             initSpeechRecognition();
             
