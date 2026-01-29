@@ -3456,7 +3456,11 @@ saveMessage('user', text); // 서버에 저장            isLoading = true;
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
             // 사용자 ID 초기화
-            visitorId = getVisitorId();           
+            visitorId = getVisitorId();
+            // 서버에서 이전 대화 불러오기
+            loadServerHistory().then(() => {
+                renderConversationHistory();
+            });
             renderHomeScreen();
             initSpeechRecognition();
             
