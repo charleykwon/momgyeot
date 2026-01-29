@@ -2619,8 +2619,7 @@
             autoResizeInput();
 
             conversationHistory.push({ role: 'user', content: text });
-
-            isLoading = true;
+saveMessage('user', text); // 서버에 저장            isLoading = true;
             showTyping();
             updateSendButton();
 
@@ -2628,7 +2627,7 @@
                 const response = await callClaudeAPI(text);
                 hideTyping();
                 addMessage(response, 'ai');
-                conversationHistory.push({ role: 'assistant', content: response });
+                saveMessage('assistant', response); // 서버에 저장                conversationHistory.push({ role: 'assistant', content: response });
                 saveMyMateData(response);
             } catch (error) {
                 hideTyping();
