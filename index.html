@@ -2091,10 +2091,10 @@
                 if (isVoiceMode) {
                     document.getElementById('voiceTranscript').textContent = transcript;
                 } else if (isGlobalInputVoice) {
-                    // globalInput에 실시간 표시
-                    document.getElementById('globalInput').value = transcript;
-                }
-
+                  // globalInput에 최종 결과 입력 후 리셋
+                        document.getElementById('globalInput').value = transcript;
+                        isGlobalInputVoice = false;
+                        updateGlobalVoiceUI(false);
                 if (event.results[event.resultIndex].isFinal) {
                     if (isVoiceMode) {
                         processVoiceInput(transcript);
@@ -2103,7 +2103,8 @@
                         document.getElementById('globalInput').value = transcript;
                         isGlobalInputVoice = false;
                         updateGlobalVoiceUI(false);
-                 } else {
+                        updateGlobalSendBtn();
+                    } else {
                         document.getElementById('chatInput').value = transcript;
                         // 자동 전송 제거 - 전송 버튼 표시로 전환
                         autoResizeInput();
@@ -2231,8 +2232,46 @@
             const indicator = document.getElementById('speakingIndicator');
             if (indicator) indicator.classList.remove('show');
         }
-
-        // ==================== VOICE MODE ====================
+function updateGlobalSendBtn() {
+            const input = document.getElementById('globalInput');
+            const voiceBtn = document.getElementById('globalVoiceBtn');
+            const sendBtn = document.getElementById('globalSendBtn');
+            const hasText = input && input.value.trim().length > 0;
+            
+            if (voiceBtn) voiceBtn.style.display = hasText ? 'none' : 'flex';
+            if (sendBtn) sendBtn.style.display = hasText ? 'flex' : 'none';
+        }
+        
+        function sendGlobalMessage() {
+            const input = document.getElementById('globalInput');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            // 저장된 맘곁 데이터 확인
+            const saved = localStorage.getItem('myMateData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                currentMate = data.type;
+                onboardingData = data.onboardingData || {};
+                
+                // 채팅 화면으로 이동
+                showScreen('chatScreen');
+                initChatScreen();
+                
+                // 입력창에 텍스트 넣고 전송
+                setTimeout(() => {
+                    document.getElementById('chatInput').value = text;
+                    input.value = '';
+                    updateGlobalSendBtn();
+                    sendMessage();
+                }, 300);
+            } else {
+                // 맘곁 선택 안됨 - 선택 화면으로
+                alert('먼저 맘곁을 선택해주세요!');
+                showMateSelection();
+            }
+        }
+            // ==================== VOICE MODE ====================
         function startGlobalVoice() {
             const saved = localStorage.getItem('myMateData');
             
