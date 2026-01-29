@@ -452,6 +452,207 @@
             background: var(--olive-dark);
         }
 
+        /* ==================== 대화 히스토리 섹션 ==================== */
+        .chat-history-section {
+            margin: 0 20px 24px;
+        }
+        
+        .chat-history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .chat-history-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .chat-history-count {
+            font-size: 13px;
+            color: var(--text-light);
+            background: var(--bg-light);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+        
+        .date-group {
+            margin-bottom: 16px;
+        }
+        
+        .date-group-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            margin-bottom: 8px;
+        }
+        
+        .date-group-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--olive);
+        }
+        
+        .date-group-count {
+            font-size: 12px;
+            color: var(--text-light);
+            background: var(--bg-light);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        .date-group-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border-light);
+        }
+        
+        .history-item {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .history-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .history-item-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .history-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .history-item-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+        
+        .history-item-preview {
+            font-size: 13px;
+            color: var(--text-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .history-item-time {
+            font-size: 12px;
+            color: var(--text-light);
+            flex-shrink: 0;
+        }
+        
+        .history-item-arrow {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+        
+        .view-all-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--bg-light);
+            border: 1px dashed var(--border-light);
+            border-radius: 16px;
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+        
+        .view-all-btn:hover {
+            background: var(--white);
+            border-color: var(--olive);
+            color: var(--olive);
+        }
+        
+        .no-history-message {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* 전체 대화 모달 */
+        .history-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-light);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .history-modal.active {
+            display: block;
+        }
+        
+        .history-modal-header {
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-light);
+            z-index: 10;
+        }
+        
+        .history-modal-back {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-light);
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .history-modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .history-modal-content {
+            padding: 20px;
+        }
+
         /* 오늘의 한마디 카드 */
         .tip-card {
             background: linear-gradient(135deg, #FFF9E6 0%, #FFF5D6 100%);
@@ -1646,6 +1847,17 @@
 
             <div class="voice-hint">마이크 버튼을 눌러 대화하세요</div>
         </div>
+        
+        <!-- ==================== HISTORY MODAL ==================== -->
+        <div class="history-modal" id="historyModal">
+            <div class="history-modal-header">
+                <button class="history-modal-back" onclick="closeHistoryModal()">←</button>
+                <span class="history-modal-title">전체 대화 기록</span>
+            </div>
+            <div class="history-modal-content" id="historyModalContent">
+                <!-- 동적으로 채워짐 -->
+            </div>
+        </div>
     </div>
 
     <script>
@@ -2583,6 +2795,9 @@
                     menuBtn.style.display = 'flex';
                 }
                 
+                // 대화 히스토리 섹션 렌더링
+                const historySection = renderConversationHistory();
+                
                 container.innerHTML = `
                     <div class="personalized-greeting">
                         <h1>${nickname}, 오늘 하루는 어떠세요?</h1>
@@ -2602,6 +2817,8 @@
                             <button class="main-mate-btn">이어서 대화하기</button>
                         </div>
                     </div>
+
+                    ${historySection}
 
                     <div class="tip-card">
                         <div class="tip-card-header">
@@ -2846,12 +3063,15 @@
                 if (saved) history = JSON.parse(saved);
             } catch(e) {}
             
-            const time = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: true });
-            history.push({ text, type, time });
+            const now = new Date();
+            const time = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: true });
+            const timestamp = now.toISOString(); // ISO 형식 타임스탬프 추가
             
-            // 최근 50개만 유지
-            if (history.length > 50) {
-                history = history.slice(-50);
+            history.push({ text, type, time, timestamp });
+            
+            // 최근 100개만 유지 (더 많이 저장)
+            if (history.length > 100) {
+                history = history.slice(-100);
             }
             
             try {
@@ -2859,6 +3079,223 @@
             } catch(e) {
                 console.log('Failed to save chat history');
             }
+        }
+        
+        // ==================== 대화 히스토리 관리 함수들 ====================
+        
+        // 모든 대화 히스토리 가져오기
+        function getAllConversations() {
+            const conversations = [];
+            const mateTypes = ['prep', 'pregnancy', 'infant', 'toddler'];
+            
+            mateTypes.forEach(mateType => {
+                const key = 'chatHistory_' + mateType;
+                try {
+                    const saved = localStorage.getItem(key);
+                    if (saved) {
+                        const history = JSON.parse(saved);
+                        if (history.length > 0) {
+                            // 마지막 메시지 정보 추출
+                            const lastMsg = history[history.length - 1];
+                            const mate = mateConfig[mateType];
+                            
+                            conversations.push({
+                                mateType,
+                                mateName: mate?.name || mateType,
+                                emoji: mate?.emoji || '💚',
+                                avatarClass: mate?.avatarClass || 'olive',
+                                lastMessage: lastMsg.text,
+                                lastTime: lastMsg.time,
+                                timestamp: lastMsg.timestamp || new Date().toISOString(),
+                                messageCount: history.length
+                            });
+                        }
+                    }
+                } catch(e) {}
+            });
+            
+            // 최신 순으로 정렬
+            conversations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            return conversations;
+        }
+        
+        // 날짜별로 그룹핑
+        function groupConversationsByDate(conversations) {
+            const groups = {};
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            const weekAgo = new Date(today);
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            
+            conversations.forEach(conv => {
+                const convDate = new Date(conv.timestamp);
+                convDate.setHours(0, 0, 0, 0);
+                
+                let dateLabel;
+                if (convDate.getTime() === today.getTime()) {
+                    dateLabel = '오늘';
+                } else if (convDate.getTime() === yesterday.getTime()) {
+                    dateLabel = '어제';
+                } else if (convDate >= weekAgo) {
+                    dateLabel = `${convDate.getMonth() + 1}월 ${convDate.getDate()}일`;
+                } else {
+                    dateLabel = `${convDate.getMonth() + 1}월 ${convDate.getDate()}일`;
+                }
+                
+                if (!groups[dateLabel]) {
+                    groups[dateLabel] = {
+                        label: dateLabel,
+                        date: convDate,
+                        items: []
+                    };
+                }
+                groups[dateLabel].items.push(conv);
+            });
+            
+            // 날짜순 정렬 (최신 먼저)
+            return Object.values(groups).sort((a, b) => b.date - a.date);
+        }
+        
+        // 최근 7일 대화만 필터링
+        function getRecentConversations(days = 7) {
+            const all = getAllConversations();
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - days);
+            
+            return all.filter(conv => new Date(conv.timestamp) >= cutoff);
+        }
+        
+        // 대화 히스토리 HTML 렌더링
+        function renderConversationHistory() {
+            const recent = getRecentConversations(7);
+            const all = getAllConversations();
+            
+            if (all.length === 0) {
+                return `
+                    <div class="chat-history-section">
+                        <div class="chat-history-header">
+                            <span class="chat-history-title">💬 이전 대화</span>
+                        </div>
+                        <div class="no-history-message">
+                            아직 대화 기록이 없어요.<br>맘곁과 대화를 시작해보세요!
+                        </div>
+                    </div>
+                `;
+            }
+            
+            const grouped = groupConversationsByDate(recent);
+            const olderCount = all.length - recent.length;
+            
+            let html = `
+                <div class="chat-history-section">
+                    <div class="chat-history-header">
+                        <span class="chat-history-title">💬 이전 대화</span>
+                        <span class="chat-history-count">최근 7일 · ${recent.length}개</span>
+                    </div>
+            `;
+            
+            grouped.forEach(group => {
+                html += `
+                    <div class="date-group">
+                        <div class="date-group-header">
+                            <span class="date-group-label">${group.label}</span>
+                            <span class="date-group-count">${group.items.length}개</span>
+                            <div class="date-group-line"></div>
+                        </div>
+                `;
+                
+                group.items.forEach(conv => {
+                    html += `
+                        <div class="history-item" onclick="resumeChatWith('${conv.mateType}')">
+                            <div class="history-item-avatar ${conv.avatarClass}">${conv.emoji}</div>
+                            <div class="history-item-content">
+                                <div class="history-item-name">${conv.mateName}</div>
+                                <div class="history-item-preview">${truncate(conv.lastMessage, 30)}</div>
+                            </div>
+                            <div class="history-item-time">${conv.lastTime}</div>
+                            <div class="history-item-arrow">›</div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            });
+            
+            // 전체 보기 버튼 (더 오래된 대화가 있을 때)
+            if (olderCount > 0 || all.length > 3) {
+                html += `
+                    <button class="view-all-btn" onclick="showAllConversations()">
+                        📂 전체 대화 보기 (${all.length}개)
+                    </button>
+                `;
+            }
+            
+            html += `</div>`;
+            return html;
+        }
+        
+        // 특정 맘곁과 대화 이어가기
+        function resumeChatWith(mateType) {
+            currentMate = mateType;
+            const mate = mateConfig[mateType];
+            if (mate) {
+                onboardingData = { nickname: '맘' };
+                conversationHistory = [];
+                showScreen('chat');
+                
+                const savedHistory = localStorage.getItem('chatHistory_' + mateType);
+                if (savedHistory) {
+                    restoreChat(JSON.parse(savedHistory));
+                }
+            }
+        }
+        
+        // 전체 대화 보기 모달
+        function showAllConversations() {
+            const modal = document.getElementById('historyModal');
+            const content = document.getElementById('historyModalContent');
+            
+            const all = getAllConversations();
+            const grouped = groupConversationsByDate(all);
+            
+            let html = '';
+            grouped.forEach(group => {
+                html += `
+                    <div class="date-group">
+                        <div class="date-group-header">
+                            <span class="date-group-label">${group.label}</span>
+                            <span class="date-group-count">${group.items.length}개</span>
+                            <div class="date-group-line"></div>
+                        </div>
+                `;
+                
+                group.items.forEach(conv => {
+                    html += `
+                        <div class="history-item" onclick="resumeChatWith('${conv.mateType}'); closeHistoryModal();">
+                            <div class="history-item-avatar ${conv.avatarClass}">${conv.emoji}</div>
+                            <div class="history-item-content">
+                                <div class="history-item-name">${conv.mateName}</div>
+                                <div class="history-item-preview">${truncate(conv.lastMessage, 30)}</div>
+                            </div>
+                            <div class="history-item-time">${conv.lastTime}</div>
+                            <div class="history-item-arrow">›</div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            });
+            
+            content.innerHTML = html;
+            modal.classList.add('active');
+        }
+        
+        function closeHistoryModal() {
+            document.getElementById('historyModal').classList.remove('active');
         }
 
         // Quick Action 프롬프트
