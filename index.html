@@ -2337,7 +2337,7 @@
             document.getElementById(screenId).classList.add('active');
         }
 
-      function selectMate(mateType) {
+function selectMate(mateType) {
             currentMate = mateType;
             onboardingData = { nickname: '맘' };
             conversationHistory = [];
@@ -2349,17 +2349,15 @@
             const savedHistory = localStorage.getItem('chatHistory_' + mateType);
             if (savedHistory) {
                 restoreChat(JSON.parse(savedHistory));
-            }
-        }
-        function goBack() {
-            if (currentStep > 0) {
-                currentStep--;
-                renderStep();
             } else {
-                showScreen('homeScreen');
+                // 새 대화면 환영 메시지 표시
+                const mate = mateConfig[mateType];
+                const welcomeMsg = mate.welcomeMessage || `안녕하세요, 맘! 😊\n무엇이든 편하게 이야기해주세요. 곁에서 함께할게요. 💚`;
+                setTimeout(() => {
+                    addMessage('ai', welcomeMsg);
+                }, 500);
             }
         }
-
         function goToHome() {
             saveMyMateData();
             closeVoiceMode();
