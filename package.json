@@ -1,7 +1,7 @@
 {
   "name": "momgyeot",
   "version": "4.0.0",
-  "description": "맘곁 - 태담 커뮤니케이션 앱",
+  "description": "맘곁 - 임신·출산·육아 AI 컴패니언",
   "private": true,
   "scripts": {
     "dev": "vercel dev",
@@ -10,5 +10,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
   }
 }
