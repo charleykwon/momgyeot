@@ -3312,8 +3312,7 @@ saveMessage('user', text); // 서버에 저장            isLoading = true;
             if (mate) {
                 onboardingData = { nickname: '맘' };
                 conversationHistory = [];
-                showScreen('chat');
-                
+                showScreen('chatScreen');
                 const savedHistory = localStorage.getItem('chatHistory_' + mateType);
                 if (savedHistory) {
                     restoreChat(JSON.parse(savedHistory));
