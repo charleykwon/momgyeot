@@ -2337,19 +2337,20 @@
             document.getElementById(screenId).classList.add('active');
         }
 
-        function selectMate(mateType) {
+      function selectMate(mateType) {
             currentMate = mateType;
-            currentStep = 0;
-            onboardingData = {};
+            onboardingData = { nickname: '맘' };
+            conversationHistory = [];
             
-            const mate = mateConfig[mateType];
-            const screen = document.getElementById('onboardingScreen');
+            // 바로 채팅 화면으로 이동
+            showScreen('chatScreen');
             
-            screen.classList.toggle('purple-theme', mate.isPurple);
-            renderStep();
-            showScreen('onboardingScreen');
+            // 저장된 대화 있으면 복원
+            const savedHistory = localStorage.getItem('chatHistory_' + mateType);
+            if (savedHistory) {
+                restoreChat(JSON.parse(savedHistory));
+            }
         }
-
         function goBack() {
             if (currentStep > 0) {
                 currentStep--;
