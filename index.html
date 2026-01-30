@@ -2,8 +2,12 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>맘곁 인트로 프리뷰</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#FDF8F3">
+    <title>맘곁 - 엄마와 아기를 위한 AI 동반자</title>
     <style>
         * {
             margin: 0;
@@ -11,59 +15,52 @@
             box-sizing: border-box;
         }
         
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f0f0f0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        /* iOS Safe Area 지원 */
+        html {
+            height: 100%;
         }
         
-        /* iPhone Frame */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FDF8F3;
+            min-height: 100%;
+            min-height: 100dvh; /* Dynamic viewport height for mobile */
+            overflow: hidden;
+            /* PWA 전체화면 지원 */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        /* 풀스크린 - 아이폰 프레임 제거 */
         .iphone-frame {
-            width: 375px;
-            height: 812px;
-            background: #000;
-            border-radius: 50px;
-            padding: 12px;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.35);
-            position: relative;
+            display: contents;
         }
         
         .notch {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 130px;
-            height: 28px;
-            background: #000;
-            border-radius: 0 0 18px 18px;
-            z-index: 100;
+            display: none;
         }
         
         .screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             width: 100%;
             height: 100%;
-            background: #fff;
-            border-radius: 40px;
+            height: 100dvh;
+            background: #FDF8F3;
             overflow: hidden;
-            position: relative;
+            /* iOS Safe Area */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
         }
         
         .home-indicator {
-            position: absolute;
-            bottom: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 130px;
-            height: 5px;
-            background: #000;
-            border-radius: 3px;
-            opacity: 0.2;
-            z-index: 100;
+            display: none;
         }
         
         /* 화면 전환 */
@@ -131,10 +128,10 @@
             left: 0;
             right: 0;
             bottom: 0;
-            display: flex;
+            
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            
+            
             padding: 24px;
             padding-bottom: 45px;
             z-index: 10;
@@ -163,9 +160,9 @@
             height: 56px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             font-size: 28px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             margin: 0 auto 12px;
@@ -292,7 +289,7 @@
         
         .intro-btn {
             display: inline-flex;
-            align-items: center;
+            
             gap: 10px;
             padding: 18px 40px;
             background: #E8B4B8;
@@ -332,7 +329,7 @@
         /* ==================== 로그인 화면 ==================== */
         .login-screen {
             background: #FDF8F5;
-            display: flex;
+            
             flex-direction: column;
         }
         
@@ -347,9 +344,9 @@
             background: rgba(94, 107, 58, 0.1);
             border: none;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             cursor: pointer;
             margin-bottom: 40px;
             font-size: 18px;
@@ -365,9 +362,9 @@
             height: 64px;
             background: #fff;
             border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             font-size: 32px;
             box-shadow: 0 4px 20px rgba(94, 107, 58, 0.15);
             margin-bottom: 16px;
@@ -398,9 +395,9 @@
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             gap: 12px;
             margin-bottom: 12px;
             border: none;
@@ -429,8 +426,8 @@
         }
         
         .divider {
-            display: flex;
-            align-items: center;
+            
+            
             gap: 16px;
             margin: 20px 0;
         }
@@ -460,20 +457,20 @@
         /* ==================== 홈 화면 ==================== */
         .home-screen {
             background: #FDF8F5;
-            display: flex;
+            
             flex-direction: column;
         }
         
         .home-header {
-            display: flex;
+            
             justify-content: space-between;
-            align-items: center;
+            
             padding: 60px 20px 20px;
         }
         
         .home-greeting {
-            display: flex;
-            align-items: center;
+            
+            
             gap: 12px;
         }
         
@@ -493,7 +490,7 @@
         }
         
         .home-icons {
-            display: flex;
+            
             gap: 8px;
         }
         
@@ -512,7 +509,7 @@
             flex: 1;
             padding: 0 20px;
             overflow-y: auto;
-            padding-bottom: 100px;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
         }
         
         .section-title {
@@ -587,20 +584,20 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 85px;
+            height: calc(85px + env(safe-area-inset-bottom, 0px));
             background: white;
-            display: flex;
+            
             justify-content: space-around;
             align-items: flex-start;
             padding-top: 12px;
             border-top: 1px solid #f0f0f0;
-            padding-bottom: 25px;
+            padding-bottom: calc(25px + env(safe-area-inset-bottom, 0px));
         }
         
         .nav-item {
-            display: flex;
+            
             flex-direction: column;
-            align-items: center;
+            
             gap: 4px;
             background: none;
             border: none;
@@ -621,13 +618,13 @@
         /* ==================== 온보딩 화면 ==================== */
         .onboarding-screen {
             background: #FDF8F3;
-            display: flex;
+            
             flex-direction: column;
         }
         
         .onboarding-header {
-            display: flex;
-            align-items: center;
+            
+            
             justify-content: space-between;
             padding: 16px 20px;
             background: #FDF8F3;
@@ -645,7 +642,7 @@
         .onboarding-content {
             flex: 1;
             padding: 20px 24px;
-            display: flex;
+            
             flex-direction: column;
             overflow-y: auto;
         }
@@ -668,14 +665,14 @@
         }
         
         .onboarding-options {
-            display: flex;
+            
             flex-direction: column;
             gap: 12px;
         }
         
         .onboarding-option {
-            display: flex;
-            align-items: center;
+            
+            
             gap: 14px;
             padding: 18px 20px;
             background: white;
@@ -763,13 +760,13 @@
         /* ==================== 채팅 화면 ==================== */
         .chat-screen {
             background: #FDF8F5;
-            display: flex;
+            
             flex-direction: column;
         }
         
         .chat-header {
-            display: flex;
-            align-items: center;
+            
+            
             justify-content: space-between;
             padding: 50px 16px 16px;
             background: white;
@@ -777,8 +774,8 @@
         }
         
         .chat-title {
-            display: flex;
-            align-items: center;
+            
+            
             gap: 8px;
             font-size: 17px;
             font-weight: 600;
@@ -789,13 +786,13 @@
             flex: 1;
             padding: 20px 16px;
             overflow-y: auto;
-            display: flex;
+            
             flex-direction: column;
             gap: 16px;
         }
         
         .message {
-            display: flex;
+            
             gap: 10px;
             max-width: 85%;
         }
@@ -814,9 +811,9 @@
             height: 36px;
             background: white;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             font-size: 18px;
             flex-shrink: 0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -845,7 +842,7 @@
         }
         
         .chat-input-area {
-            display: flex;
+            
             gap: 10px;
             padding: 12px 16px 32px;
             background: white;
@@ -874,9 +871,9 @@
             border-radius: 50%;
             color: white;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             transition: background 0.2s;
         }
         
@@ -893,9 +890,9 @@
             border-radius: 50%;
             color: white;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             transition: all 0.3s;
             flex-shrink: 0;
         }
@@ -916,9 +913,9 @@
         
         /* 음파 아이콘 */
         .sound-wave {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             gap: 2px;
             height: 20px;
         }
@@ -962,8 +959,8 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s;
-            display: flex;
-            align-items: center;
+            
+            
             gap: 8px;
         }
         
@@ -1003,8 +1000,8 @@
         
         /* ==================== 공통 헤더 ==================== */
         .screen-header {
-            display: flex;
-            align-items: center;
+            
+            
             justify-content: space-between;
             padding: 50px 16px 16px;
             background: white;
@@ -1030,7 +1027,7 @@
         /* ==================== 캘린더 화면 ==================== */
         .calendar-screen {
             background: #FDF8F5;
-            display: flex;
+            
             flex-direction: column;
         }
         
@@ -1038,12 +1035,12 @@
             flex: 1;
             padding: 20px 16px;
             overflow-y: auto;
-            padding-bottom: 100px;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
         }
         
         .calendar-nav {
-            display: flex;
-            align-items: center;
+            
+            
             justify-content: space-between;
             margin-bottom: 20px;
         }
@@ -1090,9 +1087,9 @@
         
         .calendar-day {
             aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             font-size: 14px;
             border-radius: 50%;
             cursor: pointer;
@@ -1120,8 +1117,8 @@
         }
         
         .event-item {
-            display: flex;
-            align-items: center;
+            
+            
             gap: 12px;
             background: white;
             padding: 16px;
@@ -1152,7 +1149,7 @@
         /* ==================== 마이페이지 화면 ==================== */
         .my-screen {
             background: #FDF8F5;
-            display: flex;
+            
             flex-direction: column;
         }
         
@@ -1160,15 +1157,15 @@
             flex: 1;
             padding: 20px 16px;
             overflow-y: auto;
-            padding-bottom: 100px;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
         }
         
         .profile-section {
-            display: flex;
-            align-items: center;
+            
+            
             gap: 16px;
             background: white;
-            padding: 20px;
+            padding: 0;
             border-radius: 16px;
             margin-bottom: 20px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.06);
@@ -1179,9 +1176,9 @@
             height: 60px;
             background: linear-gradient(135deg, #E8B4B8, #F0D0D3);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             font-size: 28px;
         }
         
@@ -1215,7 +1212,7 @@
         }
         
         .my-stats {
-            display: flex;
+            
             gap: 12px;
             margin-bottom: 24px;
         }
@@ -1249,8 +1246,8 @@
         }
         
         .my-menu-item {
-            display: flex;
-            align-items: center;
+            
+            
             width: 100%;
             padding: 16px 20px;
             background: none;
@@ -1270,7 +1267,7 @@
         /* ==================== 알림 화면 ==================== */
         .notification-screen {
             background: #FDF8F5;
-            display: flex;
+            
             flex-direction: column;
         }
         
@@ -1281,7 +1278,7 @@
         }
         
         .noti-item {
-            display: flex;
+            
             gap: 12px;
             background: white;
             padding: 16px;
@@ -1300,9 +1297,9 @@
             height: 40px;
             background: #f5f5f5;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             font-size: 18px;
             flex-shrink: 0;
         }
@@ -1364,8 +1361,8 @@
         }
         
         .side-menu-header {
-            display: flex;
-            align-items: center;
+            
+            
             justify-content: space-between;
             padding: 60px 20px 20px;
             background: linear-gradient(135deg, #5E6B3A, #7A8B4A);
@@ -1373,8 +1370,8 @@
         }
         
         .side-profile {
-            display: flex;
-            align-items: center;
+            
+            
             gap: 12px;
         }
         
@@ -1383,9 +1380,9 @@
             height: 48px;
             background: rgba(255,255,255,0.2);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            
+            
+            
             font-size: 22px;
         }
         
@@ -1415,8 +1412,8 @@
         }
         
         .side-menu-item {
-            display: flex;
-            align-items: center;
+            
+            
             gap: 14px;
             width: 100%;
             padding: 14px 24px;
@@ -1436,7 +1433,7 @@
         
         .side-divider {
             height: 1px;
-            background: #f0f0f0;
+            background: #FDF8F3;
             margin: 12px 24px;
         }
         
