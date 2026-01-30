@@ -3,40 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>맘곁 - 엄마 곁의 든든한 동반자</title>
-    <meta name="description" content="임신 준비부터 육아까지, 엄마 곁을 지키는 AI 동반자">
+    <title>맘곁 - 엄마와 아기 곁을 지키는 AI</title>
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#5E6B3A">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/icon-192.png">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        
-        :root {
-            --mothers-olive: #5E6B3A;
-            --mothers-olive-light: #8FA65D;
-            --mothers-pink: #E8B4B8;
-            --mothers-pink-light: #F5D5D8;
-            --black-olive: #3D4A2D;
-            --cream: #FBF9F3;
-            --warm-gray: #9A9A8A;
-        }
-        
-        html, body {
-            height: 100%;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
-            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--cream);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F5F5F0;
             min-height: 100vh;
             overflow-x: hidden;
         }
         
-        /* 화면 전환 */
+        /* 페이지 전환 */
         .page {
             display: none;
             min-height: 100vh;
@@ -47,154 +35,116 @@
             flex-direction: column;
         }
         
-        /* ==================== 인트로 화면 ==================== */
+        /* 인트로 화면 */
         .intro-screen {
-            background: linear-gradient(180deg, #2D3320 0%, #1A1F12 100%);
+            background: linear-gradient(180deg, #5E6B3A 0%, #3D4A2D 100%);
             justify-content: center;
             align-items: center;
             padding: 40px 24px;
             text-align: center;
-            min-height: 100vh;
-            position: relative;
-        }
-        
-        .intro-content {
-            max-width: 400px;
-            width: 100%;
-        }
-        
-        .intro-logo {
-            margin-bottom: 50px;
         }
         
         .intro-logo-icon {
-            font-size: 80px;
-            margin-bottom: 16px;
-            filter: drop-shadow(0 4px 20px rgba(232,180,184,0.3));
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
         }
         
         .intro-brand {
-            font-family: 'Noto Serif KR', serif;
-            font-size: 18px;
-            color: var(--mothers-olive-light);
-            letter-spacing: 4px;
-            font-weight: 600;
-        }
-        
-        .intro-headline h1 {
-            font-family: 'Noto Serif KR', serif;
-            font-size: 26px;
-            font-weight: 600;
-            color: #fff;
-            line-height: 1.6;
-            margin-bottom: 24px;
-        }
-        
-        .typing-line {
-            display: block;
-            opacity: 0;
-            transform: translateY(10px);
-            animation: fadeInUp 0.8s ease forwards;
-        }
-        
-        .line1 { animation-delay: 0.3s; }
-        .line2 { animation-delay: 0.8s; }
-        .line3 { animation-delay: 1.3s; }
-        
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .highlight {
-            color: var(--mothers-pink);
-            font-weight: 700;
-        }
-        
-        .intro-subtitle {
-            color: rgba(255,255,255,0.7);
-            font-size: 15px;
-            line-height: 1.8;
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 3px;
             margin-bottom: 40px;
         }
         
-        .intro-btn {
-            background: linear-gradient(135deg, var(--mothers-olive) 0%, var(--mothers-olive-light) 100%);
+        .intro-headline h1 {
+            font-size: 28px;
             color: #fff;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        
+        .intro-headline .highlight {
+            color: #E8B4B8;
+        }
+        
+        .intro-subtitle {
+            font-size: 15px;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.7;
+            margin-bottom: 48px;
+        }
+        
+        .intro-btn {
+            background: #E8B4B8;
+            color: #3D4A2D;
             border: none;
-            padding: 18px 60px;
-            border-radius: 30px;
+            padding: 18px 48px;
             font-size: 17px;
             font-weight: 600;
+            border-radius: 30px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 30px rgba(94,107,58,0.4);
-        }
-        
-        .intro-btn:active {
-            transform: scale(0.98);
-        }
-        
-        .intro-btn span {
-            margin-left: 8px;
+            box-shadow: 0 4px 20px rgba(232,180,184,0.4);
         }
         
         .intro-footer {
             position: absolute;
             bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255,255,255,0.3);
             font-size: 12px;
+            color: rgba(255,255,255,0.5);
         }
         
-        /* ==================== 홈 화면 ==================== */
+        /* 홈 화면 */
         .home-screen {
-            background: linear-gradient(180deg, var(--mothers-olive) 0%, var(--black-olive) 100%);
-            padding: 50px 20px 40px;
-            min-height: 100vh;
+            background: #F5F5F0;
+            padding: 60px 20px 30px;
         }
         
         .home-header {
             text-align: center;
             margin-bottom: 30px;
-            color: #fff;
         }
         
         .home-logo {
-            font-size: 50px;
-            margin-bottom: 12px;
+            font-size: 48px;
+            margin-bottom: 16px;
         }
         
         .home-title {
-            font-family: 'Noto Serif KR', serif;
             font-size: 22px;
-            font-weight: 600;
+            color: #3D4A2D;
             margin-bottom: 8px;
         }
         
         .home-subtitle {
             font-size: 14px;
-            opacity: 0.8;
+            color: #888;
         }
         
+        /* 스테이지 카드 */
         .stage-cards {
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            max-width: 400px;
-            margin: 0 auto;
+            gap: 12px;
         }
         
         .stage-card {
-            background: rgba(255,255,255,0.97);
-            border-radius: 20px;
+            background: #fff;
+            border-radius: 16px;
             padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         
         .stage-card:active {
@@ -205,7 +155,6 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            margin-bottom: 10px;
         }
         
         .stage-icon {
@@ -214,46 +163,40 @@
         
         .stage-info h3 {
             font-size: 17px;
-            color: var(--black-olive);
+            color: #3D4A2D;
             margin-bottom: 2px;
         }
         
         .stage-info p {
             font-size: 13px;
-            color: var(--warm-gray);
+            color: #888;
         }
         
         .stage-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
             font-size: 11px;
-            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
         }
         
-        .tag-prep { background: #F3E5F5; color: #7B1FA2; }
-        .tag-pregnancy { background: #FCE4EC; color: #C2185B; }
-        .tag-infant { background: #E8F5E9; color: #388E3C; }
-        .tag-toddler { background: #FFF3E0; color: #F57C00; }
+        .tag-prep { background: #F3E8FF; color: #7C3AED; }
+        .tag-pregnancy { background: #FCE7F3; color: #DB2777; }
+        .tag-infant { background: #ECFDF5; color: #059669; }
+        .tag-toddler { background: #FEF3C7; color: #D97706; }
         
-        /* ==================== 채팅 화면 ==================== */
+        /* 채팅 화면 */
         .chat-screen {
-            background: var(--cream);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background: #F5F5F0;
         }
         
         .chat-header {
-            background: var(--mothers-olive);
+            background: #5E6B3A;
             color: #fff;
             padding: 16px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            gap: 14px;
+            padding-top: 50px;
         }
         
         .chat-back {
@@ -262,14 +205,14 @@
             color: #fff;
             font-size: 24px;
             cursor: pointer;
-            padding: 4px;
+            padding: 8px;
         }
         
         .chat-avatar {
             width: 44px;
             height: 44px;
-            border-radius: 50%;
             background: rgba(255,255,255,0.2);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -277,7 +220,7 @@
         }
         
         .chat-info h3 {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
         }
         
@@ -289,10 +232,10 @@
         .chat-messages {
             flex: 1;
             padding: 20px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            overflow-y: auto;
+            gap: 16px;
         }
         
         .message {
@@ -300,40 +243,91 @@
             padding: 14px 18px;
             border-radius: 20px;
             font-size: 15px;
-            line-height: 1.6;
-            word-break: keep-all;
+            line-height: 1.5;
+            white-space: pre-wrap;
         }
         
         .message.ai {
             background: #fff;
-            color: var(--black-olive);
+            color: #333;
             align-self: flex-start;
             border-bottom-left-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            white-space: pre-wrap;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
         
         .message.user {
-            background: var(--mothers-olive);
+            background: #5E6B3A;
             color: #fff;
             align-self: flex-end;
             border-bottom-right-radius: 6px;
         }
         
+        /* FAQ 질문 버튼 - 중요! */
+        .faq-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+            padding: 0 4px;
+        }
+        
+        .faq-btn {
+            background: #fff;
+            border: 2px solid #5E6B3A;
+            color: #3D4A2D;
+            padding: 14px 18px;
+            font-size: 14px;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .faq-btn:hover, .faq-btn:active {
+            background: #5E6B3A;
+            color: #fff;
+        }
+        
+        /* 퀵 액션 (간단 키워드) */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .quick-btn {
+            background: rgba(94,107,58,0.1);
+            border: 1px solid rgba(94,107,58,0.3);
+            color: #5E6B3A;
+            padding: 10px 16px;
+            font-size: 13px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .quick-btn:hover {
+            background: #5E6B3A;
+            color: #fff;
+        }
+        
+        /* 타이핑 인디케이터 */
         .typing-indicator {
             display: flex;
             gap: 4px;
-            padding: 16px 20px;
+            padding: 14px 18px;
             background: #fff;
             border-radius: 20px;
-            align-self: flex-start;
             border-bottom-left-radius: 6px;
+            width: fit-content;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
         
         .typing-indicator span {
             width: 8px;
             height: 8px;
-            background: var(--mothers-olive);
+            background: #5E6B3A;
             border-radius: 50%;
             animation: typing 1.4s infinite;
         }
@@ -346,56 +340,32 @@
             30% { transform: translateY(-6px); opacity: 1; }
         }
         
-        .quick-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding: 8px 0;
-        }
-        
-        .quick-btn {
-            padding: 10px 16px;
-            background: rgba(94,107,58,0.1);
-            border: 1px solid var(--mothers-olive);
-            border-radius: 20px;
-            font-size: 13px;
-            color: var(--mothers-olive);
-            cursor: pointer;
-        }
-        
-        .quick-btn:active {
-            background: var(--mothers-olive);
-            color: #fff;
-        }
-        
+        /* 입력 영역 */
         .chat-input-area {
             padding: 16px 20px;
             background: #fff;
-            border-top: 1px solid #eee;
             display: flex;
             gap: 12px;
-            align-items: center;
-            position: sticky;
-            bottom: 0;
+            border-top: 1px solid #eee;
         }
         
         .chat-input {
             flex: 1;
+            border: 1px solid #ddd;
             padding: 14px 18px;
-            border: 2px solid #eee;
-            border-radius: 25px;
             font-size: 15px;
+            border-radius: 24px;
             outline: none;
         }
         
         .chat-input:focus {
-            border-color: var(--mothers-olive);
+            border-color: #5E6B3A;
         }
         
         .chat-send {
             width: 48px;
             height: 48px;
-            background: var(--mothers-olive);
+            background: #5E6B3A;
             color: #fff;
             border: none;
             border-radius: 50%;
@@ -450,9 +420,9 @@
             
             <div class="intro-headline">
                 <h1>
-                    <span class="typing-line line1">아기를 품은 엄마,</span>
-                    <span class="typing-line line2">그 곁을 지키는 아빠,</span>
-                    <span class="typing-line line3">그 둘을 받쳐주는 <span class="highlight">맘곁</span>.</span>
+                    아기를 품은 엄마,<br>
+                    그 곁을 지키는 아빠,<br>
+                    그 둘을 받쳐주는 <span class="highlight">맘곁</span>.
                 </h1>
             </div>
             
@@ -463,7 +433,7 @@
             
             <div class="intro-cta">
                 <button class="intro-btn" onclick="showHome()">
-                    시작하기 <span>→</span>
+                    시작하기 →
                 </button>
             </div>
         </div>
@@ -551,35 +521,51 @@
     </div>
 
     <script>
-        // 스테이지 정보
+        // 스테이지 정보 + FAQ 질문
         const stageInfo = {
             prep: {
                 icon: '💜',
                 name: '예비맘곁',
                 subtitle: '임신 준비 전문',
-                greeting: '안녕하세요! 예비맘곁이에요 💜\n\n임신을 준비하는 여정, 때론 외롭고 막막하시죠?\n저와 함께 차근차근 준비해봐요.\n\n어떤 부분이 가장 궁금하세요?',
-                quickActions: ['배란일 계산', '엽산 섭취', '난임 상담', '건강 체크']
+                greeting: '안녕하세요! 예비맘곁이에요 💜\n\n임신을 준비하는 여정, 때론 외롭고 막막하시죠?\n저와 함께 차근차근 준비해봐요.\n\n아래 질문 중 선택하시거나, 자유롭게 물어봐 주세요!',
+                faqQuestions: [
+                    '임신 준비할 때 꼭 챙겨야 할 영양제가 뭐예요?',
+                    '배란일은 어떻게 계산하나요?',
+                    '난임 검사는 언제, 어떻게 받아야 하나요?'
+                ]
             },
             pregnancy: {
                 icon: '🤰',
                 name: '임신맘곁',
                 subtitle: '임신 케어 전문',
-                greeting: '안녕하세요! 임신맘곁이에요 🤰\n\n소중한 생명과 함께하는 시간,\n기쁘기도 하고 걱정도 되시죠?\n\n무엇이든 편하게 물어봐 주세요!',
-                quickActions: ['입덧 완화', '태동 체크', '산전검사', '출산 준비']
+                greeting: '안녕하세요! 임신맘곁이에요 🤰\n\n소중한 생명과 함께하는 시간,\n기쁘기도 하고 걱정도 되시죠?\n\n아래 질문 중 선택하시거나, 자유롭게 물어봐 주세요!',
+                faqQuestions: [
+                    '입덧이 너무 심한데, 완화하는 방법이 있을까요?',
+                    '임신 중 먹으면 안 되는 음식이 뭐예요?',
+                    '태동은 언제부터 느껴지나요?'
+                ]
             },
             infant: {
                 icon: '👶',
                 name: '새싹맘곁',
                 subtitle: '신생아 케어 전문',
-                greeting: '안녕하세요! 새싹맘곁이에요 👶\n\n처음 맞는 아기와의 시간,\n하나하나 새롭고 걱정되시죠?\n\n편하게 말씀해주세요. 함께 찾아볼게요!',
-                quickActions: ['수유 고민', '수면 교육', '성장 발달', '아기 건강']
+                greeting: '안녕하세요! 새싹맘곁이에요 👶\n\n처음 맞는 아기와의 시간,\n하나하나 새롭고 걱정되시죠?\n\n아래 질문 중 선택하시거나, 자유롭게 물어봐 주세요!',
+                faqQuestions: [
+                    '모유수유가 너무 힘든데, 어떻게 해야 할까요?',
+                    '신생아 수면 교육은 언제부터 시작하면 좋을까요?',
+                    '아기가 자꾸 보채는데, 배앓이인지 어떻게 알 수 있어요?'
+                ]
             },
             toddler: {
                 icon: '🧒',
                 name: '우리맘곁',
                 subtitle: '유아 육아 전문',
-                greeting: '안녕하세요! 우리맘곁이에요 🧒\n\n호기심 가득한 우리 아이,\n매일 새로운 도전이시죠?\n\n육아 고민, 함께 나눠요!',
-                quickActions: ['훈육 방법', '언어 발달', '편식 해결', '어린이집']
+                greeting: '안녕하세요! 우리맘곁이에요 🧒\n\n호기심 가득한 우리 아이,\n매일 새로운 도전이시죠?\n\n아래 질문 중 선택하시거나, 자유롭게 물어봐 주세요!',
+                faqQuestions: [
+                    '떼쓰는 아이, 어떻게 훈육해야 할까요?',
+                    '편식이 심한데, 골고루 먹게 하는 방법 있을까요?',
+                    '어린이집은 언제부터 보내는 게 좋을까요?'
+                ]
             }
         };
         
@@ -612,10 +598,10 @@
             
             showPage('chatScreen');
             
-            // 인사 메시지
+            // 인사 메시지 + FAQ 질문 버튼
             setTimeout(() => {
                 addMessage(info.greeting, 'ai');
-                setTimeout(() => addQuickActions(info.quickActions), 300);
+                setTimeout(() => addFaqButtons(info.faqQuestions), 300);
             }, 400);
         }
         
@@ -634,19 +620,21 @@
             });
         }
         
-        // 퀵 액션
-        function addQuickActions(actions) {
+        // FAQ 질문 버튼 추가 (핵심!)
+        function addFaqButtons(questions) {
             const container = document.getElementById('chatMessages');
             const div = document.createElement('div');
-            div.className = 'quick-actions';
-            div.innerHTML = actions.map(a => 
-                `<button class="quick-btn" onclick="sendQuick('${a}')">${a}</button>`
+            div.className = 'faq-buttons';
+            div.innerHTML = questions.map(q => 
+                `<button class="faq-btn" onclick="sendFaq('${q.replace(/'/g, "\\'")}')">${q}</button>`
             ).join('');
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
         }
         
-        function sendQuick(text) {
+        function sendFaq(text) {
+            // FAQ 버튼 제거
+            document.querySelectorAll('.faq-buttons').forEach(el => el.remove());
             document.getElementById('chatInput').value = text;
             sendMessage();
         }
@@ -673,8 +661,8 @@
             const text = input.value.trim();
             if (!text) return;
             
-            // 퀵 액션 제거
-            document.querySelectorAll('.quick-actions').forEach(el => el.remove());
+            // FAQ 버튼 제거
+            document.querySelectorAll('.faq-buttons').forEach(el => el.remove());
             
             addMessage(text, 'user');
             input.value = '';
