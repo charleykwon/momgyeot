@@ -25,6 +25,10 @@
             --warm-gray: #9A9A8A;
         }
         
+        html, body {
+            height: 100%;
+        }
+        
         body {
             font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--cream);
@@ -34,30 +38,24 @@
         
         /* 화면 전환 */
         .page {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            overflow-y: auto;
+            display: none;
+            min-height: 100vh;
         }
         
-        .page.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateX(30px);
+        .page.active {
+            display: flex;
+            flex-direction: column;
         }
         
         /* ==================== 인트로 화면 ==================== */
         .intro-screen {
             background: linear-gradient(180deg, #2D3320 0%, #1A1F12 100%);
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 40px 24px;
             text-align: center;
+            min-height: 100vh;
+            position: relative;
         }
         
         .intro-content {
@@ -66,7 +64,7 @@
         }
         
         .intro-logo {
-            margin-bottom: 60px;
+            margin-bottom: 50px;
         }
         
         .intro-logo-icon {
@@ -85,7 +83,7 @@
         
         .intro-headline h1 {
             font-family: 'Noto Serif KR', serif;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 600;
             color: #fff;
             line-height: 1.6;
@@ -119,11 +117,7 @@
             color: rgba(255,255,255,0.7);
             font-size: 15px;
             line-height: 1.8;
-            margin-bottom: 50px;
-        }
-        
-        .heart-text {
-            display: inline-block;
+            margin-bottom: 40px;
         }
         
         .intro-btn {
@@ -139,18 +133,12 @@
             box-shadow: 0 8px 30px rgba(94,107,58,0.4);
         }
         
-        .intro-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(94,107,58,0.5);
+        .intro-btn:active {
+            transform: scale(0.98);
         }
         
         .intro-btn span {
             margin-left: 8px;
-            transition: transform 0.3s;
-        }
-        
-        .intro-btn:hover span {
-            transform: translateX(5px);
         }
         
         .intro-footer {
@@ -162,142 +150,16 @@
             font-size: 12px;
         }
         
-        /* ==================== 로그인 화면 ==================== */
-        .login-screen {
-            background: var(--cream);
-            padding: 60px 24px 40px;
-        }
-        
-        .login-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        
-        .back-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: var(--black-olive);
-            cursor: pointer;
-            padding: 10px;
-        }
-        
-        .login-logo-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-        }
-        
-        .login-title {
-            font-family: 'Noto Serif KR', serif;
-            font-size: 26px;
-            color: var(--black-olive);
-            font-weight: 600;
-            line-height: 1.4;
-            margin-bottom: 12px;
-        }
-        
-        .login-desc {
-            color: var(--warm-gray);
-            font-size: 14px;
-        }
-        
-        .login-buttons {
-            max-width: 340px;
-            margin: 0 auto;
-        }
-        
-        .login-btn {
-            width: 100%;
-            padding: 16px 20px;
-            border-radius: 12px;
-            border: none;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.2s ease;
-        }
-        
-        .login-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .login-btn-kakao {
-            background: #FEE500;
-            color: #191919;
-        }
-        
-        .login-btn-naver {
-            background: #03C75A;
-            color: #fff;
-        }
-        
-        .login-btn-google {
-            background: #fff;
-            color: #333;
-            border: 1px solid #ddd;
-        }
-        
-        .login-btn-apple {
-            background: #000;
-            color: #fff;
-        }
-        
-        .login-divider {
-            display: flex;
-            align-items: center;
-            margin: 24px 0;
-            color: var(--warm-gray);
-            font-size: 13px;
-        }
-        
-        .login-divider::before,
-        .login-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #ddd;
-        }
-        
-        .login-divider span {
-            padding: 0 16px;
-        }
-        
-        .login-btn-guest {
-            background: transparent;
-            color: var(--mothers-olive);
-            border: 2px solid var(--mothers-olive);
-        }
-        
-        .login-terms {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: var(--warm-gray);
-            line-height: 1.6;
-        }
-        
-        .login-terms a {
-            color: var(--mothers-olive);
-            text-decoration: underline;
-        }
-        
         /* ==================== 홈 화면 ==================== */
         .home-screen {
             background: linear-gradient(180deg, var(--mothers-olive) 0%, var(--black-olive) 100%);
-            padding: 50px 20px 100px;
+            padding: 50px 20px 40px;
+            min-height: 100vh;
         }
         
         .home-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             color: #fff;
         }
         
@@ -308,7 +170,7 @@
         
         .home-title {
             font-family: 'Noto Serif KR', serif;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
             margin-bottom: 8px;
         }
@@ -321,40 +183,39 @@
         .stage-cards {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
             max-width: 400px;
             margin: 0 auto;
         }
         
         .stage-card {
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.97);
             border-radius: 20px;
-            padding: 24px;
+            padding: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         
-        .stage-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        .stage-card:active {
+            transform: scale(0.98);
         }
         
         .stage-card-header {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 12px;
+            gap: 14px;
+            margin-bottom: 10px;
         }
         
         .stage-icon {
-            font-size: 40px;
+            font-size: 36px;
         }
         
         .stage-info h3 {
-            font-size: 18px;
+            font-size: 17px;
             color: var(--black-olive);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
         
         .stage-info p {
@@ -375,150 +236,12 @@
         .tag-infant { background: #E8F5E9; color: #388E3C; }
         .tag-toddler { background: #FFF3E0; color: #F57C00; }
         
-        /* ==================== 온보딩 화면 ==================== */
-        .onboarding-screen {
-            background: var(--cream);
-            padding: 30px 24px;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        
-        .onboarding-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-        
-        .onboarding-back {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 8px;
-        }
-        
-        .onboarding-progress {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .progress-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #ddd;
-            transition: all 0.3s ease;
-        }
-        
-        .progress-dot.active {
-            background: var(--mothers-olive);
-            width: 24px;
-            border-radius: 4px;
-        }
-        
-        .onboarding-skip {
-            background: none;
-            border: none;
-            color: var(--warm-gray);
-            font-size: 14px;
-            cursor: pointer;
-        }
-        
-        .onboarding-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px 0;
-        }
-        
-        .onboarding-icon {
-            font-size: 80px;
-            margin-bottom: 30px;
-        }
-        
-        .onboarding-title {
-            font-family: 'Noto Serif KR', serif;
-            font-size: 26px;
-            color: var(--black-olive);
-            margin-bottom: 16px;
-            line-height: 1.4;
-        }
-        
-        .onboarding-desc {
-            font-size: 15px;
-            color: var(--warm-gray);
-            line-height: 1.7;
-            margin-bottom: 30px;
-        }
-        
-        .onboarding-options {
-            width: 100%;
-            max-width: 320px;
-        }
-        
-        .onboarding-option {
-            width: 100%;
-            padding: 16px 20px;
-            margin-bottom: 12px;
-            background: #fff;
-            border: 2px solid #eee;
-            border-radius: 14px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .onboarding-option:hover {
-            border-color: var(--mothers-olive);
-            background: rgba(94,107,58,0.05);
-        }
-        
-        .onboarding-option.selected {
-            border-color: var(--mothers-olive);
-            background: rgba(94,107,58,0.1);
-        }
-        
-        .onboarding-footer {
-            padding: 20px 0;
-        }
-        
-        .onboarding-next {
-            width: 100%;
-            padding: 18px;
-            background: var(--mothers-olive);
-            color: #fff;
-            border: none;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .onboarding-next:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .onboarding-next:not(:disabled):hover {
-            background: var(--black-olive);
-        }
-        
         /* ==================== 채팅 화면 ==================== */
         .chat-screen {
             background: var(--cream);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            height: 100vh;
         }
         
         .chat-header {
@@ -528,7 +251,9 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         .chat-back {
@@ -537,6 +262,7 @@
             color: #fff;
             font-size: 24px;
             cursor: pointer;
+            padding: 4px;
         }
         
         .chat-avatar {
@@ -562,11 +288,11 @@
         
         .chat-messages {
             flex: 1;
-            overflow-y: auto;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
+            overflow-y: auto;
         }
         
         .message {
@@ -575,18 +301,7 @@
             border-radius: 20px;
             font-size: 15px;
             line-height: 1.6;
-            animation: messageIn 0.3s ease;
-        }
-        
-        @keyframes messageIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            word-break: keep-all;
         }
         
         .message.ai {
@@ -595,6 +310,7 @@
             align-self: flex-start;
             border-bottom-left-radius: 6px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            white-space: pre-wrap;
         }
         
         .message.user {
@@ -630,6 +346,28 @@
             30% { transform: translateY(-6px); opacity: 1; }
         }
         
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 8px 0;
+        }
+        
+        .quick-btn {
+            padding: 10px 16px;
+            background: rgba(94,107,58,0.1);
+            border: 1px solid var(--mothers-olive);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--mothers-olive);
+            cursor: pointer;
+        }
+        
+        .quick-btn:active {
+            background: var(--mothers-olive);
+            color: #fff;
+        }
+        
         .chat-input-area {
             padding: 16px 20px;
             background: #fff;
@@ -637,6 +375,8 @@
             display: flex;
             gap: 12px;
             align-items: center;
+            position: sticky;
+            bottom: 0;
         }
         
         .chat-input {
@@ -646,7 +386,6 @@
             border-radius: 25px;
             font-size: 15px;
             outline: none;
-            transition: border-color 0.2s;
         }
         
         .chat-input:focus {
@@ -662,44 +401,9 @@
             border-radius: 50%;
             font-size: 20px;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
         
-        .chat-send:hover {
-            background: var(--black-olive);
-            transform: scale(1.05);
-        }
-        
-        .chat-send:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
-        /* 퀵 액션 */
-        .quick-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-        
-        .quick-btn {
-            padding: 10px 16px;
-            background: rgba(94,107,58,0.1);
-            border: 1px solid var(--mothers-olive);
-            border-radius: 20px;
-            font-size: 13px;
-            color: var(--mothers-olive);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .quick-btn:hover {
-            background: var(--mothers-olive);
-            color: #fff;
-        }
-        
-        /* 위기 알림 */
+        /* 위기 배너 */
         .crisis-banner {
             background: linear-gradient(135deg, #FF6B6B, #FF8E53);
             color: #fff;
@@ -721,9 +425,7 @@
         /* Safe Area */
         @supports (padding-top: env(safe-area-inset-top)) {
             .intro-screen,
-            .login-screen,
-            .home-screen,
-            .onboarding-screen {
+            .home-screen {
                 padding-top: calc(40px + env(safe-area-inset-top));
             }
             
@@ -739,7 +441,7 @@
 </head>
 <body>
     <!-- 인트로 화면 -->
-    <div class="page intro-screen" id="introScreen">
+    <div class="page intro-screen active" id="introScreen">
         <div class="intro-content">
             <div class="intro-logo">
                 <div class="intro-logo-icon">🤱</div>
@@ -755,12 +457,12 @@
             </div>
             
             <p class="intro-subtitle">
-                <span class="heart-text">아이만이 아니라, 부모의 마음까지</span><br>
-                <span class="heart-text">함께 돌보는 동반자가 되고 싶어요. 💕</span>
+                아이만이 아니라, 부모의 마음까지<br>
+                함께 돌보는 동반자가 되고 싶어요. 💕
             </p>
             
             <div class="intro-cta">
-                <button class="intro-btn" onclick="showLogin()">
+                <button class="intro-btn" onclick="showHome()">
                     시작하기 <span>→</span>
                 </button>
             </div>
@@ -768,46 +470,8 @@
         <div class="intro-footer">© 2026 맘곁 Momgyeot</div>
     </div>
     
-    <!-- 로그인 화면 -->
-    <div class="page login-screen hidden" id="loginScreen">
-        <button class="back-btn" onclick="showIntro()">←</button>
-        
-        <div class="login-header">
-            <div class="login-logo-icon">🤱</div>
-            <h2 class="login-title">맘곁에 오신 것을<br>환영해요</h2>
-            <p class="login-desc">간편하게 로그인하고 시작하세요</p>
-        </div>
-        
-        <div class="login-buttons">
-            <button class="login-btn login-btn-kakao" onclick="loginWith('kakao')">
-                💬 카카오로 시작하기
-            </button>
-            <button class="login-btn login-btn-naver" onclick="loginWith('naver')">
-                <span style="font-weight:bold">N</span> 네이버로 시작하기
-            </button>
-            <button class="login-btn login-btn-google" onclick="loginWith('google')">
-                <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-                Google로 시작하기
-            </button>
-            <button class="login-btn login-btn-apple" onclick="loginWith('apple')">
-                 Apple로 시작하기
-            </button>
-            
-            <div class="login-divider"><span>또는</span></div>
-            
-            <button class="login-btn login-btn-guest" onclick="showHome()">
-                🌱 비회원으로 둘러보기
-            </button>
-        </div>
-        
-        <p class="login-terms">
-            시작하면 <a href="#">이용약관</a> 및 <a href="#">개인정보처리방침</a>에<br>
-            동의하는 것으로 간주됩니다.
-        </p>
-    </div>
-    
     <!-- 홈 화면 -->
-    <div class="page home-screen hidden" id="homeScreen">
+    <div class="page home-screen" id="homeScreen">
         <div class="home-header">
             <div class="home-logo">🤱</div>
             <h1 class="home-title">어떤 맘곁이 필요하세요?</h1>
@@ -815,7 +479,7 @@
         </div>
         
         <div class="stage-cards">
-            <div class="stage-card" onclick="startOnboarding('prep')">
+            <div class="stage-card" onclick="startChat('prep')">
                 <div class="stage-card-header">
                     <div class="stage-icon">💜</div>
                     <div class="stage-info">
@@ -826,7 +490,7 @@
                 <span class="stage-tag tag-prep">임신 준비 중</span>
             </div>
             
-            <div class="stage-card" onclick="startOnboarding('pregnancy')">
+            <div class="stage-card" onclick="startChat('pregnancy')">
                 <div class="stage-card-header">
                     <div class="stage-icon">🤰</div>
                     <div class="stage-info">
@@ -837,7 +501,7 @@
                 <span class="stage-tag tag-pregnancy">임신 중</span>
             </div>
             
-            <div class="stage-card" onclick="startOnboarding('infant')">
+            <div class="stage-card" onclick="startChat('infant')">
                 <div class="stage-card-header">
                     <div class="stage-icon">👶</div>
                     <div class="stage-info">
@@ -848,7 +512,7 @@
                 <span class="stage-tag tag-infant">영아 육아 중</span>
             </div>
             
-            <div class="stage-card" onclick="startOnboarding('toddler')">
+            <div class="stage-card" onclick="startChat('toddler')">
                 <div class="stage-card-header">
                     <div class="stage-icon">🧒</div>
                     <div class="stage-info">
@@ -861,31 +525,8 @@
         </div>
     </div>
     
-    <!-- 온보딩 화면 -->
-    <div class="page onboarding-screen hidden" id="onboardingScreen">
-        <div class="onboarding-header">
-            <button class="onboarding-back" onclick="goBackOnboarding()">←</button>
-            <div class="onboarding-progress" id="onboardingProgress">
-                <div class="progress-dot active"></div>
-                <div class="progress-dot"></div>
-                <div class="progress-dot"></div>
-            </div>
-            <button class="onboarding-skip" onclick="skipOnboarding()">건너뛰기</button>
-        </div>
-        
-        <div class="onboarding-content" id="onboardingContent">
-            <!-- 동적으로 채워짐 -->
-        </div>
-        
-        <div class="onboarding-footer">
-            <button class="onboarding-next" id="onboardingNext" disabled onclick="nextOnboarding()">
-                다음
-            </button>
-        </div>
-    </div>
-    
     <!-- 채팅 화면 -->
-    <div class="page chat-screen hidden" id="chatScreen">
+    <div class="page chat-screen" id="chatScreen">
         <div class="crisis-banner" id="crisisBanner">
             힘든 순간이시라면, <a href="tel:1393">자살예방상담전화 1393</a>으로 연락해주세요 💚
         </div>
@@ -900,13 +541,12 @@
         </div>
         
         <div class="chat-messages" id="chatMessages">
-            <!-- 메시지들 -->
         </div>
         
         <div class="chat-input-area">
             <input type="text" class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." 
-                   onkeypress="handleKeyPress(event)">
-            <button class="chat-send" id="sendBtn" onclick="sendMessage()">➤</button>
+                   onkeypress="if(event.key==='Enter')sendMessage()">
+            <button class="chat-send" onclick="sendMessage()">➤</button>
         </div>
     </div>
 
@@ -943,244 +583,25 @@
             }
         };
         
-        // 온보딩 데이터
-        const onboardingData = {
-            prep: [
-                {
-                    icon: '💜',
-                    title: '임신 준비,\n어디서부터 시작할까요?',
-                    desc: '현재 상황을 알려주시면\n맞춤 정보를 드릴게요',
-                    options: [
-                        { text: '🌱 이제 막 준비 시작', value: 'just_started' },
-                        { text: '📅 배란일 추적 중', value: 'tracking' },
-                        { text: '💊 난임 시술 중', value: 'treatment' },
-                        { text: '🔄 재임신 준비', value: 'retry' }
-                    ]
-                },
-                {
-                    icon: '❤️',
-                    title: '특별히 신경 쓰이는\n부분이 있으세요?',
-                    desc: '여러 개 선택해도 괜찮아요',
-                    options: [
-                        { text: '🥗 영양제/식단', value: 'nutrition' },
-                        { text: '🏥 검사/진료', value: 'medical' },
-                        { text: '💪 운동/체력', value: 'fitness' },
-                        { text: '😰 스트레스/감정', value: 'emotion' }
-                    ]
-                },
-                {
-                    icon: '🤝',
-                    title: '준비 완료!\n예비맘곁이 함께할게요',
-                    desc: '언제든 편하게 물어보세요.\n당신의 임신 준비 여정을 응원해요!',
-                    options: []
-                }
-            ],
-            pregnancy: [
-                {
-                    icon: '🤰',
-                    title: '현재 임신 주수를\n알려주세요',
-                    desc: '시기에 맞는 정보를 드릴게요',
-                    options: [
-                        { text: '1~12주 (초기)', value: 'first' },
-                        { text: '13~27주 (중기)', value: 'second' },
-                        { text: '28주~ (후기)', value: 'third' },
-                        { text: '🤷 아직 잘 몰라요', value: 'unknown' }
-                    ]
-                },
-                {
-                    icon: '💭',
-                    title: '요즘 가장 힘든 건\n무엇인가요?',
-                    desc: '솔직하게 말씀해 주세요',
-                    options: [
-                        { text: '🤢 입덧/컨디션', value: 'morning_sickness' },
-                        { text: '😰 불안/걱정', value: 'anxiety' },
-                        { text: '🏥 검사/진료 정보', value: 'medical' },
-                        { text: '🍼 출산/육아 준비', value: 'prepare' }
-                    ]
-                },
-                {
-                    icon: '🌸',
-                    title: '좋아요!\n임신맘곁이 함께해요',
-                    desc: '건강한 임신 기간 보내시길 바라요.\n궁금한 건 언제든 물어보세요!',
-                    options: []
-                }
-            ],
-            infant: [
-                {
-                    icon: '👶',
-                    title: '아기가 태어난 지\n얼마나 됐나요?',
-                    desc: '월령에 맞는 정보를 드릴게요',
-                    options: [
-                        { text: '🌟 신생아 (0~1개월)', value: 'newborn' },
-                        { text: '🍼 1~3개월', value: '1_3_months' },
-                        { text: '😊 4~6개월', value: '4_6_months' },
-                        { text: '🎉 7~12개월', value: '7_12_months' }
-                    ]
-                },
-                {
-                    icon: '🤱',
-                    title: '수유 방법은\n어떻게 하고 계세요?',
-                    desc: '맞춤 정보를 위해 알려주세요',
-                    options: [
-                        { text: '🤱 완전 모유수유', value: 'breastfeeding' },
-                        { text: '🍼 완전 분유', value: 'formula' },
-                        { text: '🔄 혼합 수유', value: 'mixed' },
-                        { text: '🥄 이유식 시작', value: 'weaning' }
-                    ]
-                },
-                {
-                    icon: '💚',
-                    title: '설정 완료!\n새싹맘곁이 함께해요',
-                    desc: '초보맘의 든든한 친구가 될게요.\n작은 것도 편하게 물어보세요!',
-                    options: []
-                }
-            ],
-            toddler: [
-                {
-                    icon: '🧒',
-                    title: '우리 아이 나이가\n어떻게 되나요?',
-                    desc: '발달 단계에 맞게 도와드릴게요',
-                    options: [
-                        { text: '👣 12~18개월', value: '12_18_months' },
-                        { text: '🚶 19~24개월', value: '19_24_months' },
-                        { text: '🗣️ 2세', value: '2_years' },
-                        { text: '🎨 3세 이상', value: '3_plus' }
-                    ]
-                },
-                {
-                    icon: '🎯',
-                    title: '요즘 제일 고민되는\n부분이 뭔가요?',
-                    desc: '육아엔 정답이 없지만, 함께 찾아봐요',
-                    options: [
-                        { text: '😤 훈육/떼쓰기', value: 'discipline' },
-                        { text: '🗣️ 언어/발달', value: 'development' },
-                        { text: '🥦 편식/식사', value: 'eating' },
-                        { text: '🏫 어린이집/교육', value: 'education' }
-                    ]
-                },
-                {
-                    icon: '🧡',
-                    title: '좋아요!\n우리맘곁이 함께해요',
-                    desc: '힘든 육아, 혼자 고민하지 마세요.\n언제든 이야기 나눠요!',
-                    options: []
-                }
-            ]
-        };
-        
-        // 상태 변수
         let currentStage = 'infant';
-        let onboardingStep = 0;
-        let selectedOptions = {};
         let conversationHistory = [];
         
-        // 화면 전환 함수
+        // 화면 전환
         function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-            document.getElementById(pageId).classList.remove('hidden');
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0);
         }
         
-        function showIntro() { showPage('introScreen'); }
-        function showLogin() { showPage('loginScreen'); }
-        function showHome() { showPage('homeScreen'); }
-        
-        // 로그인 처리
-        function loginWith(provider) {
-            console.log('Login with:', provider);
-            // 실제 OAuth 구현 필요
-            showHome();
-        }
-        
-        // 온보딩 시작
-        function startOnboarding(stage) {
-            currentStage = stage;
-            onboardingStep = 0;
-            selectedOptions = {};
-            renderOnboarding();
-            showPage('onboardingScreen');
-        }
-        
-        // 온보딩 렌더링
-        function renderOnboarding() {
-            const data = onboardingData[currentStage][onboardingStep];
-            const totalSteps = onboardingData[currentStage].length;
-            
-            // 프로그레스 업데이트
-            const progressHtml = Array(totalSteps).fill(0).map((_, i) => 
-                `<div class="progress-dot ${i === onboardingStep ? 'active' : ''}"></div>`
-            ).join('');
-            document.getElementById('onboardingProgress').innerHTML = progressHtml;
-            
-            // 컨텐츠 렌더링
-            let optionsHtml = '';
-            if (data.options && data.options.length > 0) {
-                optionsHtml = `
-                    <div class="onboarding-options">
-                        ${data.options.map(opt => `
-                            <button class="onboarding-option" onclick="selectOnboardingOption(this, '${opt.value}')">
-                                ${opt.text}
-                            </button>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            document.getElementById('onboardingContent').innerHTML = `
-                <div class="onboarding-icon">${data.icon}</div>
-                <h2 class="onboarding-title">${data.title.replace('\n', '<br>')}</h2>
-                <p class="onboarding-desc">${data.desc.replace('\n', '<br>')}</p>
-                ${optionsHtml}
-            `;
-            
-            // 마지막 단계면 버튼 텍스트 변경
-            const nextBtn = document.getElementById('onboardingNext');
-            if (onboardingStep === totalSteps - 1) {
-                nextBtn.textContent = '대화 시작하기';
-                nextBtn.disabled = false;
-            } else {
-                nextBtn.textContent = '다음';
-                nextBtn.disabled = true;
-            }
-        }
-        
-        // 옵션 선택
-        function selectOnboardingOption(element, value) {
-            document.querySelectorAll('.onboarding-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            element.classList.add('selected');
-            selectedOptions[onboardingStep] = value;
-            document.getElementById('onboardingNext').disabled = false;
-        }
-        
-        // 다음 단계
-        function nextOnboarding() {
-            const totalSteps = onboardingData[currentStage].length;
-            if (onboardingStep < totalSteps - 1) {
-                onboardingStep++;
-                renderOnboarding();
-            } else {
-                startChat();
-            }
-        }
-        
-        // 뒤로가기
-        function goBackOnboarding() {
-            if (onboardingStep > 0) {
-                onboardingStep--;
-                renderOnboarding();
-            } else {
-                showHome();
-            }
-        }
-        
-        // 건너뛰기
-        function skipOnboarding() {
-            startChat();
+        function showHome() {
+            showPage('homeScreen');
         }
         
         // 채팅 시작
-        function startChat() {
-            const info = stageInfo[currentStage];
+        function startChat(stage) {
+            currentStage = stage;
+            const info = stageInfo[stage];
+            
             document.getElementById('chatAvatar').textContent = info.icon;
             document.getElementById('chatTitle').textContent = info.name;
             document.getElementById('chatSubtitle').textContent = info.subtitle;
@@ -1194,62 +615,56 @@
             // 인사 메시지
             setTimeout(() => {
                 addMessage(info.greeting, 'ai');
-                
-                // 퀵 액션 추가
-                setTimeout(() => {
-                    addQuickActions(info.quickActions);
-                }, 500);
-            }, 500);
+                setTimeout(() => addQuickActions(info.quickActions), 300);
+            }, 400);
         }
         
         // 메시지 추가
         function addMessage(text, type) {
-            const messagesContainer = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}`;
-            messageDiv.textContent = text;
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'message ' + type;
+            div.textContent = text;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
             
-            if (type === 'user') {
-                conversationHistory.push({ role: 'user', content: text });
-            } else {
-                conversationHistory.push({ role: 'assistant', content: text });
-            }
+            conversationHistory.push({
+                role: type === 'user' ? 'user' : 'assistant',
+                content: text
+            });
         }
         
-        // 퀵 액션 추가
+        // 퀵 액션
         function addQuickActions(actions) {
-            const messagesContainer = document.getElementById('chatMessages');
-            const quickDiv = document.createElement('div');
-            quickDiv.className = 'quick-actions';
-            quickDiv.innerHTML = actions.map(action => 
-                `<button class="quick-btn" onclick="sendQuickMessage('${action}')">${action}</button>`
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'quick-actions';
+            div.innerHTML = actions.map(a => 
+                `<button class="quick-btn" onclick="sendQuick('${a}')">${a}</button>`
             ).join('');
-            messagesContainer.appendChild(quickDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
         }
         
-        // 퀵 메시지 전송
-        function sendQuickMessage(text) {
+        function sendQuick(text) {
             document.getElementById('chatInput').value = text;
             sendMessage();
         }
         
-        // 타이핑 인디케이터 표시
+        // 타이핑 표시
         function showTyping() {
-            const messagesContainer = document.getElementById('chatMessages');
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'typing-indicator';
-            typingDiv.id = 'typingIndicator';
-            typingDiv.innerHTML = '<span></span><span></span><span></span>';
-            messagesContainer.appendChild(typingDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'typing-indicator';
+            div.id = 'typing';
+            div.innerHTML = '<span></span><span></span><span></span>';
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
         }
         
         function hideTyping() {
-            const typing = document.getElementById('typingIndicator');
-            if (typing) typing.remove();
+            const el = document.getElementById('typing');
+            if (el) el.remove();
         }
         
         // 메시지 전송
@@ -1265,12 +680,14 @@
             input.value = '';
             
             // 위기 감지
-            checkCrisis(text);
+            const crisisWords = ['죽고싶', '자살', '힘들어', '못살겠', '포기'];
+            const hasCrisis = crisisWords.some(w => text.includes(w));
+            document.getElementById('crisisBanner').classList.toggle('show', hasCrisis);
             
             showTyping();
             
             try {
-                const response = await fetch('/api/chat', {
+                const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1282,52 +699,19 @@
                 
                 hideTyping();
                 
-                if (response.ok) {
-                    const data = await response.json();
+                if (res.ok) {
+                    const data = await res.json();
                     addMessage(data.response || data.message, 'ai');
                 } else {
-                    addMessage('죄송해요, 일시적인 오류가 발생했어요. 다시 시도해주세요.', 'ai');
+                    addMessage('죄송해요, 잠시 후 다시 시도해주세요.', 'ai');
                 }
-            } catch (error) {
+            } catch (e) {
                 hideTyping();
-                // 오프라인 또는 API 오류 시 기본 응답
-                addMessage(getOfflineResponse(text), 'ai');
+                // 오프라인 응답
+                const info = stageInfo[currentStage];
+                addMessage(`좋은 질문이에요! ${info.icon}\n\n잠시 연결이 불안정해요. 다시 한번 시도해주세요.`, 'ai');
             }
         }
-        
-        // 오프라인 응답
-        function getOfflineResponse(text) {
-            const info = stageInfo[currentStage];
-            if (text.includes('안녕') || text.includes('반가')) {
-                return `안녕하세요! ${info.name}이에요 ${info.icon}\n\n무엇이 궁금하세요?`;
-            }
-            return `좋은 질문이에요! 잠시 후 다시 시도해주시면 더 자세한 답변을 드릴 수 있어요. ${info.icon}`;
-        }
-        
-        // 위기 감지
-        function checkCrisis(text) {
-            const crisisKeywords = ['죽고싶', '자살', '힘들어', '못살겠', '끝내고싶', '포기하고싶'];
-            const hasCrisis = crisisKeywords.some(keyword => text.includes(keyword));
-            document.getElementById('crisisBanner').classList.toggle('show', hasCrisis);
-        }
-        
-        // 키보드 이벤트
-        function handleKeyPress(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendMessage();
-            }
-        }
-        
-        // 초기화
-        document.addEventListener('DOMContentLoaded', () => {
-            // 저장된 세션 확인
-            const savedStage = localStorage.getItem('momgyeot_stage');
-            if (savedStage && stageInfo[savedStage]) {
-                // 재방문 사용자는 바로 홈으로
-                // showHome();
-            }
-        });
     </script>
 </body>
 </html>
