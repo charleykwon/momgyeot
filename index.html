@@ -2688,76 +2688,32 @@ saveMessage('user', text); // 서버에 저장            isLoading = true;
             updateSendButton();
         }
 
-        // RAG 검색 함수
-        async function searchRAG(query) {
-            try {
-                const response = await fetch('/api/search', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query, limit: 5 })
-                });
-                
-                if (!response.ok) {
-                    console.log('RAG 검색 실패, 기본 응답 진행');
-                    return null;
-                }
-                
-                const data = await response.json();
-                return data.results || [];
-            } catch (error) {
-                console.log('RAG 검색 오류:', error.message);
-                return null;
-            }
-        }
-        
-        // RAG 결과를 컨텍스트로 포맷팅
-        function formatRAGContext(results) {
-            if (!results || results.length === 0) return '';
-            
-            let context = '\n\n## 📚 관련 전문 정보:\n';
-            results.forEach((item, idx) => {
-                context += `\n### ${idx + 1}. ${item.title || '정보'}\n`;
-                context += item.content ? item.content.substring(0, 500) : '';
-                if (item.source) context += `\n(출처: ${item.source})`;
-            });
-            
-            context += '\n\n위 정보를 참고하되, 따뜻하고 공감하는 맘곁 스타일로 답변해주세요.';
-            return context;
-        }
-        
+        // 맘곁 Chat API 호출 (RAG 검색은 백엔드에서 자동 처리)
         async function callClaudeAPI(userMessage) {
-            const stagePrompt = systemPrompts[currentMate] || '';
-            let contextInfo = `\n\n## 사용자: ${onboardingData.nickname}`;
-            
-            // Quick Action 맥락 추가
-            if (currentQuickAction && currentQuickAction.context) {
-                contextInfo += `\n\n## 현재 대화 맥락:\n${currentQuickAction.context}`;
-            }
-            
-            // RAG 검색 실행 (임신/육아 관련 질문일 때)
-            const ragResults = await searchRAG(userMessage);
-            if (ragResults && ragResults.length > 0) {
-                contextInfo += formatRAGContext(ragResults);
-                console.log(`✅ RAG: ${ragResults.length}개 관련 정보 추가`);
-            }
-            
-            const fullSystemPrompt = systemPrompts.base + stagePrompt + contextInfo;
-
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    model: 'claude-sonnet-4-20250514',
-                    max_tokens: 1024,
-                    system: fullSystemPrompt,
-                    messages: conversationHistory,
-                    user_id: visitorId
+                    message: userMessage,
+                    user_id: visitorId,
+                    useRAG: true
                 })
             });
 
-            if (!response.ok) throw new Error(`API error: ${response.status}`);
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                console.error('API 오류:', errorData);
+                throw new Error(`API error: ${response.status}`);
+            }
+            
             const data = await response.json();
-            return data.content?.[0]?.text || data.response || '응답을 가져오지 못했어요.';
+            
+            // RAG 사용 여부 로그
+            if (data.ragUsed) {
+                console.log(`✅ RAG: ${data.ragCount}개 관련 정보 활용`);
+            }
+            
+            return data.response || '응답을 가져오지 못했어요.';
         }
 
         function autoResizeInput() {
@@ -3567,4 +3523,5 @@ function showMateSelection() {
     </script>
 </body>
 </html>
+
 
