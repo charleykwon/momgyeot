@@ -1,18 +1,21 @@
 {
   "name": "momgyeot",
-  "version": "4.0.0",
-  "description": "맘곁 - 임신·출산·육아 AI 컴패니언",
-  "private": true,
+  "version": "1.0.0",
+  "description": "맘곁 - 육아 컴패니언 AI",
   "scripts": {
     "dev": "vercel dev",
-    "build": "echo 'No build required'",
-    "deploy": "vercel --prod"
+    "build": "echo 'Static site - no build needed'",
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "vercel": "^33.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.52.0",
-    "@supabase/supabase-js": "^2.39.0"
-  }
+  "author": "Mothersbaby",
+  "license": "MIT"
 }
