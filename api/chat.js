@@ -1,4 +1,4 @@
-// Vercel Serverless Function for AI Chat
+// Vercel Serverless Function for AI Chat with Claude
 const https = require('https');
 
 module.exports = async function handler(req, res) {
@@ -37,9 +37,23 @@ module.exports = async function handler(req, res) {
         
         // 2. 응답 생성
         let answer = '';
+        
         if (ragContext.length > 0) {
-            const item = ragContext[0];
-            answer = item.title ? `**${item.title}**\n\n${item.content}` : item.content;
+            // Claude AI가 있으면 자연스러운 답변 생성
+            if (ANTHROPIC_API_KEY) {
+                try {
+                    answer = await generateClaudeResponse(query, ragContext, mateType, userInfo, ANTHROPIC_API_KEY);
+                } catch (e) {
+                    console.error('Claude error:', e.message);
+                    // Claude 실패시 RAG 결과 직접 사용
+                    const item = ragContext[0];
+                    answer = item.title ? `**${item.title}**\n\n${item.content}` : item.content;
+                }
+            } else {
+                // Claude 없으면 RAG 결과 직접 사용
+                const item = ragContext[0];
+                answer = item.title ? `**${item.title}**\n\n${item.content}` : item.content;
+            }
         } else {
             answer = '죄송해요, 관련 정보를 찾지 못했어요. 😢\n\n다른 방식으로 질문해 주시거나, 전문가 상담을 이용해 보세요!';
         }
@@ -72,9 +86,9 @@ function httpsRequest(url, options, postData) {
             res.on('data', chunk => data += chunk);
             res.on('end', () => {
                 try {
-                    resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, json: () => JSON.parse(data) });
+                    resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, json: () => JSON.parse(data), status: res.statusCode });
                 } catch (e) {
-                    resolve({ ok: false, json: () => ({}) });
+                    resolve({ ok: false, json: () => ({}), status: res.statusCode });
                 }
             });
         });
@@ -83,6 +97,88 @@ function httpsRequest(url, options, postData) {
         if (postData) req.write(postData);
         req.end();
     });
+}
+
+async function generateClaudeResponse(query, ragContext, mateType, userInfo, apiKey) {
+    // 메이트 타입별 페르소나
+    const personas = {
+        'preparing': {
+            name: '예비맘곁',
+            emoji: '🌱',
+            description: '임신을 준비하는 예비 엄마들을 위한 따뜻한 길잡이'
+        },
+        'pregnant': {
+            name: '임신맘곁',
+            emoji: '🤰',
+            description: '임신 중인 엄마들의 든든한 동반자'
+        },
+        'newborn': {
+            name: '초보맘곁',
+            emoji: '👶',
+            description: '모유수유와 신생아 케어를 돕는 친근한 도우미'
+        }
+    };
+    
+    const persona = personas[mateType] || personas['newborn'];
+    
+    // RAG 컨텍스트를 문자열로 변환
+    const contextStr = ragContext.map((item, i) => 
+        `[참고자료 ${i + 1}]\n제목: ${item.title}\n내용: ${item.content}`
+    ).join('\n\n');
+    
+    // 사용자 정보 문자열
+    let userInfoStr = '';
+    if (userInfo) {
+        if (userInfo.nickname) userInfoStr += `사용자 닉네임: ${userInfo.nickname}\n`;
+        if (userInfo.babyAge) userInfoStr += `아기 월령: ${userInfo.babyAge}개월\n`;
+        if (userInfo.pregnancyWeek) userInfoStr += `임신 주차: ${userInfo.pregnancyWeek}주\n`;
+    }
+    
+    const systemPrompt = `당신은 "${persona.name}" ${persona.emoji}입니다. ${persona.description}입니다.
+
+## 답변 규칙
+1. 따뜻하고 공감적인 말투로 답변하세요
+2. 반말이 아닌 존댓말을 사용하세요 (예: ~해요, ~이에요, ~세요)
+3. 적절한 이모지를 사용하세요 (과하지 않게)
+4. 의학적 조언은 참고자료에 기반하여 정확하게 전달하세요
+5. 심각한 증상은 반드시 병원 방문을 권유하세요
+6. 답변은 300자 이내로 간결하게 해주세요
+7. 엄마를 응원하고 격려하는 메시지를 포함하세요
+
+${userInfoStr ? `## 사용자 정보\n${userInfoStr}` : ''}
+
+## 참고자료
+${contextStr}`;
+
+    const postData = JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        messages: [
+            { role: 'user', content: query }
+        ],
+        system: systemPrompt
+    });
+    
+    const response = await httpsRequest('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01'
+        }
+    }, postData);
+    
+    if (!response.ok) {
+        throw new Error(`Claude API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.content && data.content[0] && data.content[0].text) {
+        return data.content[0].text;
+    }
+    
+    throw new Error('Invalid Claude response');
 }
 
 async function searchRAG(query, supabaseUrl, supabaseKey, mateType) {
