@@ -19,7 +19,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #F5F5F0;
+            background: #FDF8F5;
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -28,14 +28,14 @@
         .page {
             display: none;
             min-height: 100vh;
+            flex-direction: column;
         }
         
         .page.active {
             display: flex;
-            flex-direction: column;
         }
         
-        /* 인트로 화면 */
+        /* ==================== 인트로 화면 ==================== */
         .intro-screen {
             background: linear-gradient(180deg, #5E6B3A 0%, #3D4A2D 100%);
             justify-content: center;
@@ -101,111 +101,207 @@
             color: rgba(255,255,255,0.5);
         }
         
-        /* 홈 화면 */
+        /* ==================== 홈 화면 ==================== */
         .home-screen {
-            background: #F5F5F0;
-            padding: 60px 20px 30px;
+            background: #FDF8F5;
+            padding-bottom: 85px; /* 바텀 네비 공간 */
         }
         
+        /* 상단 헤더 */
         .home-header {
-            text-align: center;
-            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 20px 20px;
+            background: #FDF8F5;
         }
         
-        .home-logo {
-            font-size: 48px;
-            margin-bottom: 16px;
+        .menu-btn {
+            width: 44px;
+            height: 44px;
+            background: rgba(94, 107, 58, 0.1);
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .home-title {
-            font-size: 22px;
+        .home-greeting {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .greeting-emoji {
+            font-size: 32px;
+        }
+        
+        .greeting-text {
+            font-size: 14px;
+            color: #8A8A8A;
+        }
+        
+        .greeting-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #3D4A2D;
+        }
+        
+        .home-icons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            background: rgba(94, 107, 58, 0.1);
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        /* 홈 컨텐츠 */
+        .home-content {
+            padding: 0 20px 20px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
             color: #3D4A2D;
             margin-bottom: 8px;
         }
         
-        .home-subtitle {
+        .section-desc {
             font-size: 14px;
-            color: #888;
+            color: #8A8A8A;
+            margin-bottom: 20px;
         }
         
-        /* 스테이지 카드 */
-        .stage-cards {
-            display: flex;
-            flex-direction: column;
+        /* 맘곁 카드 */
+        .mate-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
         
-        .stage-card {
+        .mate-card {
             background: #fff;
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            border: none;
+            border-radius: 20px;
+            padding: 20px 16px;
+            text-align: center;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
             transition: transform 0.2s, box-shadow 0.2s;
         }
         
-        .stage-card:active {
-            transform: scale(0.98);
+        .mate-card:active {
+            transform: scale(0.97);
         }
         
-        .stage-card-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        
-        .stage-icon {
-            font-size: 36px;
-        }
-        
-        .stage-info h3 {
-            font-size: 17px;
-            color: #3D4A2D;
-            margin-bottom: 2px;
-        }
-        
-        .stage-info p {
-            font-size: 13px;
-            color: #888;
-        }
-        
-        .stage-tag {
+        .mate-tag {
+            display: inline-block;
             font-size: 11px;
-            padding: 6px 12px;
+            color: #5E6B3A;
+            background: rgba(94, 107, 58, 0.1);
+            padding: 4px 10px;
             border-radius: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .mate-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+        
+        .mate-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #3D4A2D;
+            margin-bottom: 6px;
+        }
+        
+        .mate-card p {
+            font-size: 12px;
+            color: #8A8A8A;
+            line-height: 1.4;
+        }
+        
+        /* 하단 네비게이션 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 85px;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #BDBDBD;
+            transition: color 0.2s;
+            padding: 8px 16px;
+        }
+        
+        .nav-item.active {
+            color: #5E6B3A;
+        }
+        
+        .nav-item span {
+            font-size: 11px;
             font-weight: 500;
         }
         
-        .tag-prep { background: #F3E8FF; color: #7C3AED; }
-        .tag-pregnancy { background: #FCE7F3; color: #DB2777; }
-        .tag-infant { background: #ECFDF5; color: #059669; }
-        .tag-toddler { background: #FEF3C7; color: #D97706; }
-        
-        /* 채팅 화면 */
+        /* ==================== 채팅 화면 ==================== */
         .chat-screen {
-            background: #F5F5F0;
+            background: #FDF8F5;
         }
         
         .chat-header {
-            background: #5E6B3A;
-            color: #fff;
-            padding: 16px 20px;
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding-top: 50px;
+            gap: 12px;
+            padding: 50px 20px 16px;
+            background: #5E6B3A;
+            color: #fff;
         }
         
-        .chat-back {
-            background: none;
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
             border: none;
+            border-radius: 50%;
             color: #fff;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
-            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .chat-avatar {
@@ -236,6 +332,7 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            padding-bottom: 100px;
         }
         
         .message {
@@ -262,7 +359,7 @@
             border-bottom-right-radius: 6px;
         }
         
-        /* FAQ 질문 버튼 - 중요! */
+        /* FAQ 질문 버튼 */
         .faq-buttons {
             display: flex;
             flex-direction: column;
@@ -285,29 +382,6 @@
         }
         
         .faq-btn:hover, .faq-btn:active {
-            background: #5E6B3A;
-            color: #fff;
-        }
-        
-        /* 퀵 액션 (간단 키워드) */
-        .quick-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        
-        .quick-btn {
-            background: rgba(94,107,58,0.1);
-            border: 1px solid rgba(94,107,58,0.3);
-            color: #5E6B3A;
-            padding: 10px 16px;
-            font-size: 13px;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-        
-        .quick-btn:hover {
             background: #5E6B3A;
             color: #fff;
         }
@@ -342,11 +416,16 @@
         
         /* 입력 영역 */
         .chat-input-area {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             padding: 16px 20px;
             background: #fff;
             display: flex;
             gap: 12px;
             border-top: 1px solid #eee;
+            padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
         }
         
         .chat-input {
@@ -392,24 +471,153 @@
             font-weight: 600;
         }
         
-        /* Safe Area */
+        /* 사이드 메뉴 */
+        .side-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .side-menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: #fff;
+            z-index: 201;
+            transition: left 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-menu.active {
+            left: 0;
+        }
+        
+        .side-menu-header {
+            padding: 60px 24px 24px;
+            background: #5E6B3A;
+            color: #fff;
+        }
+        
+        .side-menu-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .side-menu-avatar {
+            width: 56px;
+            height: 56px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        
+        .side-menu-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .side-menu-email {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        
+        .side-menu-items {
+            flex: 1;
+            padding: 16px 0;
+        }
+        
+        .side-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            font-size: 15px;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+        
+        .side-menu-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .close-menu-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* Safe Area for iOS */
         @supports (padding-top: env(safe-area-inset-top)) {
-            .intro-screen,
-            .home-screen {
-                padding-top: calc(40px + env(safe-area-inset-top));
-            }
-            
-            .chat-header {
-                padding-top: calc(16px + env(safe-area-inset-top));
-            }
-            
-            .chat-input-area {
-                padding-bottom: calc(16px + env(safe-area-inset-bottom));
+            .home-header, .chat-header {
+                padding-top: calc(20px + env(safe-area-inset-top));
             }
         }
     </style>
 </head>
 <body>
+    <!-- 사이드 메뉴 오버레이 -->
+    <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
+    
+    <!-- 사이드 메뉴 -->
+    <div class="side-menu" id="sideMenu">
+        <button class="close-menu-btn" onclick="closeSideMenu()">✕</button>
+        <div class="side-menu-header">
+            <div class="side-menu-profile">
+                <div class="side-menu-avatar">👤</div>
+                <div>
+                    <div class="side-menu-name" id="menuUserName">게스트님</div>
+                    <div class="side-menu-email">환영합니다!</div>
+                </div>
+            </div>
+        </div>
+        <div class="side-menu-items">
+            <button class="side-menu-item" onclick="closeSideMenu(); showHome();">
+                <span>🏠</span> 홈
+            </button>
+            <button class="side-menu-item" onclick="alert('준비 중입니다')">
+                <span>📅</span> 캘린더
+            </button>
+            <button class="side-menu-item" onclick="alert('준비 중입니다')">
+                <span>💬</span> 상담 내역
+            </button>
+            <button class="side-menu-item" onclick="alert('준비 중입니다')">
+                <span>⚙️</span> 설정
+            </button>
+        </div>
+    </div>
+
     <!-- 인트로 화면 -->
     <div class="page intro-screen active" id="introScreen">
         <div class="intro-content">
@@ -442,56 +650,83 @@
     
     <!-- 홈 화면 -->
     <div class="page home-screen" id="homeScreen">
+        <!-- 상단 헤더 -->
         <div class="home-header">
-            <div class="home-logo">🤱</div>
-            <h1 class="home-title">어떤 맘곁이 필요하세요?</h1>
-            <p class="home-subtitle">나에게 맞는 AI 동반자를 선택해주세요</p>
+            <button class="menu-btn" onclick="openSideMenu()">☰</button>
+            <div class="home-greeting">
+                <span class="greeting-emoji">👋</span>
+                <div>
+                    <p class="greeting-text">안녕하세요!</p>
+                    <p class="greeting-name" id="userName">게스트님</p>
+                </div>
+            </div>
+            <div class="home-icons">
+                <button class="icon-btn" onclick="alert('알림 기능 준비 중입니다')">🔔</button>
+            </div>
         </div>
         
-        <div class="stage-cards">
-            <div class="stage-card" onclick="startChat('prep')">
-                <div class="stage-card-header">
-                    <div class="stage-icon">💜</div>
-                    <div class="stage-info">
-                        <h3>예비맘곁</h3>
-                        <p>임신 준비 & 난임</p>
-                    </div>
-                </div>
-                <span class="stage-tag tag-prep">임신 준비 중</span>
-            </div>
+        <!-- 홈 컨텐츠 -->
+        <div class="home-content">
+            <h2 class="section-title">맘곁 선택하기</h2>
+            <p class="section-desc">나에게 맞는 맘곁을 선택해주세요</p>
             
-            <div class="stage-card" onclick="startChat('pregnancy')">
-                <div class="stage-card-header">
-                    <div class="stage-icon">🤰</div>
-                    <div class="stage-info">
-                        <h3>임신맘곁</h3>
-                        <p>임신 중 관리</p>
-                    </div>
-                </div>
-                <span class="stage-tag tag-pregnancy">임신 중</span>
+            <div class="mate-cards">
+                <button class="mate-card" onclick="startChat('prep')">
+                    <span class="mate-tag">임신준비</span>
+                    <div class="mate-icon">🌱</div>
+                    <h3>새싹맘곁</h3>
+                    <p>임신을 준비하는<br>예비 엄마를 위해</p>
+                </button>
+                
+                <button class="mate-card" onclick="startChat('pregnancy')">
+                    <span class="mate-tag">임신중</span>
+                    <div class="mate-icon">🤰</div>
+                    <h3>예비맘곁</h3>
+                    <p>소중한 생명과 함께하는<br>임신 기간 동안</p>
+                </button>
+                
+                <button class="mate-card" onclick="startChat('infant')">
+                    <span class="mate-tag">출산후</span>
+                    <div class="mate-icon">👶</div>
+                    <h3>아기맘곁</h3>
+                    <p>아기와 함께하는<br>육아의 모든 순간</p>
+                </button>
+                
+                <button class="mate-card" onclick="startChat('expert')">
+                    <span class="mate-tag">전문상담</span>
+                    <div class="mate-icon">👩‍⚕️</div>
+                    <h3>전문가 연결</h3>
+                    <p>전문 상담이<br>필요할 때</p>
+                </button>
             </div>
-            
-            <div class="stage-card" onclick="startChat('infant')">
-                <div class="stage-card-header">
-                    <div class="stage-icon">👶</div>
-                    <div class="stage-info">
-                        <h3>새싹맘곁</h3>
-                        <p>신생아 ~ 12개월</p>
-                    </div>
-                </div>
-                <span class="stage-tag tag-infant">영아 육아 중</span>
-            </div>
-            
-            <div class="stage-card" onclick="startChat('toddler')">
-                <div class="stage-card-header">
-                    <div class="stage-icon">🧒</div>
-                    <div class="stage-info">
-                        <h3>우리맘곁</h3>
-                        <p>1세 이상 육아</p>
-                    </div>
-                </div>
-                <span class="stage-tag tag-toddler">유아 육아 중</span>
-            </div>
+        </div>
+        
+        <!-- 하단 네비게이션 -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="showHome()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                <span>홈</span>
+            </button>
+            <button class="nav-item" onclick="alert('캘린더 준비 중입니다')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                </svg>
+                <span>캘린더</span>
+            </button>
+            <button class="nav-item" onclick="alert('채팅 목록 준비 중입니다')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                </svg>
+                <span>채팅</span>
+            </button>
+            <button class="nav-item" onclick="alert('마이페이지 준비 중입니다')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <span>마이</span>
+            </button>
         </div>
     </div>
     
@@ -502,11 +737,11 @@
         </div>
         
         <div class="chat-header">
-            <button class="chat-back" onclick="showHome()">←</button>
+            <button class="back-btn" onclick="showHome()">←</button>
             <div class="chat-avatar" id="chatAvatar">👶</div>
             <div class="chat-info">
-                <h3 id="chatTitle">새싹맘곁</h3>
-                <p id="chatSubtitle">신생아 케어 전문</p>
+                <h3 id="chatTitle">아기맘곁</h3>
+                <p id="chatSubtitle">육아 케어 전문</p>
             </div>
         </div>
         
@@ -524,10 +759,10 @@
         // 스테이지 정보 + FAQ 질문
         const stageInfo = {
             prep: {
-                icon: '💜',
-                name: '예비맘곁',
+                icon: '🌱',
+                name: '새싹맘곁',
                 subtitle: '임신 준비 전문',
-                greeting: '안녕하세요! 예비맘곁이에요 💜\n\n임신을 준비하는 여정, 때론 외롭고 막막하시죠?\n저와 함께 차근차근 준비해봐요.\n\n아래 질문 중 선택하시거나, 자유롭게 물어봐 주세요!',
+                greeting: '안녕하세요! 새싹맘곁이에요 🌱\n\n임신을 준비하는 여정, 때론 외롭고 막막하시죠?\n저와 함께 차근차근 준비해봐요.\n\n아래 질문 중 선택하시거나, 자유롭게 물어봐 주세요!',
                 faqQuestions: [
                     '임신 준비할 때 꼭 챙겨야 할 영양제가 뭐예요?',
                     '배란일은 어떻게 계산하나요?',
@@ -536,9 +771,9 @@
             },
             pregnancy: {
                 icon: '🤰',
-                name: '임신맘곁',
+                name: '예비맘곁',
                 subtitle: '임신 케어 전문',
-                greeting: '안녕하세요! 임신맘곁이에요 🤰\n\n소중한 생명과 함께하는 시간,\n기쁘기도 하고 걱정도 되시죠?\n\n아래 질문 중 선택하시거나, 자유롭게 물어봐 주세요!',
+                greeting: '안녕하세요! 예비맘곁이에요 🤰\n\n소중한 생명과 함께하는 시간,\n기쁘기도 하고 걱정도 되시죠?\n\n아래 질문 중 선택하시거나, 자유롭게 물어봐 주세요!',
                 faqQuestions: [
                     '입덧이 너무 심한데, 완화하는 방법이 있을까요?',
                     '임신 중 먹으면 안 되는 음식이 뭐예요?',
@@ -547,24 +782,24 @@
             },
             infant: {
                 icon: '👶',
-                name: '새싹맘곁',
-                subtitle: '신생아 케어 전문',
-                greeting: '안녕하세요! 새싹맘곁이에요 👶\n\n처음 맞는 아기와의 시간,\n하나하나 새롭고 걱정되시죠?\n\n아래 질문 중 선택하시거나, 자유롭게 물어봐 주세요!',
+                name: '아기맘곁',
+                subtitle: '육아 케어 전문',
+                greeting: '안녕하세요! 아기맘곁이에요 👶\n\n처음 맞는 아기와의 시간,\n하나하나 새롭고 걱정되시죠?\n\n아래 질문 중 선택하시거나, 자유롭게 물어봐 주세요!',
                 faqQuestions: [
                     '모유수유가 너무 힘든데, 어떻게 해야 할까요?',
                     '신생아 수면 교육은 언제부터 시작하면 좋을까요?',
                     '아기가 자꾸 보채는데, 배앓이인지 어떻게 알 수 있어요?'
                 ]
             },
-            toddler: {
-                icon: '🧒',
-                name: '우리맘곁',
-                subtitle: '유아 육아 전문',
-                greeting: '안녕하세요! 우리맘곁이에요 🧒\n\n호기심 가득한 우리 아이,\n매일 새로운 도전이시죠?\n\n아래 질문 중 선택하시거나, 자유롭게 물어봐 주세요!',
+            expert: {
+                icon: '👩‍⚕️',
+                name: '전문가 연결',
+                subtitle: '전문 상담 서비스',
+                greeting: '안녕하세요! 전문가 연결 서비스예요 👩‍⚕️\n\n더 전문적인 상담이 필요하시면\n아래 옵션을 선택해주세요.\n\n어떤 분야의 전문가가 필요하세요?',
                 faqQuestions: [
-                    '떼쓰는 아이, 어떻게 훈육해야 할까요?',
-                    '편식이 심한데, 골고루 먹게 하는 방법 있을까요?',
-                    '어린이집은 언제부터 보내는 게 좋을까요?'
+                    '모유수유 전문 상담사(IBCLC)와 상담하고 싶어요',
+                    '산후우울증 심리상담을 받고 싶어요',
+                    '육아 관련 법률 상담이 필요해요'
                 ]
             }
         };
@@ -581,6 +816,17 @@
         
         function showHome() {
             showPage('homeScreen');
+        }
+        
+        // 사이드 메뉴
+        function openSideMenu() {
+            document.getElementById('sideMenu').classList.add('active');
+            document.getElementById('sideMenuOverlay').classList.add('active');
+        }
+        
+        function closeSideMenu() {
+            document.getElementById('sideMenu').classList.remove('active');
+            document.getElementById('sideMenuOverlay').classList.remove('active');
         }
         
         // 채팅 시작
@@ -620,19 +866,19 @@
             });
         }
         
-        // FAQ 질문 버튼 추가 (핵심!)
+        // FAQ 질문 버튼 추가
         function addFaqButtons(questions) {
             const container = document.getElementById('chatMessages');
             const div = document.createElement('div');
             div.className = 'faq-buttons';
             div.innerHTML = questions.map(q => 
-                `<button class="faq-btn" onclick="sendFaq('${q.replace(/'/g, "\\'")}')">${q}</button>`
+                `<button class="faq-btn" onclick="sendFaq(this, '${q.replace(/'/g, "\\'")}')">${q}</button>`
             ).join('');
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
         }
         
-        function sendFaq(text) {
+        function sendFaq(btn, text) {
             // FAQ 버튼 제거
             document.querySelectorAll('.faq-buttons').forEach(el => el.remove());
             document.getElementById('chatInput').value = text;
