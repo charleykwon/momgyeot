@@ -25,11 +25,11 @@ module.exports = async function handler(req, res) {
         const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY;
         const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
         
-        // 1. RAG 검색
+        // 1. RAG 검색 (mateType으로 카테고리 필터링)
         let ragContext = [];
         if (SUPABASE_URL && SUPABASE_KEY) {
             try {
-                ragContext = await searchRAG(query, SUPABASE_URL, SUPABASE_KEY);
+                ragContext = await searchRAG(query, SUPABASE_URL, SUPABASE_KEY, mateType);
             } catch (e) {
                 console.error('RAG search error:', e.message);
             }
@@ -85,10 +85,34 @@ function httpsRequest(url, options, postData) {
     });
 }
 
-async function searchRAG(query, supabaseUrl, supabaseKey) {
+async function searchRAG(query, supabaseUrl, supabaseKey, mateType) {
     const searchTerm = query.trim().toLowerCase();
     
+    // 메이트 타입별 ID prefix 매핑
+    const mateIdPrefixes = {
+        'preparing': ['PREP'],  // 예비맘곁 - 임신준비
+        'pregnant': ['PREG'],   // 임신맘곁 - 임신중
+        'newborn': ['P', 'S', 'M', 'L', 'E', 'B', 'N', 'T', 'C', 'R', 'W']  // 초보맘곁 - 모유수유
+    };
+    
+    // 키워드 확장 매핑
     const keywordMap = {
+        // 임신준비 (예비맘곁)
+        '엽산': ['엽산', '영양제', '보충제'],
+        '배란': ['배란', '배란일', '가임기', '배란테스트'],
+        '시험관': ['시험관', 'IVF', '난임', '인공수정'],
+        '난임': ['난임', '인공수정', 'IUI', '시험관'],
+        '임신준비': ['임신준비', '임신계획', '준비'],
+        '체온': ['기초체온', '체온', '배란확인'],
+        // 임신중 (임신맘곁)
+        '입덧': ['입덧', '구역질', '메스꺼움', '토함'],
+        '태동': ['태동', '태아', '움직임'],
+        '임신성당뇨': ['임신성당뇨', '당뇨', '혈당'],
+        '부종': ['부종', '붓기', '다리'],
+        '조산': ['조산', '예방', '배뭉침'],
+        '출산': ['출산', '진통', '이슬', '양수'],
+        '태교': ['태교', '음악', '동화', '대화'],
+        // 모유수유 (초보맘곁)
         '젖몸살': ['젖몸살', '울혈', '유방울혈', '유방'],
         '유선염': ['유선염', '열', '감염', '유방'],
         '젖양': ['젖양', '모유량', '부족', '늘리기'],
@@ -121,23 +145,45 @@ async function searchRAG(query, supabaseUrl, supabaseKey) {
     
     let results = await response.json();
     
+    // 메이트 타입에 따른 필터링
+    const allowedPrefixes = mateIdPrefixes[mateType] || [];
+    
     results = results.map(item => {
         let score = 0;
         const title = (item.title || '').toLowerCase();
         const content = (item.content || '').toLowerCase();
+        const id = item.id || '';
         
+        // ID prefix로 카테고리 매칭
+        let categoryMatch = false;
+        if (allowedPrefixes.length > 0) {
+            for (const prefix of allowedPrefixes) {
+                if (id.startsWith(prefix)) {
+                    categoryMatch = true;
+                    score += 20; // 카테고리 매칭 보너스
+                    break;
+                }
+            }
+        } else {
+            // mateType이 없으면 전체 검색
+            categoryMatch = true;
+        }
+        
+        // 키워드 매칭
         for (const kw of expandedKeywords) {
             if (title.includes(kw)) score += 10;
             if (content.includes(kw)) score += 5;
         }
         
+        // 긴급도 보너스
         if (item.urgency === '즉시대응필요') score += 3;
         
-        return { ...item, score };
+        return { ...item, score, categoryMatch };
     });
     
+    // 카테고리 매칭 + 점수 기반 정렬
     return results
-        .filter(item => item.score > 0 && item.content)
+        .filter(item => item.score > 0 && item.content && item.categoryMatch)
         .sort((a, b) => b.score - a.score)
         .slice(0, 5);
 }
