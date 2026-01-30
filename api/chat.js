@@ -1,5 +1,5 @@
 // Vercel Serverless Function for AI Chat
-// POST /api/chat
+const fetch = require('node-fetch');
 
 module.exports = async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -31,10 +31,15 @@ module.exports = async function handler(req, res) {
             ragContext = await searchRAG(query, SUPABASE_URL, SUPABASE_KEY);
         }
         
-        // 2. Claude API 호출
+        // 2. Claude API 또는 폴백
         let answer = '';
         if (ANTHROPIC_API_KEY && ragContext.length > 0) {
-            answer = await callClaude(query, ragContext, mateType, userInfo, ANTHROPIC_API_KEY);
+            try {
+                answer = await callClaude(query, ragContext, mateType, userInfo, ANTHROPIC_API_KEY);
+            } catch (e) {
+                console.error('Claude error:', e);
+                answer = formatRAGResponse(ragContext[0]);
+            }
         } else if (ragContext.length > 0) {
             answer = formatRAGResponse(ragContext[0]);
         } else {
@@ -54,7 +59,6 @@ module.exports = async function handler(req, res) {
     }
 };
 
-// RAG 검색
 async function searchRAG(query, supabaseUrl, supabaseKey) {
     const searchTerm = query.trim().toLowerCase();
     
@@ -109,23 +113,11 @@ async function searchRAG(query, supabaseUrl, supabaseKey) {
         .slice(0, 5);
 }
 
-// Claude API
 async function callClaude(query, context, mateType, userInfo, apiKey) {
-    const systemPrompt = `당신은 '맘곁' 육아 컴패니언 AI입니다.
-
-## 역할
-- 모유수유, 임신, 출산, 육아 전문 상담
-- 공감적이고 따뜻한 태도
-- 과학적 근거 기반 정보
-
-## 응답 스타일
-- 친근하고 따뜻한 말투
-- 핵심 정보 먼저, 200-400자 내외
-- 이모지 적절히 사용 💕
-- 심각한 증상은 전문가 상담 권유`;
+    const systemPrompt = `당신은 '맘곁' 육아 컴패니언 AI입니다. 모유수유, 임신, 출산, 육아 전문 상담을 제공합니다. 공감적이고 따뜻한 태도로, 200-400자 내외의 답변을 해주세요. 이모지를 적절히 사용하고, 심각한 증상은 전문가 상담을 권유해주세요.`;
 
     const contextText = context.map((item, i) => 
-        `[${i + 1}] ${item.title}\n${item.content}`
+        `[${i + 1}] ${item.title}: ${item.content}`
     ).join('\n\n');
     
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -141,20 +133,17 @@ async function callClaude(query, context, mateType, userInfo, apiKey) {
             system: systemPrompt,
             messages: [{
                 role: 'user',
-                content: `참고 정보:\n${contextText}\n\n사용자 질문: ${query}\n\n위 참고 정보를 바탕으로 따뜻하고 공감적인 답변을 해주세요.`
+                content: `참고 정보:\n${contextText}\n\n사용자 질문: ${query}`
             }]
         })
     });
     
-    if (!response.ok) {
-        throw new Error('Claude API failed');
-    }
+    if (!response.ok) throw new Error('Claude API failed');
     
     const data = await response.json();
     return data.content[0].text;
 }
 
-// RAG 포맷
 function formatRAGResponse(item) {
     if (!item) return '';
     let response = '';
