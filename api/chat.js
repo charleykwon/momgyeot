@@ -1,156 +1,246 @@
-// 맘곁 Chat API (안정화 버전)
+// Vercel Serverless Function for 맘곁 AI Chat
 // POST /api/chat
+// RAG 검색 + 대화 히스토리 저장 통합
 
-import Anthropic from '@anthropic-ai/sdk';
-import { createClient } from '@supabase/supabase-js';
+export default async function handler(req, res) {
+    // CORS 설정
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+    
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+    
+    try {
+        const { query, userInfo, conversationId, stage } = req.body;
+        
+        if (!query) {
+            return res.status(400).json({ error: 'query required' });
+        }
+        
+        const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+        const SUPABASE_URL = process.env.SUPABASE_URL;
+        const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY;
+        
+        if (!ANTHROPIC_API_KEY) {
+            return res.status(500).json({ error: 'AI API not configured' });
+        }
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+        // 1. RAG 검색 실행
+        let context = [];
+        if (SUPABASE_URL && SUPABASE_KEY) {
+            context = await searchKnowledge(query, stage, SUPABASE_URL, SUPABASE_KEY);
+        }
+        
+        // 2. Claude API 호출
+        const response = await callClaude(query, context, userInfo, stage, ANTHROPIC_API_KEY);
+        
+        // 3. 대화 히스토리 저장
+        if (SUPABASE_URL && SUPABASE_KEY) {
+            await saveConversation(query, response.answer, userInfo, conversationId, SUPABASE_URL, SUPABASE_KEY);
+        }
+        
+        return res.status(200).json({
+            success: true,
+            answer: response.answer,
+            model: response.model,
+            contextUsed: context.length,
+            conversationId: conversationId
+        });
+        
+    } catch (error) {
+        console.error('Chat error:', error);
+        return res.status(500).json({ 
+            error: 'Chat failed',
+            message: error.message 
+        });
+    }
+}
 
-// Supabase 클라이언트 (환경변수 없으면 null)
-let supabase = null;
-if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
-  supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_ANON_KEY
-  );
+// RAG 검색 함수
+async function searchKnowledge(query, stage, supabaseUrl, supabaseKey) {
+    try {
+        // 키워드 매핑
+        const keywordMap = {
+            '입덧': ['입덧', '구토', '메스꺼움'],
+            '젖양': ['젖양', '모유량', '부족'],
+            '산후우울': ['산후우울', '우울', '기분변화'],
+            '황달': ['황달', '빌리루빈', '광선치료'],
+            '이유식': ['이유식', '고형식', '시작'],
+            '밤수유': ['밤수유', '야간수유', '수면'],
+            '진통': ['진통', '출산', '분만'],
+            '태동': ['태동', '태아움직임'],
+            '열': ['열', '발열', '해열제'],
+            '수유자세': ['수유자세', '래치', '물림']
+        };
+
+        const searchTerm = query.toLowerCase();
+        let expandedTerms = [searchTerm];
+        
+        for (const [key, values] of Object.entries(keywordMap)) {
+            if (searchTerm.includes(key)) {
+                expandedTerms = [...expandedTerms, ...values];
+            }
+        }
+
+        // Supabase 검색
+        const url = `${supabaseUrl}/rest/v1/knowledge_units?select=*`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': supabaseKey,
+                'Authorization': `Bearer ${supabaseKey}`
+            }
+        });
+
+        if (!response.ok) return [];
+
+        let results = await response.json();
+        
+        // 점수 계산 및 필터링
+        results = results.map(item => {
+            let score = 0;
+            const title = (item.title || '').toLowerCase();
+            const content = (item.content || '').toLowerCase();
+            
+            for (const term of expandedTerms) {
+                if (title.includes(term)) score += 10;
+                if (content.includes(term)) score += 5;
+            }
+            
+            return { ...item, score };
+        });
+
+        results = results
+            .filter(item => item.score > 0 && item.content)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 3);
+
+        return results;
+    } catch (error) {
+        console.error('RAG search error:', error);
+        return [];
+    }
+}
+
+// Claude API 호출
+async function callClaude(query, context, userInfo, stage, apiKey) {
+    const systemPrompt = getSystemPrompt(userInfo, stage);
+    const contextText = formatContext(context);
+    
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+            model: 'claude-3-haiku-20240307',
+            max_tokens: 1024,
+            system: systemPrompt,
+            messages: [
+                {
+                    role: 'user',
+                    content: contextText 
+                        ? `참고 정보:\n${contextText}\n\n질문: ${query}`
+                        : query
+                }
+            ]
+        })
+    });
+    
+    if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Claude API failed: ${error}`);
+    }
+    
+    const data = await response.json();
+    
+    return {
+        answer: data.content[0].text,
+        model: 'claude-3-haiku'
+    };
 }
 
 // 맘곁 시스템 프롬프트
-const SYSTEM_PROMPT = `당신은 "맘곁"이라는 이름의 따뜻하고 공감적인 육아 AI 컴패니언입니다.
+function getSystemPrompt(userInfo, stage) {
+    const stagePrompts = {
+        'prep': '임신 준비 중인 예비맘을 위한',
+        'pregnancy': '임신 중인 예비맘을 위한',
+        'infant': '신생아/영아를 키우는 엄마를 위한',
+        'toddler': '유아를 키우는 엄마를 위한'
+    };
 
-## 핵심 역할
-- 임신 준비부터 육아까지 엄마들의 여정을 함께하는 친근한 동반자
-- 모유수유, 수면교육, 이유식, 정서 케어 등 전문 정보 제공
-- 공감과 위로를 통한 정서적 지지
+    const stageContext = stagePrompts[stage] || '엄마를 위한';
 
-## 대화 스타일
-- 따뜻하고 친근한 말투 사용
-- 공감 먼저, 정보는 그 다음
-- 짧고 명확한 문장
-- 필요시 이모지 적절히 사용
+    return `당신은 '맘곁' AI 컴패니언입니다. ${stageContext} 따뜻하고 전문적인 조언을 제공합니다.
+
+## 역할
+- 임신/출산/육아 전문 상담사
+- 공감적이고 지지적인 태도
+- 과학적 근거 기반 정보 제공
+- 엄마의 마음을 헤아리는 친구
+
+## 응답 스타일
+- 따뜻하고 친근한 말투 (반말 OK)
+- 핵심 정보를 먼저 제공
+- 이모지를 적절히 사용
 - 200-400자 내외로 간결하게
+- 응급 상황은 명확히 경고
 
 ## 위기 감지
-다음 키워드 감지 시 즉시 전문 상담 연결 안내:
-- 자해/자살 관련 표현
-- 극심한 우울감 표현
-→ 자살예방상담전화 1393 (24시간) 안내
+아래 키워드 발견 시 즉시 위기 대응:
+- "죽고싶", "자해", "극단적", "힘들어서 못하겠"
+→ 공감 + 전문 상담 권유 + 핫라인 안내 (1393)
 
 ## 주의사항
-- 의료적 진단이나 처방은 하지 않음
-- 심각한 증상은 반드시 전문의 상담 권유`;
+- 의료 진단을 하지 않음
+- 심각한 증상은 전문가 상담 권유
+- 불확실한 정보는 제공하지 않음
+- 엄마를 절대 비난하지 않음
 
-// 대화 저장 함수 (Supabase 있을 때만)
-async function saveMessage(user_id, role, content) {
-  if (!supabase || !user_id) return;
-  
-  try {
-    await supabase
-      .from('conversations')
-      .insert([{ user_id, role, content }]);
-  } catch (error) {
-    console.error('메시지 저장 실패:', error.message);
-  }
+${userInfo ? `## 사용자 정보\n닉네임: ${userInfo.nickname || '엄마'}\n스테이지: ${stage || '일반'}` : ''}`;
 }
 
-// 이전 대화 불러오기
-async function getRecentMessages(user_id, limit = 6) {
-  if (!supabase || !user_id) return [];
-  
-  try {
-    const { data, error } = await supabase
-      .from('conversations')
-      .select('role, content')
-      .eq('user_id', user_id)
-      .order('created_at', { ascending: false })
-      .limit(limit);
-
-    if (error) {
-      console.error('대화 불러오기 오류:', error.message);
-      return [];
-    }
+// 컨텍스트 포맷팅
+function formatContext(context) {
+    if (!context || !Array.isArray(context) || context.length === 0) return '';
     
-    return (data || []).reverse();
-  } catch (error) {
-    console.error('대화 불러오기 실패:', error.message);
-    return [];
-  }
+    return context.map((item, i) => 
+        `[${i + 1}] ${item.title}\n${item.content?.substring(0, 500)}`
+    ).join('\n\n');
 }
 
-export default async function handler(req, res) {
-  // CORS 헤더
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'POST 메서드만 허용됩니다' });
-  }
-
-  try {
-    const { message, user_id } = req.body;
-
-    if (!message) {
-      return res.status(400).json({ error: '메시지가 필요합니다' });
+// 대화 히스토리 저장
+async function saveConversation(query, answer, userInfo, conversationId, supabaseUrl, supabaseKey) {
+    try {
+        const url = `${supabaseUrl}/rest/v1/conversations`;
+        
+        await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': supabaseKey,
+                'Authorization': `Bearer ${supabaseKey}`,
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+                conversation_id: conversationId || `conv_${Date.now()}`,
+                user_message: query,
+                ai_response: answer,
+                user_info: userInfo || {},
+                created_at: new Date().toISOString()
+            })
+        });
+    } catch (error) {
+        console.error('Save conversation error:', error);
+        // 저장 실패해도 응답은 반환
     }
-
-    // 1. 사용자 메시지 저장
-    await saveMessage(user_id, 'user', message);
-
-    // 2. 메시지 히스토리 구성
-    let messages = [];
-    
-    if (user_id) {
-      const history = await getRecentMessages(user_id, 6);
-      messages = history.map(msg => ({
-        role: msg.role,
-        content: msg.content
-      }));
-    }
-    
-    // 현재 메시지가 히스토리에 없으면 추가
-    const hasCurrentMessage = messages.some(m => 
-      m.role === 'user' && m.content === message
-    );
-    
-    if (!hasCurrentMessage) {
-      messages.push({ role: 'user', content: message });
-    }
-
-    // 메시지가 비어있으면 현재 메시지만
-    if (messages.length === 0) {
-      messages = [{ role: 'user', content: message }];
-    }
-
-    // 3. Claude API 호출
-    const response = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307',
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      messages: messages
-    });
-
-    const assistantMessage = response.content[0].text;
-
-    // 4. AI 응답 저장
-    await saveMessage(user_id, 'assistant', assistantMessage);
-
-    return res.status(200).json({
-      success: true,
-      response: assistantMessage
-    });
-
-  } catch (error) {
-    console.error('Chat API Error:', error);
-    return res.status(500).json({
-      error: '응답 생성에 실패했습니다',
-      details: error.message
-    });
-  }
 }
