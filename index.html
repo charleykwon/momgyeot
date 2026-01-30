@@ -3088,10 +3088,14 @@ function showMateSelection() {
                 });
             });
             
-            // 스크롤 맨 아래로
+            // 스크롤 맨 아래로 (렌더링 완료 대기)
             setTimeout(() => {
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }, 100);
+                // 이미지 등 로딩 후 한번 더
+                setTimeout(() => {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 200);
+            }, 300);
         }
         
         // 저장 없이 메시지 추가 (복원용)
