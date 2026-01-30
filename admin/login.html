@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맘곁 관리자 로그인</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #5E6B3A 0%, #8B9A6D 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 48px 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #5E6B3A;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 32px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #5E6B3A;
+            box-shadow: 0 0 0 3px rgba(94, 107, 58, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #5E6B3A 0%, #7A8B52 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 16px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(94, 107, 58, 0.3);
+        }
+        
+        .login-btn:disabled {
+            background: #CCC;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .error-msg {
+            color: #E53935;
+            font-size: 14px;
+            margin-top: 16px;
+            display: none;
+        }
+        
+        .error-msg.show {
+            display: block;
+        }
+        
+        .back-link {
+            display: block;
+            margin-top: 24px;
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .back-link:hover {
+            color: #5E6B3A;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">🌱</div>
+        <h1 class="title">맘곁 관리자</h1>
+        <p class="subtitle">관리자 페이지에 접속하려면 비밀번호를 입력하세요</p>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" placeholder="비밀번호 입력" required>
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">로그인</button>
+            
+            <p class="error-msg" id="errorMsg">비밀번호가 올바르지 않습니다.</p>
+        </form>
+        
+        <a href="/" class="back-link">← 메인으로 돌아가기</a>
+    </div>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000' 
+            : '';
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = '로그인 중...';
+            errorMsg.classList.remove('show');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/admin`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.token) {
+                    localStorage.setItem('momgyeot_admin_token', data.token);
+                    window.location.href = '/admin/dashboard.html';
+                } else {
+                    errorMsg.classList.add('show');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorMsg.textContent = '서버 오류가 발생했습니다.';
+                errorMsg.classList.add('show');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = '로그인';
+            }
+        });
+    </script>
+</body>
+</html>
