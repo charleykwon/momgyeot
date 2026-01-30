@@ -3,3529 +3,1331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>💚 맘곁 - 엄마 마음 곁에</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>맘곁 - 엄마 곁의 든든한 동반자</title>
+    <meta name="description" content="임신 준비부터 육아까지, 엄마 곁을 지키는 AI 동반자">
+    <meta name="theme-color" content="#5E6B3A">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --olive: #5E6B3A;
-            --olive-light: #7A8B52;
-            --olive-dark: #4A5530;
-            --pink: #E8B4B8;
-            --pink-light: #F5D5D8;
-            --purple: #9B8AA6;
-            --purple-light: #C4B8CE;
-            --cream: #FDF8F5;
-            --cream-dark: #F0EBE6;
-            --text-dark: #2D2D2D;
-            --text-medium: #5A5A5A;
-            --text-light: #8A8A8A;
-            --white: #FFFFFF;
-            --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-            --card-shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
+        :root {
+            --mothers-olive: #5E6B3A;
+            --mothers-olive-light: #8FA65D;
+            --mothers-pink: #E8B4B8;
+            --mothers-pink-light: #F5D5D8;
+            --black-olive: #3D4A2D;
+            --cream: #FBF9F3;
+            --warm-gray: #9A9A8A;
+        }
+        
         body {
             font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #F5F5F5;
+            background: var(--cream);
             min-height: 100vh;
-            min-height: -webkit-fill-available;
-            color: var(--text-dark);
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .app-container {
-            max-width: 480px;
-            margin: 0 auto;
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-            background: var(--white);
-            position: relative;
             overflow-x: hidden;
         }
-
-        .screen {
-            display: none;
-            flex-direction: column;
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-        }
-
-        .screen.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ==================== HOME SCREEN ==================== */
-        .home-screen {
-            background: linear-gradient(180deg, 
-                #E8F0E3 0%, 
-                #F5E6E8 30%,
-                #EDE8F0 60%,
-                #FFFFFF 100%
-            );
-        }
-
-        .home-header {
-            padding: 16px 20px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-
-        .home-header-btn {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .home-header-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-        }
-
-        /* Side Menu */
-        .side-menu-overlay {
+        
+        /* 화면 전환 */
+        .page {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .side-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .side-menu {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 280px;
+            width: 100%;
             height: 100%;
-            background: var(--white);
-            z-index: 1000;
-            transition: right 0.3s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            overflow-y: auto;
+        }
+        
+        .page.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(30px);
+        }
+        
+        /* ==================== 인트로 화면 ==================== */
+        .intro-screen {
+            background: linear-gradient(180deg, #2D3320 0%, #1A1F12 100%);
             display: flex;
             flex-direction: column;
-            box-shadow: -4px 0 20px rgba(0,0,0,0.1);
-        }
-
-        .side-menu.active {
-            right: 0;
-        }
-
-        .side-menu-header {
-            padding: 18px 16px;
-            background: linear-gradient(135deg, var(--mothers-olive), var(--mothers-olive-light));
-            color: white;
-        }
-
-        .side-menu-header h2 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .side-menu-header p {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        .side-menu-close {
-            position: absolute;
-            top: 20px;
-            right: 16px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
             justify-content: center;
-        }
-
-        .side-menu-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px 0;
-        }
-
-        .side-menu-section {
-            padding: 6px 16px;
-        }
-
-        .side-menu-section-title {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-            padding-left: 4px;
-        }
-
-        .side-menu-item {
-            display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            margin-bottom: 6px;
-            background: var(--bg-light);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            color: var(--text-dark);
-        }
-
-        .side-menu-item:hover {
-            background: var(--mothers-olive-light);
-            transform: translateX(4px);
-        }
-
-        .side-menu-item .item-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--white);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-            flex-shrink: 0;
-        }
-
-        .side-menu-item .item-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .side-menu-item .item-name {
-            font-size: 13px;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .side-menu-item .item-desc {
-            display: none;
-        }
-
-        .side-menu-item .item-arrow {
-            color: var(--text-light);
-            font-size: 12px;
-            flex-shrink: 0;
-        }
-
-        .side-menu-divider {
-            height: 1px;
-            background: var(--border-color);
-            margin: 10px 16px;
-        }
-
-        .home-greeting {
-            padding: 20px 24px 32px;
+            padding: 40px 24px;
             text-align: center;
         }
-
-        .home-title {
-            font-size: 26px;
+        
+        .intro-content {
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .intro-logo {
+            margin-bottom: 60px;
+        }
+        
+        .intro-logo-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 4px 20px rgba(232,180,184,0.3));
+        }
+        
+        .intro-brand {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 18px;
+            color: var(--mothers-olive-light);
+            letter-spacing: 4px;
             font-weight: 600;
-            color: var(--text-dark);
-            line-height: 1.4;
         }
-
-        .quick-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 0 24px 32px;
-            align-items: center;
+        
+        .intro-headline h1 {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.6;
+            margin-bottom: 24px;
         }
-
-        .quick-action-btn {
-            background: var(--white);
-            border: none;
-            padding: 14px 24px;
-            border-radius: 50px;
+        
+        .typing-line {
+            display: block;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .line1 { animation-delay: 0.3s; }
+        .line2 { animation-delay: 0.8s; }
+        .line3 { animation-delay: 1.3s; }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .highlight {
+            color: var(--mothers-pink);
+            font-weight: 700;
+        }
+        
+        .intro-subtitle {
+            color: rgba(255,255,255,0.7);
             font-size: 15px;
-            font-weight: 500;
-            color: var(--text-dark);
+            line-height: 1.8;
+            margin-bottom: 50px;
+        }
+        
+        .heart-text {
+            display: inline-block;
+        }
+        
+        .intro-btn {
+            background: linear-gradient(135deg, var(--mothers-olive) 0%, var(--mothers-olive-light) 100%);
+            color: #fff;
+            border: none;
+            padding: 18px 60px;
+            border-radius: 30px;
+            font-size: 17px;
+            font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: var(--card-shadow);
-            transition: all 0.2s;
-            font-family: inherit;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(94,107,58,0.4);
         }
-
-        .quick-action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--card-shadow-hover);
+        
+        .intro-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(94,107,58,0.5);
         }
-
-        /* 온보딩 완료 후 가로형 Quick Actions */
-        .quick-actions-mini {
-            display: flex;
-            gap: 10px;
-            padding: 0 20px 24px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+        
+        .intro-btn span {
+            margin-left: 8px;
+            transition: transform 0.3s;
         }
-
-        .quick-actions-mini::-webkit-scrollbar {
-            display: none;
+        
+        .intro-btn:hover span {
+            transform: translateX(5px);
         }
-
-        .quick-action-mini-btn {
-            background: var(--white);
-            border: 1.5px solid var(--mothers-olive-light);
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-dark);
+        
+        .intro-footer {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.3);
+            font-size: 12px;
+        }
+        
+        /* ==================== 로그인 화면 ==================== */
+        .login-screen {
+            background: var(--cream);
+            padding: 60px 24px 40px;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--black-olive);
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: var(--card-shadow);
-            transition: all 0.2s;
-            font-family: inherit;
-            white-space: nowrap;
-            flex-shrink: 0;
+            padding: 10px;
         }
-
-        .quick-action-mini-btn .icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+        
+        .login-logo-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .login-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 26px;
+            color: var(--black-olive);
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+        
+        .login-desc {
+            color: var(--warm-gray);
+            font-size: 14px;
+        }
+        
+        .login-buttons {
+            max-width: 340px;
+            margin: 0 auto;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .login-btn-kakao {
+            background: #FEE500;
+            color: #191919;
+        }
+        
+        .login-btn-naver {
+            background: #03C75A;
+            color: #fff;
+        }
+        
+        .login-btn-google {
+            background: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .login-btn-apple {
+            background: #000;
+            color: #fff;
+        }
+        
+        .login-divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: var(--warm-gray);
+            font-size: 13px;
+        }
+        
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+        
+        .login-divider span {
+            padding: 0 16px;
+        }
+        
+        .login-btn-guest {
+            background: transparent;
+            color: var(--mothers-olive);
+            border: 2px solid var(--mothers-olive);
+        }
+        
+        .login-terms {
+            text-align: center;
+            margin-top: 30px;
             font-size: 12px;
+            color: var(--warm-gray);
+            line-height: 1.6;
         }
-
-        .quick-action-mini-btn .icon.green {
-            background: linear-gradient(135deg, #5E6B3A, #7A8A4A);
-            color: white;
+        
+        .login-terms a {
+            color: var(--mothers-olive);
+            text-decoration: underline;
         }
-
-        .quick-action-mini-btn .icon.pink {
-            background: linear-gradient(135deg, #E8B4B8, #D9A5A9);
-            color: white;
+        
+        /* ==================== 홈 화면 ==================== */
+        .home-screen {
+            background: linear-gradient(180deg, var(--mothers-olive) 0%, var(--black-olive) 100%);
+            padding: 50px 20px 100px;
         }
-
-        .quick-action-mini-btn .icon.olive {
-            background: linear-gradient(135deg, #8B9A5C, #A8B878);
-            color: white;
+        
+        .home-header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #fff;
         }
-
-        .quick-action-mini-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--card-shadow-hover);
-            border-color: var(--mothers-olive);
+        
+        .home-logo {
+            font-size: 50px;
+            margin-bottom: 12px;
         }
-
-        .quick-action-mini-btn:active {
-            transform: scale(0.98);
+        
+        .home-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
-
-        /* 메인 맘곁 카드 (크게) */
-        .main-mate-card {
-            background: var(--white);
-            border-radius: 24px;
+        
+        .home-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .stage-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .stage-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
             padding: 24px;
-            margin: 0 20px 20px;
-            box-shadow: var(--card-shadow);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
-
-        .main-mate-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--card-shadow-hover);
+        
+        .stage-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
         }
-
-        .main-mate-header {
+        
+        .stage-card-header {
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
-
-        .main-mate-avatar {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            flex-shrink: 0;
+        
+        .stage-icon {
+            font-size: 40px;
         }
-
-        .main-mate-avatar.olive { background: linear-gradient(135deg, #E8F0E3 0%, #D4E4CC 100%); }
-        .main-mate-avatar.purple { background: linear-gradient(135deg, #EDE8F0 0%, #DDD4E4 100%); }
-        .main-mate-avatar.pink { background: linear-gradient(135deg, #F5E6E8 0%, #EEDAD8 100%); }
-
-        .main-mate-info { flex: 1; }
-
-        .main-mate-greeting {
+        
+        .stage-info h3 {
             font-size: 18px;
-            font-weight: 600;
-            color: var(--text-dark);
+            color: var(--black-olive);
             margin-bottom: 4px;
         }
-
-        .main-mate-name {
-            font-size: 14px;
-            color: var(--text-light);
+        
+        .stage-info p {
+            font-size: 13px;
+            color: var(--warm-gray);
         }
-
-        .main-mate-message {
-            font-size: 15px;
-            color: var(--text-dark);
-            line-height: 1.6;
-            background: var(--bg-light);
-            padding: 14px 16px;
-            border-radius: 16px;
-        }
-
-        .main-mate-action {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 16px;
-        }
-
-        .main-mate-btn {
-            background: var(--olive);
-            color: white;
-            border: none;
-            padding: 10px 24px;
+        
+        .stage-tag {
+            display: inline-block;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s;
-        }
-
-        .main-mate-btn:hover {
-            background: var(--olive-dark);
-        }
-
-        /* ==================== 대화 히스토리 섹션 ==================== */
-        .chat-history-section {
-            margin: 0 20px 24px;
-        }
-        
-        .chat-history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        
-        .chat-history-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-        
-        .chat-history-count {
-            font-size: 13px;
-            color: var(--text-light);
-            background: var(--bg-light);
-            padding: 4px 10px;
-            border-radius: 12px;
-        }
-        
-        .date-group {
-            margin-bottom: 16px;
-        }
-        
-        .date-group-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 0;
-            margin-bottom: 8px;
-        }
-        
-        .date-group-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--olive);
-        }
-        
-        .date-group-count {
-            font-size: 12px;
-            color: var(--text-light);
-            background: var(--bg-light);
-            padding: 2px 8px;
-            border-radius: 10px;
-        }
-        
-        .date-group-line {
-            flex: 1;
-            height: 1px;
-            background: var(--border-light);
-        }
-        
-        .history-item {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 14px 16px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        
-        .history-item:hover {
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        
-        .history-item-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-        
-        .history-item-content {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .history-item-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 2px;
-        }
-        
-        .history-item-preview {
-            font-size: 13px;
-            color: var(--text-light);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .history-item-time {
-            font-size: 12px;
-            color: var(--text-light);
-            flex-shrink: 0;
-        }
-        
-        .history-item-arrow {
-            color: var(--text-light);
-            font-size: 16px;
-        }
-        
-        .view-all-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--bg-light);
-            border: 1px dashed var(--border-light);
-            border-radius: 16px;
-            color: var(--text-light);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-family: inherit;
-        }
-        
-        .view-all-btn:hover {
-            background: var(--white);
-            border-color: var(--olive);
-            color: var(--olive);
-        }
-        
-        .no-history-message {
-            text-align: center;
-            padding: 32px 20px;
-            color: var(--text-light);
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        
-        /* 전체 대화 모달 */
-        .history-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--bg-light);
-            z-index: 1000;
-            overflow-y: auto;
-        }
-        
-        .history-modal.active {
-            display: block;
-        }
-        
-        .history-modal-header {
-            position: sticky;
-            top: 0;
-            background: var(--white);
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid var(--border-light);
-            z-index: 10;
-        }
-        
-        .history-modal-back {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: var(--bg-light);
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .history-modal-title {
-            font-size: 18px;
+            font-size: 11px;
             font-weight: 600;
         }
         
-        .history-modal-content {
-            padding: 20px;
-        }
-
-        /* 오늘의 한마디 카드 */
-        .tip-card {
-            background: linear-gradient(135deg, #FFF9E6 0%, #FFF5D6 100%);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 0 20px 24px;
-        }
-
-        .tip-card-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .tip-card-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #B8860B;
-        }
-
-        .tip-card-content {
-            font-size: 15px;
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
-
-        /* 개인화 인사 */
-        .personalized-greeting {
-            padding: 32px 24px 24px;
-            text-align: center;
-        }
-
-        .personalized-greeting h1 {
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-            line-height: 1.4;
-        }
-
-        .personalized-greeting p {
-            font-size: 15px;
-            color: var(--text-light);
-        }
-
-        .section {
-            padding: 0 20px 24px;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 14px;
-        }
-
-        .section-title .highlight {
-            color: var(--olive);
-        }
-
-        .my-mate-card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 18px;
-            box-shadow: var(--card-shadow);
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .mate-avatar {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            flex-shrink: 0;
-        }
-
-        .mate-avatar.olive { background: linear-gradient(135deg, #E8F0E3 0%, #D4E4CC 100%); }
-        .mate-avatar.purple { background: linear-gradient(135deg, #EDE8F0 0%, #DDD4E4 100%); }
-        .mate-avatar.pink { background: linear-gradient(135deg, #F5E6E8 0%, #EEDAD8 100%); }
-
-        .my-mate-info { flex: 1; min-width: 0; }
-
-        .my-mate-message {
-            font-size: 14px;
-            color: var(--text-dark);
-            line-height: 1.5;
-            margin-bottom: 6px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .my-mate-meta {
-            font-size: 13px;
-            color: var(--text-light);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .my-mate-name { font-weight: 500; color: var(--text-medium); }
-
-        .mate-list {
+        .tag-prep { background: #F3E5F5; color: #7B1FA2; }
+        .tag-pregnancy { background: #FCE4EC; color: #C2185B; }
+        .tag-infant { background: #E8F5E9; color: #388E3C; }
+        .tag-toddler { background: #FFF3E0; color: #F57C00; }
+        
+        /* ==================== 온보딩 화면 ==================== */
+        .onboarding-screen {
+            background: var(--cream);
+            padding: 30px 24px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            min-height: 100vh;
         }
-
-        .mate-card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 16px 18px;
-            box-shadow: var(--card-shadow);
+        
+        .onboarding-header {
             display: flex;
             align-items: center;
-            gap: 14px;
-            transition: all 0.2s;
+            justify-content: space-between;
+            margin-bottom: 30px;
         }
-
-        .mate-card-info { flex: 1; min-width: 0; }
-
-        .mate-card-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 4px;
+        
+        .onboarding-back {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .onboarding-progress {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
-
-        .mate-card-name .badge {
-            background: var(--olive);
-            color: white;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 6px;
+        
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-dot.active {
+            background: var(--mothers-olive);
+            width: 24px;
             border-radius: 4px;
         }
-
-        .mate-card-desc {
-            font-size: 14px;
-            color: var(--text-light);
-            line-height: 1.4;
-        }
-
-        .mate-card-btn {
-            background: var(--cream);
-            border: none;
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-dark);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            flex-shrink: 0;
-        }
-
-        .mate-card-btn:hover {
-            background: var(--olive);
-            color: white;
-        }
-
-        .bottom-input-area {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 480px;
-            background: var(--white);
-            padding: 12px 16px;
-            padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
-            border-top: 1px solid #F0F0F0;
-        }
-
-        .global-input-wrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: #F5F5F5;
-            border-radius: 24px;
-            padding: 6px 6px 6px 20px;
-        }
-
-        .global-input {
-            flex: 1;
-            border: none;
-            background: none;
-            font-size: 15px;
-            color: var(--text-dark);
-            font-family: inherit;
-            outline: none;
-        }
-
-        .global-input::placeholder { color: var(--text-light); }
-        .global-input-prefix { 
-            color: var(--olive); 
-            font-weight: 600; 
-            font-size: 15px; 
-            flex-shrink: 0;
-            white-space: nowrap;
-        }
-
-        /* Wispr Flow 스타일 음성 버튼 */
-        .voice-btn {
-            width: 42px;
-            height: 42px;
-            background: var(--text-dark);
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .voice-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .voice-btn.recording {
-            background: #FF4757;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.4); }
-            50% { box-shadow: 0 0 0 12px rgba(255, 71, 87, 0); }
-        }
-
-        /* Sound Wave Icon */
-        .sound-wave {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2px;
-            height: 20px;
-        }
-
-        .sound-wave .bar {
-            width: 3px;
-            background: white;
-            border-radius: 2px;
-            transition: height 0.1s;
-        }
-
-        .sound-wave .bar:nth-child(1) { height: 8px; }
-        .sound-wave .bar:nth-child(2) { height: 14px; }
-        .sound-wave .bar:nth-child(3) { height: 20px; }
-        .sound-wave .bar:nth-child(4) { height: 14px; }
-        .sound-wave .bar:nth-child(5) { height: 8px; }
-
-        .voice-btn.recording .sound-wave .bar {
-            animation: soundWave 0.5s infinite ease-in-out alternate;
-        }
-
-        .voice-btn.recording .sound-wave .bar:nth-child(1) { animation-delay: 0s; }
-        .voice-btn.recording .sound-wave .bar:nth-child(2) { animation-delay: 0.1s; }
-        .voice-btn.recording .sound-wave .bar:nth-child(3) { animation-delay: 0.2s; }
-        .voice-btn.recording .sound-wave .bar:nth-child(4) { animation-delay: 0.3s; }
-        .voice-btn.recording .sound-wave .bar:nth-child(5) { animation-delay: 0.4s; }
-
-        @keyframes soundWave {
-            0% { height: 6px; }
-            100% { height: 20px; }
-        }
-
-        .bottom-nav {
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0 0;
-            margin-top: 8px;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
+        
+        .onboarding-skip {
             background: none;
             border: none;
-            cursor: pointer;
-            padding: 8px 16px;
-            font-family: inherit;
-        }
-
-        .nav-item .icon { font-size: 20px; opacity: 0.4; }
-        .nav-item.active .icon { opacity: 1; }
-
-        .home-content {
-            flex: 1;
-            overflow-y: auto;
-            padding-bottom: 140px;
-        }
-
-        .empty-my-mate {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 24px;
-            text-align: center;
-            box-shadow: var(--card-shadow);
-        }
-
-        .empty-my-mate p {
+            color: var(--warm-gray);
             font-size: 14px;
-            color: var(--text-light);
-        }
-
-        /* ==================== ONBOARDING SCREEN ==================== */
-        .onboarding-screen {
-            background: linear-gradient(180deg, #E8F0E3 0%, #F5E6E8 40%, #FFFFFF 100%);
-            padding: 60px 24px 40px;
-        }
-
-        .onboarding-screen.purple-theme {
-            background: linear-gradient(180deg, #EDE8F0 0%, #F5E6E8 40%, #FFFFFF 100%);
-        }
-
-        .back-btn {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.8);
-            border: none;
-            border-radius: 12px;
-            font-size: 20px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            z-index: 10;
         }
-
+        
         .onboarding-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-        }
-
-        .onboarding-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .onboarding-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            text-align: center;
+            padding: 20px 0;
         }
-
-        .onboarding-step {
-            font-size: 13px;
-            color: var(--text-light);
-            margin-bottom: 8px;
+        
+        .onboarding-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
         }
-
+        
         .onboarding-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--text-dark);
-            line-height: 1.5;
+            font-family: 'Noto Serif KR', serif;
+            font-size: 26px;
+            color: var(--black-olive);
+            margin-bottom: 16px;
+            line-height: 1.4;
         }
-
-        .onboarding-subtitle {
-            font-size: 14px;
-            color: var(--text-medium);
-            margin-top: 8px;
-        }
-
-        .onboarding-form {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .text-input {
-            width: 100%;
-            padding: 16px 20px;
-            font-size: 17px;
-            border: 2px solid transparent;
-            border-radius: 16px;
-            background: var(--white);
-            color: var(--text-dark);
-            text-align: center;
-            font-family: inherit;
-            box-shadow: var(--card-shadow);
-            transition: all 0.2s;
-        }
-
-        .text-input:focus {
-            outline: none;
-            border-color: var(--olive);
-        }
-
-        .text-input::placeholder { color: #B5B5B5; }
-
-        .input-hint {
-            font-size: 13px;
-            color: var(--text-light);
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .option-btn {
-            background: var(--white);
-            border: 2px solid transparent;
-            padding: 16px 20px;
-            border-radius: 16px;
+        
+        .onboarding-desc {
             font-size: 15px;
-            color: var(--text-dark);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            text-align: left;
-            box-shadow: var(--card-shadow);
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            color: var(--warm-gray);
+            line-height: 1.7;
+            margin-bottom: 30px;
         }
-
-        .option-btn:hover {
-            border-color: var(--olive-light);
-            background: #FAFAFA;
-        }
-
-        .option-btn.selected {
-            border-color: var(--olive);
-            background: linear-gradient(135deg, #F5F8F2 0%, #FFFFFF 100%);
-        }
-
-        .option-btn.selected.purple {
-            border-color: var(--purple);
-            background: linear-gradient(135deg, #F5F2F8 0%, #FFFFFF 100%);
-        }
-
-        .option-icon { font-size: 20px; }
-        .option-text { flex: 1; }
-
-        .option-check {
-            width: 22px;
-            height: 22px;
-            border: 2px solid #DDD;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            color: transparent;
-            transition: all 0.2s;
-        }
-
-        .option-btn.selected .option-check {
-            border-color: var(--olive);
-            background: var(--olive);
-            color: white;
-        }
-
-        .option-btn.selected.purple .option-check {
-            border-color: var(--purple);
-            background: var(--purple);
-        }
-
-        .number-input-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-
-        .number-input {
-            width: 100px;
-            padding: 16px;
-            font-size: 24px;
-            font-weight: 600;
-            border: 2px solid transparent;
-            border-radius: 16px;
-            background: var(--white);
-            color: var(--text-dark);
-            text-align: center;
-            font-family: inherit;
-            box-shadow: var(--card-shadow);
-        }
-
-        .number-input:focus {
-            outline: none;
-            border-color: var(--olive);
-        }
-
-        .number-suffix {
-            font-size: 18px;
-            color: var(--text-medium);
-            font-weight: 500;
-        }
-
-        .onboarding-footer { padding-top: 20px; }
-
-        .btn-primary {
+        
+        .onboarding-options {
             width: 100%;
-            background: var(--olive);
-            color: white;
+            max-width: 320px;
+        }
+        
+        .onboarding-option {
+            width: 100%;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            background: #fff;
+            border: 2px solid #eee;
+            border-radius: 14px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .onboarding-option:hover {
+            border-color: var(--mothers-olive);
+            background: rgba(94,107,58,0.05);
+        }
+        
+        .onboarding-option.selected {
+            border-color: var(--mothers-olive);
+            background: rgba(94,107,58,0.1);
+        }
+        
+        .onboarding-footer {
+            padding: 20px 0;
+        }
+        
+        .onboarding-next {
+            width: 100%;
+            padding: 18px;
+            background: var(--mothers-olive);
+            color: #fff;
             border: none;
-            padding: 16px 32px;
+            border-radius: 14px;
             font-size: 16px;
             font-weight: 600;
-            border-radius: 50px;
             cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
-
-        .btn-primary:hover { background: var(--olive-dark); }
-        .btn-primary:disabled { background: #CCC; cursor: not-allowed; }
-        .btn-primary.purple { background: var(--purple); }
-        .btn-primary.purple:hover { background: #8A7995; }
-
-        /* ==================== CHAT SCREEN ==================== */
-        .chat-screen { background: #F8F8F8; }
-
+        
+        .onboarding-next:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .onboarding-next:not(:disabled):hover {
+            background: var(--black-olive);
+        }
+        
+        /* ==================== 채팅 화면 ==================== */
+        .chat-screen {
+            background: var(--cream);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
         .chat-header {
-            background: var(--white);
-            padding: 12px 16px;
+            background: var(--mothers-olive);
+            color: #fff;
+            padding: 16px 20px;
             display: flex;
             align-items: center;
             gap: 12px;
-            border-bottom: 1px solid #F0F0F0;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        .chat-back-btn {
-            width: 40px;
-            height: 40px;
+        
+        .chat-back {
             background: none;
             border: none;
-            font-size: 22px;
+            color: #fff;
+            font-size: 24px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-dark);
         }
-
-        .chat-header-avatar {
-            width: 40px;
-            height: 40px;
+        
+        .chat-avatar {
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
+            background: rgba(255,255,255,0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
         }
-
-        .chat-header-name {
-            flex: 1;
-            font-size: 17px;
+        
+        .chat-info h3 {
+            font-size: 16px;
             font-weight: 600;
-            color: var(--text-dark);
         }
-
-        .chat-menu-btn {
-            width: 40px;
-            height: 40px;
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--text-medium);
+        
+        .chat-info p {
+            font-size: 12px;
+            opacity: 0.8;
         }
-
+        
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 20px 16px;
-            padding-bottom: 100px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
-
-        .chat-date {
-            text-align: center;
-            padding: 8px 16px;
-        }
-
-        .chat-date span {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            color: var(--text-light);
-        }
-
+        
         .message {
-            display: flex;
-            gap: 10px;
-            animation: slideUp 0.3s ease;
-        }
-
-        .message.ai {
-            align-self: flex-start;
             max-width: 85%;
-        }
-
-        .message.user {
-            align-self: flex-end;
-            max-width: 80%;
-            flex-direction: row-reverse;
-        }
-
-        .message-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-            align-self: flex-start;
-        }
-
-        .message-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .message-name {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-medium);
-            margin-left: 4px;
-        }
-
-        .message-bubble {
-            padding: 12px 16px;
-            border-radius: 18px;
+            padding: 14px 18px;
+            border-radius: 20px;
             font-size: 15px;
             line-height: 1.6;
-            white-space: pre-wrap;
-            word-break: break-word;
+            animation: messageIn 0.3s ease;
         }
-
-        .message.ai .message-bubble {
-            background: var(--white);
-            color: var(--text-dark);
-            border-bottom-left-radius: 4px;
+        
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-
-        .message.user .message-bubble {
-            background: var(--olive);
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message-time {
-            font-size: 11px;
-            color: var(--text-light);
-            margin-left: 4px;
-        }
-
-        .message.user .message-time {
-            text-align: right;
-            margin-right: 4px;
-        }
-
-        /* 음성 메시지 표시 */
-        .message-voice-indicator {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--text-light);
-            margin-top: 4px;
-            margin-left: 4px;
-        }
-
-        .message-voice-indicator svg {
-            width: 14px;
-            height: 14px;
-            fill: currentColor;
-        }
-
-        .profile-link {
-            text-align: center;
-            padding: 16px;
-            margin-top: 8px;
-        }
-
-        .profile-link p {
-            font-size: 13px;
-            color: var(--text-light);
-            margin-bottom: 4px;
-        }
-
-        .profile-link a {
-            font-size: 14px;
-            color: var(--text-medium);
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        .typing-indicator {
-            display: none;
-            padding: 14px 18px;
-            background: var(--white);
-            border-radius: 18px;
-            border-bottom-left-radius: 4px;
+        
+        .message.ai {
+            background: #fff;
+            color: var(--black-olive);
             align-self: flex-start;
-            margin-left: 46px;
+            border-bottom-left-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-
-        .typing-indicator.show {
+        
+        .message.user {
+            background: var(--mothers-olive);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+        }
+        
+        .typing-indicator {
             display: flex;
-            gap: 5px;
-            align-items: center;
+            gap: 4px;
+            padding: 16px 20px;
+            background: #fff;
+            border-radius: 20px;
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
         }
-
-        .typing-dot {
+        
+        .typing-indicator span {
             width: 8px;
             height: 8px;
-            background: #C0C0C0;
+            background: var(--mothers-olive);
             border-radius: 50%;
-            animation: typingBounce 1.4s infinite ease-in-out;
+            animation: typing 1.4s infinite;
         }
-
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes typingBounce {
-            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
+        
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-6px); opacity: 1; }
         }
-
+        
         .chat-input-area {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 480px;
-            background: var(--white);
-            padding: 12px 16px;
-            padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
-            border-top: 1px solid #F0F0F0;
-        }
-
-        .chat-input-wrap {
+            padding: 16px 20px;
+            background: #fff;
+            border-top: 1px solid #eee;
             display: flex;
-            align-items: flex-end;
-            gap: 10px;
+            gap: 12px;
+            align-items: center;
         }
-
-        .chat-input-left {
-            width: 36px;
-            height: 36px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-medium);
-            flex-shrink: 0;
-        }
-
+        
         .chat-input {
             flex: 1;
-            padding: 10px 16px;
+            padding: 14px 18px;
+            border: 2px solid #eee;
+            border-radius: 25px;
             font-size: 15px;
-            border: none;
-            background: #F5F5F5;
-            border-radius: 20px;
-            color: var(--text-dark);
-            font-family: inherit;
-            resize: none;
-            max-height: 100px;
-            line-height: 1.4;
-        }
-
-        .chat-input:focus {
             outline: none;
-            background: #EFEFEF;
+            transition: border-color 0.2s;
         }
-
-        .chat-input::placeholder { color: var(--text-light); }
-
-        .chat-voice-btn {
-            width: 42px;
-            height: 42px;
-            background: var(--text-dark);
+        
+        .chat-input:focus {
+            border-color: var(--mothers-olive);
+        }
+        
+        .chat-send {
+            width: 48px;
+            height: 48px;
+            background: var(--mothers-olive);
+            color: #fff;
             border: none;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 20px;
             cursor: pointer;
-            flex-shrink: 0;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
-
-        .chat-voice-btn svg { width: 20px; height: 20px; fill: white; }
-        .chat-voice-btn.send-mode { background: var(--olive); }
-
-        .chat-voice-btn.recording {
-            background: #FF4757;
-            animation: pulse 1.5s infinite;
-        }
-
-        /* ==================== VOICE MODE OVERLAY ==================== */
-        .voice-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .voice-overlay.active {
-            display: flex;
-        }
-
-        .voice-overlay-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 50%;
-            font-size: 24px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .voice-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
-            margin-bottom: 24px;
-        }
-
-        .voice-status {
-            font-size: 18px;
-            color: white;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-
-        .voice-status .listening {
-            color: #FF4757;
-        }
-
-        .voice-status .speaking {
-            color: #4ECDC4;
-        }
-
-        .voice-visualizer {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            height: 80px;
-            margin-bottom: 40px;
-        }
-
-        .voice-visualizer .bar {
-            width: 6px;
-            background: white;
-            border-radius: 3px;
-            transition: height 0.1s;
-        }
-
-        .voice-visualizer.listening .bar {
-            animation: voiceWave 0.5s infinite ease-in-out alternate;
-        }
-
-        .voice-visualizer .bar:nth-child(1) { animation-delay: 0s; height: 20px; }
-        .voice-visualizer .bar:nth-child(2) { animation-delay: 0.1s; height: 35px; }
-        .voice-visualizer .bar:nth-child(3) { animation-delay: 0.2s; height: 50px; }
-        .voice-visualizer .bar:nth-child(4) { animation-delay: 0.15s; height: 40px; }
-        .voice-visualizer .bar:nth-child(5) { animation-delay: 0.25s; height: 55px; }
-        .voice-visualizer .bar:nth-child(6) { animation-delay: 0.1s; height: 45px; }
-        .voice-visualizer .bar:nth-child(7) { animation-delay: 0.2s; height: 30px; }
-
-        @keyframes voiceWave {
-            0% { transform: scaleY(0.3); opacity: 0.5; }
-            100% { transform: scaleY(1); opacity: 1; }
-        }
-
-        .voice-visualizer.speaking .bar {
-            background: #4ECDC4;
-            animation: speakWave 0.8s infinite ease-in-out alternate;
-        }
-
-        @keyframes speakWave {
-            0% { transform: scaleY(0.5); }
-            100% { transform: scaleY(1); }
-        }
-
-        .voice-transcript {
-            max-width: 300px;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 16px;
-            line-height: 1.6;
-            min-height: 50px;
-        }
-
-        .voice-mic-btn {
-            width: 80px;
-            height: 80px;
-            background: #FF4757;
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin-top: 40px;
-            transition: all 0.2s;
-        }
-
-        .voice-mic-btn:hover {
+        
+        .chat-send:hover {
+            background: var(--black-olive);
             transform: scale(1.05);
         }
-
-        .voice-mic-btn.listening {
-            animation: pulse 1.5s infinite;
-        }
-
-        .voice-mic-btn svg {
-            width: 36px;
-            height: 36px;
-            fill: white;
+        
+        .chat-send:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
         
-        .voice-mic-btn svg rect {
-            transform-origin: center;
-        }
-        
-        .voice-mic-btn.listening svg rect {
-            animation: micWave 0.6s ease-in-out infinite alternate;
-        }
-        .voice-mic-btn.listening svg rect:nth-child(1) { animation-delay: 0s; }
-        .voice-mic-btn.listening svg rect:nth-child(2) { animation-delay: 0.1s; }
-        .voice-mic-btn.listening svg rect:nth-child(3) { animation-delay: 0.2s; }
-        .voice-mic-btn.listening svg rect:nth-child(4) { animation-delay: 0.3s; }
-        .voice-mic-btn.listening svg rect:nth-child(5) { animation-delay: 0.4s; }
-        
-        @keyframes micWave {
-            from { transform: scaleY(0.5); }
-            to { transform: scaleY(1); }
-        }
-
-        .voice-hint {
-            position: absolute;
-            bottom: 40px;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
-        }
-
-        /* TTS 재생 중 표시 */
-        .speaking-indicator {
-            display: none;
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--olive);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            align-items: center;
+        /* 퀵 액션 */
+        .quick-actions {
+            display: flex;
             gap: 8px;
-            z-index: 100;
+            flex-wrap: wrap;
+            margin-top: 12px;
         }
-
-        .speaking-indicator.show {
-            display: flex;
-        }
-
-        .speaking-indicator .mini-wave {
-            display: flex;
-            gap: 2px;
-        }
-
-        .speaking-indicator .mini-wave span {
-            width: 3px;
-            height: 12px;
-            background: white;
-            border-radius: 2px;
-            animation: miniWave 0.5s infinite ease-in-out alternate;
-        }
-
-        .speaking-indicator .mini-wave span:nth-child(1) { animation-delay: 0s; }
-        .speaking-indicator .mini-wave span:nth-child(2) { animation-delay: 0.1s; }
-        .speaking-indicator .mini-wave span:nth-child(3) { animation-delay: 0.2s; }
-
-        @keyframes miniWave {
-            0% { height: 6px; }
-            100% { height: 14px; }
-        }
-
-        @media (max-width: 380px) {
-            .home-title { font-size: 22px; }
-            .onboarding-title { font-size: 20px; }
-        }
-    .global-input-wrap .send-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: none;
-            background: var(--olive);
-            color: white;
-            font-size: 18px;
+        
+        .quick-btn {
+            padding: 10px 16px;
+            background: rgba(94,107,58,0.1);
+            border: 1px solid var(--mothers-olive);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--mothers-olive);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
-        .global-input-wrap .send-btn:hover {
-            background: var(--olive-dark);
-            transform: scale(1.05);
+        
+        .quick-btn:hover {
+            background: var(--mothers-olive);
+            color: #fff;
+        }
+        
+        /* 위기 알림 */
+        .crisis-banner {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: #fff;
+            padding: 12px 16px;
+            font-size: 13px;
+            text-align: center;
+            display: none;
+        }
+        
+        .crisis-banner.show {
+            display: block;
+        }
+        
+        .crisis-banner a {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        /* Safe Area */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .intro-screen,
+            .login-screen,
+            .home-screen,
+            .onboarding-screen {
+                padding-top: calc(40px + env(safe-area-inset-top));
+            }
+            
+            .chat-header {
+                padding-top: calc(16px + env(safe-area-inset-top));
+            }
+            
+            .chat-input-area {
+                padding-bottom: calc(16px + env(safe-area-inset-bottom));
+            }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- ==================== HOME SCREEN ==================== -->
-        <div class="screen home-screen active" id="homeScreen">
-            <div class="home-header">
-                <button class="home-header-btn" onclick="openSideMenu()" id="menuBtn">☰</button>
+    <!-- 인트로 화면 -->
+    <div class="page intro-screen" id="introScreen">
+        <div class="intro-content">
+            <div class="intro-logo">
+                <div class="intro-logo-icon">🤱</div>
+                <div class="intro-brand">맘곁 MOMGYEOT</div>
             </div>
-
-            <div class="home-content" id="homeContent">
-                <!-- 동적으로 렌더링됨 -->
+            
+            <div class="intro-headline">
+                <h1>
+                    <span class="typing-line line1">아기를 품은 엄마,</span>
+                    <span class="typing-line line2">그 곁을 지키는 아빠,</span>
+                    <span class="typing-line line3">그 둘을 받쳐주는 <span class="highlight">맘곁</span>.</span>
+                </h1>
             </div>
-
-            <!-- Side Menu -->
-            <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
-            <div class="side-menu" id="sideMenu">
-                <div class="side-menu-header">
-                    <button class="side-menu-close" onclick="closeSideMenu()">×</button>
-                    <h2>마더스베이비</h2>
-                    <p>엄마의 모든 여정을 함께</p>
-                </div>
-                <div class="side-menu-content" id="sideMenuContent">
-                    <!-- 동적으로 렌더링됨 -->
-                </div>
-            </div>
-
-            <div class="bottom-input-area">
-       <div class="global-input-wrap">
-                    <span class="global-input-prefix">@맘곁</span>
-                    <input type="text" class="global-input" placeholder="에게 이야기해보세요" id="globalInput" oninput="updateGlobalSendBtn()">
-                    <button class="voice-btn" id="globalVoiceBtn" onclick="startGlobalVoice()">🎤</button>
-                    <button class="send-btn" id="globalSendBtn" onclick="sendGlobalMessage()" style="display:none;">➡️</button>
-                </div>
+            
+            <p class="intro-subtitle">
+                <span class="heart-text">아이만이 아니라, 부모의 마음까지</span><br>
+                <span class="heart-text">함께 돌보는 동반자가 되고 싶어요. 💕</span>
+            </p>
+            
+            <div class="intro-cta">
+                <button class="intro-btn" onclick="showLogin()">
+                    시작하기 <span>→</span>
+                </button>
             </div>
         </div>
-
-        <!-- ==================== ONBOARDING SCREEN ==================== -->
-        <div class="screen onboarding-screen" id="onboardingScreen">
-            <button class="back-btn" onclick="goBack()">←</button>
-            
-            <div class="onboarding-content">
-                <div class="onboarding-header">
-                    <div class="onboarding-avatar" id="onboardingAvatar">💚</div>
-                    <div class="onboarding-step" id="onboardingStep">1/3</div>
-                    <h2 class="onboarding-title" id="onboardingTitle">질문</h2>
-                    <p class="onboarding-subtitle" id="onboardingSubtitle"></p>
-                </div>
-
-                <div class="onboarding-form" id="onboardingForm"></div>
-
-                <div class="onboarding-footer">
-                    <button class="btn-primary" id="onboardingNextBtn" onclick="nextStep()">다음</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== CHAT SCREEN ==================== -->
-        <div class="screen chat-screen" id="chatScreen">
-            <div class="chat-header">
-                <button class="chat-back-btn" onclick="goToHome()">‹</button>
-                <div class="chat-header-avatar" id="chatAvatar">💚</div>
-                <div class="chat-header-name" id="chatHeaderName">맘곁</div>
-            </div>
-
-            <div class="chat-messages" id="chatMessages">
-                <div class="chat-date"><span id="chatDate"></span></div>
-                <div class="typing-indicator" id="typingIndicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            </div>
-
-            <div class="speaking-indicator" id="speakingIndicator">
-                <div class="mini-wave">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <span>맘곁이 말하고 있어요...</span>
-            </div>
-
-            <div class="chat-input-area">
-                <div class="chat-input-wrap">
-                    <button class="chat-input-left">+</button>
-                    <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요." rows="1"></textarea>
-                    <button class="chat-voice-btn" id="chatSendBtn" onclick="handleChatButton()">
-                        <div class="sound-wave" id="chatBtnWave">
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                        </div>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== VOICE OVERLAY ==================== -->
-        <div class="voice-overlay" id="voiceOverlay">
-            <button class="voice-overlay-close" onclick="closeVoiceMode()">✕</button>
-            
-            <div class="voice-avatar" id="voiceAvatar">💚</div>
-            
-            <div class="voice-status" id="voiceStatus">
-                <span class="listening">듣고 있어요...</span>
-            </div>
-
-            <div class="voice-visualizer listening" id="voiceVisualizer">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
-
-            <div class="voice-transcript" id="voiceTranscript"></div>
-
-            <button class="voice-mic-btn listening" id="voiceMicBtn" onclick="toggleVoiceRecording()">
-                <svg viewBox="0 0 24 24" class="wave-icon">
-                    <rect x="2" y="8" width="3" height="8" rx="1.5"/>
-                    <rect x="7" y="5" width="3" height="14" rx="1.5"/>
-                    <rect x="12" y="2" width="3" height="20" rx="1.5"/>
-                    <rect x="17" y="5" width="3" height="14" rx="1.5"/>
-                    <rect x="22" y="8" width="3" height="8" rx="1.5"/>
-                </svg>
-            </button>
-
-            <div class="voice-hint">마이크 버튼을 눌러 대화하세요</div>
+        <div class="intro-footer">© 2026 맘곁 Momgyeot</div>
+    </div>
+    
+    <!-- 로그인 화면 -->
+    <div class="page login-screen hidden" id="loginScreen">
+        <button class="back-btn" onclick="showIntro()">←</button>
+        
+        <div class="login-header">
+            <div class="login-logo-icon">🤱</div>
+            <h2 class="login-title">맘곁에 오신 것을<br>환영해요</h2>
+            <p class="login-desc">간편하게 로그인하고 시작하세요</p>
         </div>
         
-        <!-- ==================== HISTORY MODAL ==================== -->
-        <div class="history-modal" id="historyModal">
-            <div class="history-modal-header">
-                <button class="history-modal-back" onclick="closeHistoryModal()">←</button>
-                <span class="history-modal-title">전체 대화 기록</span>
+        <div class="login-buttons">
+            <button class="login-btn login-btn-kakao" onclick="loginWith('kakao')">
+                💬 카카오로 시작하기
+            </button>
+            <button class="login-btn login-btn-naver" onclick="loginWith('naver')">
+                <span style="font-weight:bold">N</span> 네이버로 시작하기
+            </button>
+            <button class="login-btn login-btn-google" onclick="loginWith('google')">
+                <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+                Google로 시작하기
+            </button>
+            <button class="login-btn login-btn-apple" onclick="loginWith('apple')">
+                 Apple로 시작하기
+            </button>
+            
+            <div class="login-divider"><span>또는</span></div>
+            
+            <button class="login-btn login-btn-guest" onclick="showHome()">
+                🌱 비회원으로 둘러보기
+            </button>
+        </div>
+        
+        <p class="login-terms">
+            시작하면 <a href="#">이용약관</a> 및 <a href="#">개인정보처리방침</a>에<br>
+            동의하는 것으로 간주됩니다.
+        </p>
+    </div>
+    
+    <!-- 홈 화면 -->
+    <div class="page home-screen hidden" id="homeScreen">
+        <div class="home-header">
+            <div class="home-logo">🤱</div>
+            <h1 class="home-title">어떤 맘곁이 필요하세요?</h1>
+            <p class="home-subtitle">나에게 맞는 AI 동반자를 선택해주세요</p>
+        </div>
+        
+        <div class="stage-cards">
+            <div class="stage-card" onclick="startOnboarding('prep')">
+                <div class="stage-card-header">
+                    <div class="stage-icon">💜</div>
+                    <div class="stage-info">
+                        <h3>예비맘곁</h3>
+                        <p>임신 준비 & 난임</p>
+                    </div>
+                </div>
+                <span class="stage-tag tag-prep">임신 준비 중</span>
             </div>
-            <div class="history-modal-content" id="historyModalContent">
-                <!-- 동적으로 채워짐 -->
+            
+            <div class="stage-card" onclick="startOnboarding('pregnancy')">
+                <div class="stage-card-header">
+                    <div class="stage-icon">🤰</div>
+                    <div class="stage-info">
+                        <h3>임신맘곁</h3>
+                        <p>임신 중 관리</p>
+                    </div>
+                </div>
+                <span class="stage-tag tag-pregnancy">임신 중</span>
             </div>
+            
+            <div class="stage-card" onclick="startOnboarding('infant')">
+                <div class="stage-card-header">
+                    <div class="stage-icon">👶</div>
+                    <div class="stage-info">
+                        <h3>새싹맘곁</h3>
+                        <p>신생아 ~ 12개월</p>
+                    </div>
+                </div>
+                <span class="stage-tag tag-infant">영아 육아 중</span>
+            </div>
+            
+            <div class="stage-card" onclick="startOnboarding('toddler')">
+                <div class="stage-card-header">
+                    <div class="stage-icon">🧒</div>
+                    <div class="stage-info">
+                        <h3>우리맘곁</h3>
+                        <p>1세 이상 육아</p>
+                    </div>
+                </div>
+                <span class="stage-tag tag-toddler">유아 육아 중</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 온보딩 화면 -->
+    <div class="page onboarding-screen hidden" id="onboardingScreen">
+        <div class="onboarding-header">
+            <button class="onboarding-back" onclick="goBackOnboarding()">←</button>
+            <div class="onboarding-progress" id="onboardingProgress">
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+            <button class="onboarding-skip" onclick="skipOnboarding()">건너뛰기</button>
+        </div>
+        
+        <div class="onboarding-content" id="onboardingContent">
+            <!-- 동적으로 채워짐 -->
+        </div>
+        
+        <div class="onboarding-footer">
+            <button class="onboarding-next" id="onboardingNext" disabled onclick="nextOnboarding()">
+                다음
+            </button>
+        </div>
+    </div>
+    
+    <!-- 채팅 화면 -->
+    <div class="page chat-screen hidden" id="chatScreen">
+        <div class="crisis-banner" id="crisisBanner">
+            힘든 순간이시라면, <a href="tel:1393">자살예방상담전화 1393</a>으로 연락해주세요 💚
+        </div>
+        
+        <div class="chat-header">
+            <button class="chat-back" onclick="showHome()">←</button>
+            <div class="chat-avatar" id="chatAvatar">👶</div>
+            <div class="chat-info">
+                <h3 id="chatTitle">새싹맘곁</h3>
+                <p id="chatSubtitle">신생아 케어 전문</p>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <!-- 메시지들 -->
+        </div>
+        
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chatInput" placeholder="메시지를 입력하세요..." 
+                   onkeypress="handleKeyPress(event)">
+            <button class="chat-send" id="sendBtn" onclick="sendMessage()">➤</button>
         </div>
     </div>
 
     <script>
-        // ==================== STATE ====================
-        let currentMate = null;
-        let currentStep = 0;
-        let currentQuickAction = null; // Quick Action 맥락 저장
-        let onboardingData = {};
-        let conversationHistory = [];
-        let visitorId = null; // 사용자 식별자
-        let isLoading = false;
-
-        // Voice state
-        let recognition = null;
-        let synthesis = window.speechSynthesis;
-        let isRecording = false;
-        let isVoiceMode = false;
-        let isSpeaking = false;
-        let isGlobalInputVoice = false; // globalInput에서 음성인식 시작 여부
-// 사용자 고유 ID 생성/가져오기
-        function getVisitorId() {
-            let id = localStorage.getItem('momgyeot_visitor_id');
-            if (!id) {
-                id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('momgyeot_visitor_id', id);
-            }
-            return id;
-        }
-
-        // 대화 기록 서버에 저장
-        async function saveMessage(role, content) {
-            try {
-                await fetch('/api/history', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: visitorId, role, content })
-                });
-            } catch (e) {
-                console.error('메시지 저장 실패:', e);
-            }
-        }
-
-        // 대화 기록 불러오기
-        async function loadHistory() {
-            try {
-                const res = await fetch(`/api/history?user_id=${visitorId}`);
-                const data = await res.json();
-                return data.messages || [];
-            } catch (e) {
-                console.error('기록 불러오기 실패:', e);
-                return [];
-            }
-        }        // ==================== MATE CONFIG ====================
-        const mateConfig = {
+        // 스테이지 정보
+        const stageInfo = {
             prep: {
+                icon: '💜',
                 name: '예비맘곁',
-                emoji: '💜',
-                avatarClass: 'purple',
-                isPurple: true,
-                steps: [
-                    { type: 'text', key: 'nickname', title: '편하게 불러드릴\n이름을 알려주세요', subtitle: '이름이나 닉네임 모두 좋아요', placeholder: '예: 하늘, 보미', hint: '한글, 영문 2~10자' },
-                    { type: 'select', key: 'duration', title: '준비하신 지\n얼마나 되셨어요?', options: [
-                        { value: 'start', label: '이제 막 시작했어요', icon: '🌱' },
-                        { value: '6months', label: '6개월 정도 됐어요', icon: '🍃' },
-                        { value: '1year', label: '1년 정도 됐어요', icon: '🌿' },
-                        { value: 'over1year', label: '1년 넘었어요', icon: '🌳' }
-                    ]},
-                    { type: 'select', key: 'situation', title: '지금 어떤 상황이세요?', options: [
-                        { value: 'natural', label: '자연 임신 시도 중이에요', icon: '🤍' },
-                        { value: 'hospital', label: '병원 상담/검사 중이에요', icon: '🏥' },
-                        { value: 'treatment', label: '시술 준비 또는 진행 중이에요', icon: '💉' },
-                        { value: 'rest', label: '잠시 쉬고 있어요', icon: '☁️' }
-                    ]},
-                    { type: 'select', key: 'need', title: '저한테 어떤 도움이\n필요하세요?', options: [
-                        { value: 'info', label: '정보가 궁금해요', icon: '📚' },
-                        { value: 'talk', label: '마음을 나누고 싶어요', icon: '💜' },
-                        { value: 'company', label: '그냥 곁에 있어주세요', icon: '🤗' }
-                    ]}
-                ],
-                getWelcome: (data) => `안녕하세요 ${data.nickname}, 저는 예비맘곁이에요.\n\n${getDurationText(data.duration)} 준비해오셨군요.\n${getSituationText(data.situation)}\n\n어떤 이야기든 편하게 나눠주세요.\n저는 항상 여기 있을게요 💜`
+                subtitle: '임신 준비 전문',
+                greeting: '안녕하세요! 예비맘곁이에요 💜\n\n임신을 준비하는 여정, 때론 외롭고 막막하시죠?\n저와 함께 차근차근 준비해봐요.\n\n어떤 부분이 가장 궁금하세요?',
+                quickActions: ['배란일 계산', '엽산 섭취', '난임 상담', '건강 체크']
             },
             pregnancy: {
+                icon: '🤰',
                 name: '임신맘곁',
-                emoji: '🤰',
-                avatarClass: 'pink',
-                isPurple: false,
-                steps: [
-                    { type: 'text', key: 'nickname', title: '어떻게 불러드릴까요?', subtitle: '태명이나 닉네임 모두 좋아요', placeholder: '예: 채림맘, 콩이맘', hint: '한글, 영문 2~10자' },
-                    { type: 'number', key: 'weeks', title: '현재 임신 몇 주차이세요?', suffix: '주', min: 4, max: 42 },
-                    { type: 'select', key: 'firstBaby', title: '첫 아이인가요?', options: [
-                        { value: 'yes', label: '네, 첫 아이예요', icon: '👶' },
-                        { value: 'no', label: '아니요, 둘째/셋째예요', icon: '👨‍👩‍👧' }
-                    ]},
-                    { type: 'select', key: 'concern', title: '요즘 가장 신경 쓰이는 건\n무엇인가요?', options: [
-                        { value: 'body', label: '입덧/몸의 변화', icon: '🤢' },
-                        { value: 'health', label: '검사/태아 건강', icon: '🏥' },
-                        { value: 'birth', label: '출산 준비', icon: '🍼' },
-                        { value: 'emotion', label: '마음이 힘들어요', icon: '💚' }
-                    ]}
-                ],
-                getWelcome: (data) => `안녕하세요 ${data.nickname}, 저는 임신맘곁이에요.\n\n${data.weeks}주차시군요! ${getWeeksComment(data.weeks)}\n\n열 달의 여정, 설렘과 걱정 모두 함께 나눠요.\n앞으로 즐겁게 함께해요! 💚`
+                subtitle: '임신 케어 전문',
+                greeting: '안녕하세요! 임신맘곁이에요 🤰\n\n소중한 생명과 함께하는 시간,\n기쁘기도 하고 걱정도 되시죠?\n\n무엇이든 편하게 물어봐 주세요!',
+                quickActions: ['입덧 완화', '태동 체크', '산전검사', '출산 준비']
             },
             infant: {
+                icon: '👶',
                 name: '새싹맘곁',
-                emoji: '👶',
-                avatarClass: 'olive',
-                isPurple: false,
-                steps: [
-                    { type: 'text', key: 'nickname', title: '어떻게 불러드릴까요?', subtitle: '아이 이름이나 닉네임 모두 좋아요', placeholder: '예: 하준맘, 서아맘', hint: '한글, 영문 2~10자' },
-                    { type: 'select', key: 'babyAge', title: '아기가 태어난 지\n얼마나 됐나요?', options: [
-                        { value: 'newborn', label: '신생아 (0~3개월)', icon: '🐣' },
-                        { value: '4-6', label: '4~6개월', icon: '🐥' },
-                        { value: '7-12', label: '7~12개월', icon: '🐤' },
-                        { value: '13-24', label: '13~24개월', icon: '🐔' }
-                    ]},
-                    { type: 'select', key: 'feeding', title: '수유 방법은 어떻게 되세요?', options: [
-                        { value: 'breast', label: '완전 모유수유', icon: '🤱' },
-                        { value: 'mixed', label: '혼합 수유', icon: '🍼' },
-                        { value: 'formula', label: '분유 수유', icon: '🧴' },
-                        { value: 'weaning', label: '이유식 진행 중', icon: '🥣' }
-                    ]},
-                    { type: 'select', key: 'concern', title: '요즘 가장 고민인 건\n무엇인가요?', options: [
-                        { value: 'feeding', label: '수유/이유식', icon: '🍼' },
-                        { value: 'sleep', label: '수면', icon: '😴' },
-                        { value: 'development', label: '발달/건강', icon: '📈' },
-                        { value: 'tired', label: '육아 피로', icon: '😮‍💨' }
-                    ]}
-                ],
-                getWelcome: (data) => `안녕하세요 ${data.nickname}, 저는 새싹맘곁이에요.\n\n${getBabyAgeText(data.babyAge)} 아기를 키우고 계시군요.\n육아의 하루하루, 정말 고생 많으세요.\n\n앞으로 즐겁게 함께해요! 💚`
+                subtitle: '신생아 케어 전문',
+                greeting: '안녕하세요! 새싹맘곁이에요 👶\n\n처음 맞는 아기와의 시간,\n하나하나 새롭고 걱정되시죠?\n\n편하게 말씀해주세요. 함께 찾아볼게요!',
+                quickActions: ['수유 고민', '수면 교육', '성장 발달', '아기 건강']
             },
             toddler: {
+                icon: '🧒',
                 name: '우리맘곁',
-                emoji: '🧒',
-                avatarClass: 'olive',
-                isPurple: false,
-                steps: [
-                    { type: 'text', key: 'nickname', title: '어떻게 불러드릴까요?', subtitle: '아이 이름이나 닉네임 모두 좋아요', placeholder: '예: 지우맘, 민서맘', hint: '한글, 영문 2~10자' },
-                    { type: 'select', key: 'childAge', title: '아이 나이가 어떻게 되나요?', options: [
-                        { value: '2-3', label: '2~3세', icon: '👶' },
-                        { value: '4-5', label: '4~5세', icon: '🧒' },
-                        { value: '6-7', label: '6~7세', icon: '👦' }
-                    ]},
-                    { type: 'select', key: 'institution', title: '기관에 다니고 있나요?', options: [
-                        { value: 'daycare', label: '어린이집 다녀요', icon: '🏫' },
-                        { value: 'kindergarten', label: '유치원 다녀요', icon: '🎒' },
-                        { value: 'none', label: '아직 안 다녀요', icon: '🏠' }
-                    ]},
-                    { type: 'select', key: 'concern', title: '요즘 가장 고민인 건\n무엇인가요?', options: [
-                        { value: 'discipline', label: '훈육/떼쓰기', icon: '😤' },
-                        { value: 'adaptation', label: '기관 적응', icon: '🏫' },
-                        { value: 'sibling', label: '형제 관계', icon: '👧👦' },
-                        { value: 'development', label: '발달 고민', icon: '📊' }
-                    ]}
-                ],
-                getWelcome: (data) => `안녕하세요 ${data.nickname}, 저는 우리맘곁이에요.\n\n${getChildAgeText(data.childAge)} 아이를 키우고 계시군요.\n아이와 함께 성장하는 요즘, 많이 바쁘시죠?\n\n앞으로 즐겁게 함께해요! 💚`
+                subtitle: '유아 육아 전문',
+                greeting: '안녕하세요! 우리맘곁이에요 🧒\n\n호기심 가득한 우리 아이,\n매일 새로운 도전이시죠?\n\n육아 고민, 함께 나눠요!',
+                quickActions: ['훈육 방법', '언어 발달', '편식 해결', '어린이집']
             }
         };
-
-        // Helper functions
-        function getDurationText(val) {
-            const map = { 'start': '이제 막', '6months': '6개월 정도', '1year': '1년 정도', 'over1year': '1년 넘게' };
-            return map[val] || '';
-        }
-        function getSituationText(val) {
-            const map = {
-                'natural': '자연 임신을 시도하고 계시는군요.',
-                'hospital': '병원에서 상담받고 계시는군요.',
-                'treatment': '시술을 준비하거나 진행 중이시군요.',
-                'rest': '잠시 쉬면서 마음을 추스르는 중이시군요.'
-            };
-            return map[val] || '';
-        }
-        function getWeeksComment(weeks) {
-            if (weeks <= 12) return '초기라 조심스러운 시기죠.';
-            if (weeks <= 27) return '안정기에 접어드셨네요.';
-            return '이제 막바지네요!';
-        }
-        function getBabyAgeText(val) {
-            const map = { 'newborn': '신생아', '4-6': '4~6개월 된', '7-12': '7~12개월 된', '13-24': '돌 지난' };
-            return map[val] || '';
-        }
-        function getChildAgeText(val) {
-            const map = { '2-3': '2~3세', '4-5': '4~5세', '6-7': '6~7세' };
-            return map[val] || '';
-        }
-
-        // System prompts
-        const systemPrompts = {
-            base: `당신은 "맘곁"입니다. 마더스베이비의 AI 동반자입니다.
-## 핵심 역할
-- 정서적 공감과 지지
-- 판단 없이 모든 선택 존중
-## 말투
-- 편안한 존댓말, 부드러운 어미
-- 짧은 문장, 3-5줄
-## 위기 감지
-"죽고싶", "사라지고싶" 감지 시 → 공감 + 자살예방상담전화 1393 안내`,
-            prep: `\n## 예비맘곁 규칙\n- 이모지: 💜 🤍 🌸\n- 금지: 👶 🍼 🤰, "긍정적으로", "다음엔 될 거예요"\n- 마무리: 💜`,
-            pregnancy: `\n## 임신맘곁 규칙\n- 의학적 조언은 병원 권유\n- 마무리: 💚`,
-            infant: `\n## 새싹맘곁 규칙\n- "그것도 방법이에요" 자주 사용\n- 마무리: 💚`,
-            toddler: `\n## 우리맘곁 규칙\n- 양육 방식 비판 금지\n- 마무리: 💚`
+        
+        // 온보딩 데이터
+        const onboardingData = {
+            prep: [
+                {
+                    icon: '💜',
+                    title: '임신 준비,\n어디서부터 시작할까요?',
+                    desc: '현재 상황을 알려주시면\n맞춤 정보를 드릴게요',
+                    options: [
+                        { text: '🌱 이제 막 준비 시작', value: 'just_started' },
+                        { text: '📅 배란일 추적 중', value: 'tracking' },
+                        { text: '💊 난임 시술 중', value: 'treatment' },
+                        { text: '🔄 재임신 준비', value: 'retry' }
+                    ]
+                },
+                {
+                    icon: '❤️',
+                    title: '특별히 신경 쓰이는\n부분이 있으세요?',
+                    desc: '여러 개 선택해도 괜찮아요',
+                    options: [
+                        { text: '🥗 영양제/식단', value: 'nutrition' },
+                        { text: '🏥 검사/진료', value: 'medical' },
+                        { text: '💪 운동/체력', value: 'fitness' },
+                        { text: '😰 스트레스/감정', value: 'emotion' }
+                    ]
+                },
+                {
+                    icon: '🤝',
+                    title: '준비 완료!\n예비맘곁이 함께할게요',
+                    desc: '언제든 편하게 물어보세요.\n당신의 임신 준비 여정을 응원해요!',
+                    options: []
+                }
+            ],
+            pregnancy: [
+                {
+                    icon: '🤰',
+                    title: '현재 임신 주수를\n알려주세요',
+                    desc: '시기에 맞는 정보를 드릴게요',
+                    options: [
+                        { text: '1~12주 (초기)', value: 'first' },
+                        { text: '13~27주 (중기)', value: 'second' },
+                        { text: '28주~ (후기)', value: 'third' },
+                        { text: '🤷 아직 잘 몰라요', value: 'unknown' }
+                    ]
+                },
+                {
+                    icon: '💭',
+                    title: '요즘 가장 힘든 건\n무엇인가요?',
+                    desc: '솔직하게 말씀해 주세요',
+                    options: [
+                        { text: '🤢 입덧/컨디션', value: 'morning_sickness' },
+                        { text: '😰 불안/걱정', value: 'anxiety' },
+                        { text: '🏥 검사/진료 정보', value: 'medical' },
+                        { text: '🍼 출산/육아 준비', value: 'prepare' }
+                    ]
+                },
+                {
+                    icon: '🌸',
+                    title: '좋아요!\n임신맘곁이 함께해요',
+                    desc: '건강한 임신 기간 보내시길 바라요.\n궁금한 건 언제든 물어보세요!',
+                    options: []
+                }
+            ],
+            infant: [
+                {
+                    icon: '👶',
+                    title: '아기가 태어난 지\n얼마나 됐나요?',
+                    desc: '월령에 맞는 정보를 드릴게요',
+                    options: [
+                        { text: '🌟 신생아 (0~1개월)', value: 'newborn' },
+                        { text: '🍼 1~3개월', value: '1_3_months' },
+                        { text: '😊 4~6개월', value: '4_6_months' },
+                        { text: '🎉 7~12개월', value: '7_12_months' }
+                    ]
+                },
+                {
+                    icon: '🤱',
+                    title: '수유 방법은\n어떻게 하고 계세요?',
+                    desc: '맞춤 정보를 위해 알려주세요',
+                    options: [
+                        { text: '🤱 완전 모유수유', value: 'breastfeeding' },
+                        { text: '🍼 완전 분유', value: 'formula' },
+                        { text: '🔄 혼합 수유', value: 'mixed' },
+                        { text: '🥄 이유식 시작', value: 'weaning' }
+                    ]
+                },
+                {
+                    icon: '💚',
+                    title: '설정 완료!\n새싹맘곁이 함께해요',
+                    desc: '초보맘의 든든한 친구가 될게요.\n작은 것도 편하게 물어보세요!',
+                    options: []
+                }
+            ],
+            toddler: [
+                {
+                    icon: '🧒',
+                    title: '우리 아이 나이가\n어떻게 되나요?',
+                    desc: '발달 단계에 맞게 도와드릴게요',
+                    options: [
+                        { text: '👣 12~18개월', value: '12_18_months' },
+                        { text: '🚶 19~24개월', value: '19_24_months' },
+                        { text: '🗣️ 2세', value: '2_years' },
+                        { text: '🎨 3세 이상', value: '3_plus' }
+                    ]
+                },
+                {
+                    icon: '🎯',
+                    title: '요즘 제일 고민되는\n부분이 뭔가요?',
+                    desc: '육아엔 정답이 없지만, 함께 찾아봐요',
+                    options: [
+                        { text: '😤 훈육/떼쓰기', value: 'discipline' },
+                        { text: '🗣️ 언어/발달', value: 'development' },
+                        { text: '🥦 편식/식사', value: 'eating' },
+                        { text: '🏫 어린이집/교육', value: 'education' }
+                    ]
+                },
+                {
+                    icon: '🧡',
+                    title: '좋아요!\n우리맘곁이 함께해요',
+                    desc: '힘든 육아, 혼자 고민하지 마세요.\n언제든 이야기 나눠요!',
+                    options: []
+                }
+            ]
         };
-
-        // ==================== VOICE RECOGNITION ====================
-        function initSpeechRecognition() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                console.log('Speech recognition not supported');
-                return false;
-            }
-
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            recognition.lang = 'ko-KR';
-            recognition.continuous = false;
-            recognition.interimResults = true;
-
-            recognition.onresult = (event) => {
-                let transcript = '';
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    transcript += event.results[i][0].transcript;
-                }
-                
-                if (isVoiceMode) {
-                    document.getElementById('voiceTranscript').textContent = transcript;
-               } else if (isGlobalInputVoice) {
-                    // globalInput에 실시간 표시
-                    document.getElementById('globalInput').value = transcript;
-                }
-
-                if (event.results[event.resultIndex].isFinal) {
-                if (isVoiceMode) {
-                        processVoiceInput(transcript);
-                    } else if (isGlobalInputVoice) {
-                        // globalInput에 최종 결과 입력 후 리셋
-                        document.getElementById('globalInput').value = transcript;
-                        isGlobalInputVoice = false;
-                        updateGlobalVoiceUI(false);
-                        updateGlobalSendBtn();
-                    } else {
-                        document.getElementById('chatInput').value = transcript;
-                        // 자동 전송 제거 - 전송 버튼 표시로 전환
-                        autoResizeInput();
-                        updateSendButton();
-                    }
-                }
-            };
-
-            recognition.onend = () => {
-                isRecording = false;
-                if (isGlobalInputVoice) {
-                    isGlobalInputVoice = false;
-                    updateGlobalVoiceUI(false);
-                }
-                updateRecordingUI();
-            };
-
-            recognition.onerror = (event) => {
-                console.log('Speech recognition error:', event.error);
-                isRecording = false;
-                if (isGlobalInputVoice) {
-                    isGlobalInputVoice = false;
-                    updateGlobalVoiceUI(false);
-                }
-                updateRecordingUI();
-            };
-
-            return true;
-        }
-
-        function startRecording() {
-            if (!recognition && !initSpeechRecognition()) {
-                alert('음성 인식을 지원하지 않는 브라우저입니다.');
-                return;
-            }
-
-            try {
-                recognition.start();
-                isRecording = true;
-                updateRecordingUI();
-            } catch (e) {
-                console.log('Recognition error:', e);
-            }
-        }
-
-        function stopRecording() {
-            if (recognition) {
-                recognition.stop();
-            }
-            isRecording = false;
-            updateRecordingUI();
-        }
-
-        function updateRecordingUI() {
-            const chatBtn = document.getElementById('chatSendBtn');
-            const voiceMicBtn = document.getElementById('voiceMicBtn');
-            const voiceVisualizer = document.getElementById('voiceVisualizer');
-
-            if (isRecording) {
-                if (chatBtn) chatBtn.classList.add('recording');
-                if (voiceMicBtn) voiceMicBtn.classList.add('listening');
-                if (voiceVisualizer) {
-                    voiceVisualizer.classList.add('listening');
-                    voiceVisualizer.classList.remove('speaking');
-                }
-            } else {
-                if (chatBtn) chatBtn.classList.remove('recording');
-                if (voiceMicBtn) voiceMicBtn.classList.remove('listening');
-                if (voiceVisualizer) voiceVisualizer.classList.remove('listening');
-            }
-        }
-
-        // ==================== TEXT TO SPEECH ====================
-        function speak(text) {
-            if (!synthesis) return;
-
-            synthesis.cancel();
-
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'ko-KR';
-            utterance.rate = 0.95;
-            utterance.pitch = 1.1;
-
-            utterance.onstart = () => {
-                isSpeaking = true;
-                const indicator = document.getElementById('speakingIndicator');
-                if (indicator) indicator.classList.add('show');
-                
-                if (isVoiceMode) {
-                    const status = document.getElementById('voiceStatus');
-                    const visualizer = document.getElementById('voiceVisualizer');
-                    if (status) status.innerHTML = '<span class="speaking">말하고 있어요...</span>';
-                    if (visualizer) {
-                        visualizer.classList.remove('listening');
-                        visualizer.classList.add('speaking');
-                    }
-                }
-            };
-
-            utterance.onend = () => {
-                isSpeaking = false;
-                const indicator = document.getElementById('speakingIndicator');
-                if (indicator) indicator.classList.remove('show');
-                
-                if (isVoiceMode) {
-                    const status = document.getElementById('voiceStatus');
-                    const visualizer = document.getElementById('voiceVisualizer');
-                    if (status) status.innerHTML = '<span class="listening">듣고 있어요...</span>';
-                    if (visualizer) visualizer.classList.remove('speaking');
-                    // 자동으로 다시 듣기 시작
-                    setTimeout(() => {
-                        if (isVoiceMode) startRecording();
-                    }, 500);
-                }
-            };
-
-            synthesis.speak(utterance);
-        }
-
-        function stopSpeaking() {
-            if (synthesis) {
-                synthesis.cancel();
-            }
-            isSpeaking = false;
-            const indicator = document.getElementById('speakingIndicator');
-            if (indicator) indicator.classList.remove('show');
-        }
-            
-        function updateGlobalSendBtn() {
-            const input = document.getElementById('globalInput');
-            const voiceBtn = document.getElementById('globalVoiceBtn');
-            const sendBtn = document.getElementById('globalSendBtn');
-            const hasText = input && input.value.trim().length > 0;
-            
-            if (voiceBtn) voiceBtn.style.display = hasText ? 'none' : 'flex';
-            if (sendBtn) sendBtn.style.display = hasText ? 'flex' : 'none';
+        
+        // 상태 변수
+        let currentStage = 'infant';
+        let onboardingStep = 0;
+        let selectedOptions = {};
+        let conversationHistory = [];
+        
+        // 화면 전환 함수
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
         }
         
-        function sendGlobalMessage() {
-            const input = document.getElementById('globalInput');
-            const text = input.value.trim();
-            if (!text) return;
-            
-            const saved = localStorage.getItem('myMateData');
-            if (saved) {
-                const data = JSON.parse(saved);
-                currentMate = data.type;
-                onboardingData = data.onboardingData || {};
-                
-                showScreen('chatScreen');
-                initChatScreen();
-                
-                setTimeout(() => {
-                    document.getElementById('chatInput').value = text;
-                    input.value = '';
-                    updateGlobalSendBtn();
-                    sendMessage();
-                }, 300);
-            } else {
-                alert('먼저 맘곁을 선택해주세요!');
-                showMateSelection();
-            }
-        }
-
-        // ==================== VOICE MODE ====================  
-
-        // ==================== VOICE MODE ====================           // ==================== VOICE MODE ====================
-            function startGlobalVoice() {
-            const saved = localStorage.getItem('myMateData');
-            
-            if (!saved) {
-                alert('먼저 맘곁을 선택해주세요!');
-                return;
-            }
-            
-            // 이미 녹음 중이면 중지
-            if (isGlobalInputVoice) {
-                stopRecording();
-                isGlobalInputVoice = false;
-                updateGlobalVoiceUI(false);
-                return;
-            }
-            
-            // globalInput 음성인식 시작
-            isGlobalInputVoice = true;
-            updateGlobalVoiceUI(true);
-            startRecording();
+        function showIntro() { showPage('introScreen'); }
+        function showLogin() { showPage('loginScreen'); }
+        function showHome() { showPage('homeScreen'); }
+        
+        // 로그인 처리
+        function loginWith(provider) {
+            console.log('Login with:', provider);
+            // 실제 OAuth 구현 필요
+            showHome();
         }
         
-        function updateGlobalVoiceUI(isActive) {
-            const voiceBtn = document.querySelector('.global-input-wrap .voice-btn');
-            if (voiceBtn) {
-                if (isActive) {
-                    voiceBtn.style.background = '#FF6B6B';
-                    voiceBtn.innerHTML = '🎙️';
-                } else {
-                    voiceBtn.style.background = 'var(--olive-light)';
-                    voiceBtn.innerHTML = '🎤';
-                }
-            }
+        // 온보딩 시작
+        function startOnboarding(stage) {
+            currentStage = stage;
+            onboardingStep = 0;
+            selectedOptions = {};
+            renderOnboarding();
+            showPage('onboardingScreen');
         }
-
-        function openVoiceMode() {
-            isVoiceMode = true;
-            const mate = mateConfig[currentMate];
+        
+        // 온보딩 렌더링
+        function renderOnboarding() {
+            const data = onboardingData[currentStage][onboardingStep];
+            const totalSteps = onboardingData[currentStage].length;
             
-            const overlay = document.getElementById('voiceOverlay');
-            const avatar = document.getElementById('voiceAvatar');
-            const transcript = document.getElementById('voiceTranscript');
-            const status = document.getElementById('voiceStatus');
+            // 프로그레스 업데이트
+            const progressHtml = Array(totalSteps).fill(0).map((_, i) => 
+                `<div class="progress-dot ${i === onboardingStep ? 'active' : ''}"></div>`
+            ).join('');
+            document.getElementById('onboardingProgress').innerHTML = progressHtml;
             
-            if (overlay && avatar && transcript && status) {
-                overlay.classList.add('active');
-                avatar.textContent = mate.emoji;
-                avatar.className = `voice-avatar ${mate.avatarClass}`;
-                transcript.textContent = '';
-                status.innerHTML = '<span class="listening">듣고 있어요...</span>';
-                
-                setTimeout(() => startRecording(), 500);
-            }
-        }
-
-        function closeVoiceMode() {
-            isVoiceMode = false;
-            stopRecording();
-            stopSpeaking();
-            document.getElementById('voiceOverlay').classList.remove('active');
-        }
-
-        function toggleVoiceRecording() {
-            if (isSpeaking) {
-                stopSpeaking();
-                return;
-            }
-
-            if (isRecording) {
-                stopRecording();
-            } else {
-                startRecording();
-            }
-        }
-
-        async function processVoiceInput(text) {
-            if (!text.trim()) return;
-
-            stopRecording();
-            
-            const status = document.getElementById('voiceStatus');
-            const visualizer = document.getElementById('voiceVisualizer');
-            if (status) status.innerHTML = '<span>생각하고 있어요...</span>';
-            if (visualizer) visualizer.classList.remove('listening');
-            
-            addMessage(text, 'user', true);
-            conversationHistory.push({ role: 'user', content: text });
-
-            try {
-                const response = await callClaudeAPI(text);
-               addMessage(welcomeMsg, 'ai');
-                conversationHistory.push({ role: 'assistant', content: response });
-                saveMyMateData(response);
-                
-                if (isVoiceMode) {
-                    speak(response);
-                }
-            } catch (error) {
-                const emoji = currentMate === 'prep' ? '💜' : '💚';
-                const errorMsg = `죄송해요, 잠시 연결이 불안정하네요. ${emoji}`;
-                addMessage(errorMsg, 'ai');
-                
-                if (isVoiceMode) {
-                    speak(errorMsg);
-                }
-            }
-        }
-
-        // ==================== NAVIGATION ====================
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-        }
-
-function selectMate(mateType) {
-            currentMate = mateType;
-            currentStep = 0;
-            onboardingData = {};
-            
-            const mate = mateConfig[mateType];
-            const screen = document.getElementById('onboardingScreen');
-            
-            // 이미 대화한 적 있으면 바로 채팅으로
-            const savedHistory = localStorage.getItem('chatHistory_' + mateType);
-            if (savedHistory) {
-                onboardingData = { nickname: '맘' };
-                conversationHistory = [];
-                showScreen('chatScreen');
-                restoreChat(JSON.parse(savedHistory));
-            } else {
-                // 첫 진입이면 온보딩 진행
-                screen.classList.toggle('purple-theme', mate.isPurple);
-                renderStep();
-                showScreen('onboardingScreen');
-            }
-        }
-        function goToHome() {
-            saveMyMateData();
-            closeVoiceMode();
-            showScreen('homeScreen');
-            updateMyMateSection();
-        }
-
-        // ==================== ONBOARDING ====================
-        function renderStep() {
-            const mate = mateConfig[currentMate];
-            if (!mate || !mate.steps || !mate.steps[currentStep]) {
-                console.error('renderStep: invalid mate or step', currentMate, currentStep);
-                return;
-            }
-            const step = mate.steps[currentStep];
-            const totalSteps = mate.steps.length;
-            
-            document.getElementById('onboardingAvatar').textContent = mate.emoji;
-            document.getElementById('onboardingAvatar').className = `onboarding-avatar ${mate.avatarClass}`;
-            document.getElementById('onboardingStep').textContent = `${currentStep + 1}/${totalSteps}`;
-            document.getElementById('onboardingTitle').innerHTML = step.title.replace(/\n/g, '<br>');
-            document.getElementById('onboardingSubtitle').textContent = step.subtitle || '';
-            
-            const btn = document.getElementById('onboardingNextBtn');
-            btn.textContent = currentStep === totalSteps - 1 ? '대화 시작하기' : '다음';
-            btn.className = mate.isPurple ? 'btn-primary purple' : 'btn-primary';
-            
-            const form = document.getElementById('onboardingForm');
-            
-            if (step.type === 'text') {
-                form.innerHTML = `
-                    <div class="form-group">
-                        <input type="text" class="text-input" id="stepInput" placeholder="${step.placeholder}" value="${onboardingData[step.key] || ''}" maxlength="10">
-                        <p class="input-hint">${step.hint || ''}</p>
-                    </div>
-                `;
-                const input = document.getElementById('stepInput');
-                input.focus();
-                input.addEventListener('input', () => { onboardingData[step.key] = input.value.trim(); updateNextButton(); });
-                input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) nextStep(); });
-            } else if (step.type === 'number') {
-                form.innerHTML = `
-                    <div class="form-group">
-                        <div class="number-input-wrap">
-                            <input type="number" class="number-input" id="stepInput" min="${step.min}" max="${step.max}" value="${onboardingData[step.key] || ''}" placeholder="00">
-                            <span class="number-suffix">${step.suffix}</span>
-                        </div>
-                    </div>
-                `;
-                const input = document.getElementById('stepInput');
-                input.focus();
-                input.addEventListener('input', () => { onboardingData[step.key] = input.value; updateNextButton(); });
-                input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) nextStep(); });
-            } else if (step.type === 'select') {
-                const purpleClass = mate.isPurple ? ' purple' : '';
-                form.innerHTML = `
-                    <div class="options-list">
-                        ${step.options.map(opt => `
-                            <button class="option-btn${onboardingData[step.key] === opt.value ? ' selected' + purpleClass : ''}" onclick="selectOption('${step.key}', '${opt.value}', this)">
-                                <span class="option-icon">${opt.icon}</span>
-                                <span class="option-text">${opt.label}</span>
-                                <span class="option-check">✓</span>
+            // 컨텐츠 렌더링
+            let optionsHtml = '';
+            if (data.options && data.options.length > 0) {
+                optionsHtml = `
+                    <div class="onboarding-options">
+                        ${data.options.map(opt => `
+                            <button class="onboarding-option" onclick="selectOnboardingOption(this, '${opt.value}')">
+                                ${opt.text}
                             </button>
                         `).join('')}
                     </div>
                 `;
             }
-            updateNextButton();
-        }
-
-        function selectOption(key, value, btn) {
-            onboardingData[key] = value;
             
-            // 선택 표시만 업데이트 (전체 리렌더링 하지 않음)
-            document.querySelectorAll('.option-btn').forEach(b => {
-                b.classList.remove('selected', 'purple');
+            document.getElementById('onboardingContent').innerHTML = `
+                <div class="onboarding-icon">${data.icon}</div>
+                <h2 class="onboarding-title">${data.title.replace('\n', '<br>')}</h2>
+                <p class="onboarding-desc">${data.desc.replace('\n', '<br>')}</p>
+                ${optionsHtml}
+            `;
+            
+            // 마지막 단계면 버튼 텍스트 변경
+            const nextBtn = document.getElementById('onboardingNext');
+            if (onboardingStep === totalSteps - 1) {
+                nextBtn.textContent = '대화 시작하기';
+                nextBtn.disabled = false;
+            } else {
+                nextBtn.textContent = '다음';
+                nextBtn.disabled = true;
+            }
+        }
+        
+        // 옵션 선택
+        function selectOnboardingOption(element, value) {
+            document.querySelectorAll('.onboarding-option').forEach(opt => {
+                opt.classList.remove('selected');
             });
-            btn.classList.add('selected');
-            
-            const mate = mateConfig[currentMate];
-            if (mate.isPurple) {
-                btn.classList.add('purple');
-            }
-            
-            // 체크 아이콘 업데이트
-            btn.querySelector('.option-check').style.borderColor = mate.isPurple ? 'var(--purple)' : 'var(--olive)';
-            btn.querySelector('.option-check').style.background = mate.isPurple ? 'var(--purple)' : 'var(--olive)';
-            btn.querySelector('.option-check').style.color = 'white';
-            
-            // 0.3초 후 다음 단계
-            setTimeout(() => {
-                nextStep();
-            }, 300);
+            element.classList.add('selected');
+            selectedOptions[onboardingStep] = value;
+            document.getElementById('onboardingNext').disabled = false;
         }
-
-        function updateNextButton() {
-            const mate = mateConfig[currentMate];
-            if (!mate || !mate.steps || !mate.steps[currentStep]) return;
-            const step = mate.steps[currentStep];
-            const btn = document.getElementById('onboardingNextBtn');
-            if (!btn) return;
-            
-            let isValid = false;
-            if (step.type === 'text') {
-                isValid = (onboardingData[step.key] || '').length >= 2;
-            } else if (step.type === 'number') {
-                const val = parseInt(onboardingData[step.key]);
-                isValid = val >= step.min && val <= step.max;
-            } else if (step.type === 'select') {
-                isValid = !!onboardingData[step.key];
-            }
-            btn.disabled = !isValid;
-        }
-
-        function nextStep() {
-            const mate = mateConfig[currentMate];
-            if (!mate || !mate.steps) return;
-            if (currentStep < mate.steps.length - 1) {
-                currentStep++;
-                renderStep();
+        
+        // 다음 단계
+        function nextOnboarding() {
+            const totalSteps = onboardingData[currentStage].length;
+            if (onboardingStep < totalSteps - 1) {
+                onboardingStep++;
+                renderOnboarding();
             } else {
                 startChat();
             }
         }
-
-        // ==================== CHAT ====================
+        
+        // 뒤로가기
+        function goBackOnboarding() {
+            if (onboardingStep > 0) {
+                onboardingStep--;
+                renderOnboarding();
+            } else {
+                showHome();
+            }
+        }
+        
+        // 건너뛰기
+        function skipOnboarding() {
+            startChat();
+        }
+        
+        // 채팅 시작
         function startChat() {
-            const mate = mateConfig[currentMate];
-            if (!mate) {
-                console.error('startChat: mate not found for', currentMate);
-                return;
-            }
+            const info = stageInfo[currentStage];
+            document.getElementById('chatAvatar').textContent = info.icon;
+            document.getElementById('chatTitle').textContent = info.name;
+            document.getElementById('chatSubtitle').textContent = info.subtitle;
             
-            const avatarEl = document.getElementById('chatAvatar');
-            const nameEl = document.getElementById('chatHeaderName');
-            if (avatarEl) {
-                avatarEl.textContent = mate.emoji;
-                avatarEl.className = `chat-header-avatar ${mate.avatarClass}`;
-            }
-            if (nameEl) nameEl.textContent = mate.name;
-            
-            const messagesContainer = document.getElementById('chatMessages');
-            messagesContainer.innerHTML = `
-                <div class="chat-date"><span>${getTodayDateStr()}</span></div>
-                <div class="typing-indicator" id="typingIndicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            `;
-            
+            // 메시지 초기화
+            document.getElementById('chatMessages').innerHTML = '';
             conversationHistory = [];
-            currentQuickAction = null; // Quick Action 맥락 리셋
-            showScreen('chatScreen');
             
+            showPage('chatScreen');
+            
+            // 인사 메시지
             setTimeout(() => {
-                const welcomeMsg = mate.getWelcome(onboardingData);
-                addMessage(welcomeMsg, 'ai');
-                addProfileLink();
+                addMessage(info.greeting, 'ai');
+                
+                // 퀵 액션 추가
+                setTimeout(() => {
+                    addQuickActions(info.quickActions);
+                }, 500);
             }, 500);
         }
-
-        function getTodayDateStr() {
-            const today = new Date();
-            const days = ['일', '월', '화', '수', '목', '금', '토'];
-            return `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일 ${days[today.getDay()]}요일`;
-        }
-
-        function addMessage(text, type, isVoice = false) {
+        
+        // 메시지 추가
+        function addMessage(text, type) {
             const messagesContainer = document.getElementById('chatMessages');
-            const typingIndicator = document.getElementById('typingIndicator');
-            const mate = mateConfig[currentMate];
-            const time = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: true });
-            
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
             
-            const voiceIndicator = isVoice ? `
-                <div class="message-voice-indicator">
-                    <svg viewBox="0 0 24 24"><rect x="3" y="8" width="2" height="8" rx="1"/><rect x="7" y="5" width="2" height="14" rx="1"/><rect x="11" y="3" width="2" height="18" rx="1"/><rect x="15" y="5" width="2" height="14" rx="1"/><rect x="19" y="8" width="2" height="8" rx="1"/></svg>
-                    음성 메시지
-                </div>
-            ` : '';
-            
-            if (type === 'ai') {
-                messageDiv.innerHTML = `
-                    <div class="message-avatar ${mate.avatarClass}">${mate.emoji}</div>
-                    <div class="message-content">
-                        <div class="message-name">${mate.name}</div>
-                        <div class="message-bubble">${escapeHtml(text)}</div>
-                        <div class="message-time">${time}</div>
-                    </div>
-                `;
+            if (type === 'user') {
+                conversationHistory.push({ role: 'user', content: text });
             } else {
-                messageDiv.innerHTML = `
-                    <div class="message-content">
-                        <div class="message-bubble">${escapeHtml(text)}</div>
-                        ${voiceIndicator}
-                        <div class="message-time">${time}</div>
-                    </div>
-                `;
+                conversationHistory.push({ role: 'assistant', content: text });
             }
-            
-            messagesContainer.insertBefore(messageDiv, typingIndicator);
-            scrollToBottom();
-            
-            // 대화 히스토리 저장
-            saveChatHistory(text, type);
         }
-
-        function addProfileLink() {
-            // 프로필 기능 없음 - 비활성화
+        
+        // 퀵 액션 추가
+        function addQuickActions(actions) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const quickDiv = document.createElement('div');
+            quickDiv.className = 'quick-actions';
+            quickDiv.innerHTML = actions.map(action => 
+                `<button class="quick-btn" onclick="sendQuickMessage('${action}')">${action}</button>`
+            ).join('');
+            messagesContainer.appendChild(quickDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        
+        // 퀵 메시지 전송
+        function sendQuickMessage(text) {
+            document.getElementById('chatInput').value = text;
+            sendMessage();
         }
-
-        function scrollToBottom() {
-            const container = document.getElementById('chatMessages');
-            setTimeout(() => { container.scrollTop = container.scrollHeight; }, 100);
-        }
-
+        
+        // 타이핑 인디케이터 표시
         function showTyping() {
-            document.getElementById('typingIndicator').classList.add('show');
-            scrollToBottom();
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = '<span></span><span></span><span></span>';
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
-
+        
         function hideTyping() {
-            document.getElementById('typingIndicator').classList.remove('show');
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
         }
-
-        function handleChatButton() {
-            const input = document.getElementById('chatInput');
-            const hasText = input.value.trim().length > 0;
-            
-            if (hasText) {
-                sendMessage();
-            } else {
-                if (isRecording) {
-                    stopRecording();
-                } else {
-                    startRecording();
-                }
-            }
-        }
-
-        async function sendMessage(isVoice = false) {
+        
+        // 메시지 전송
+        async function sendMessage() {
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
+            if (!text) return;
             
-            if (!text || isLoading) return;
-
-            addMessage(text, 'user', isVoice);
+            // 퀵 액션 제거
+            document.querySelectorAll('.quick-actions').forEach(el => el.remove());
+            
+            addMessage(text, 'user');
             input.value = '';
-            autoResizeInput();
-
-            conversationHistory.push({ role: 'user', content: text });
-saveMessage('user', text); // 서버에 저장            isLoading = true;
+            
+            // 위기 감지
+            checkCrisis(text);
+            
             showTyping();
-            updateSendButton();
-
+            
             try {
-                const response = await callClaudeAPI(text);
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: text,
+                        stage: currentStage,
+                        history: conversationHistory.slice(-6)
+                    })
+                });
+                
                 hideTyping();
-                addMessage(response, 'ai');
-                saveMessage('assistant', response); // 서버에 저장                conversationHistory.push({ role: 'assistant', content: response });
-                saveMyMateData(response);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    addMessage(data.response || data.message, 'ai');
+                } else {
+                    addMessage('죄송해요, 일시적인 오류가 발생했어요. 다시 시도해주세요.', 'ai');
+                }
             } catch (error) {
                 hideTyping();
-                const emoji = currentMate === 'prep' ? '💜' : '💚';
-                addMessage(`죄송해요, 잠시 연결이 불안정하네요. ${emoji}`, 'ai');
-            }
-
-            isLoading = false;
-            updateSendButton();
-        }
-
-        // 맘곁 Chat API 호출 (RAG 검색은 백엔드에서 자동 처리)
-        async function callClaudeAPI(userMessage) {
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: userMessage,
-                    user_id: visitorId,
-                    useRAG: true
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                console.error('API 오류:', errorData);
-                throw new Error(`API error: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            
-            // RAG 사용 여부 로그
-            if (data.ragUsed) {
-                console.log(`✅ RAG: ${data.ragCount}개 관련 정보 활용`);
-            }
-            
-            return data.response || '응답을 가져오지 못했어요.';
-        }
-
-        function autoResizeInput() {
-            const input = document.getElementById('chatInput');
-            input.style.height = 'auto';
-            input.style.height = Math.min(input.scrollHeight, 100) + 'px';
-            updateSendButton();
-        }
-
-        function updateSendButton() {
-            const btn = document.getElementById('chatSendBtn');
-            const waveDiv = document.getElementById('chatBtnWave');
-            const input = document.getElementById('chatInput');
-            const hasText = input.value.trim().length > 0;
-            
-            if (hasText) {
-                btn.classList.add('send-mode');
-                btn.classList.remove('recording');
-                btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>';
-            } else {
-                btn.classList.remove('send-mode');
-                btn.innerHTML = `
-                    <div class="sound-wave" id="chatBtnWave">
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                    </div>
-                `;
-            }
-        }
-
-        // ==================== SIDE MENU ====================
-        function openSideMenu() {
-            document.getElementById('sideMenuOverlay').classList.add('active');
-            document.getElementById('sideMenu').classList.add('active');
-            renderSideMenuContent();
-        }
-
-        function closeSideMenu() {
-            document.getElementById('sideMenuOverlay').classList.remove('active');
-            document.getElementById('sideMenu').classList.remove('active');
-        }
-
-        function renderSideMenuContent() {
-            const saved = localStorage.getItem('myMateData');
-            const container = document.getElementById('sideMenuContent');
-            
-            if (!saved) return;
-            
-            const data = JSON.parse(saved);
-            const mateType = data.type;
-            
-            // 맘곁별 메뉴 링크 설정
-            const menuLinks = [
-                { icon: '🤰', name: '맘곁 태교·태담', url: 'https://www.momgyeot.com' },
-                { icon: '📖', name: '새로 쓰는 태교신기', url: 'https://mktaegyo.replit.app' },
-                { icon: '📚', name: '모유수유 리얼가이드', url: 'https://breastfeedingrealguide-10.replit.app' },
-                { icon: '🤱', name: '육아 컴패니언', url: 'https://mothersbaby-ai.vercel.app/' },
-                { icon: '🛒', name: '마더스베이비 쇼핑몰', url: 'https://www.mothersbaby.co.kr' }
-            ];
-
-            let linksHTML = menuLinks.map(link => `
-                <a class="side-menu-item" href="${link.url}" target="_blank" onclick="closeSideMenu()">
-                    <div class="item-icon">${link.icon}</div>
-                    <div class="item-info">
-                        <div class="item-name">${link.name}</div>
-                    </div>
-                    <span class="item-arrow">›</span>
-                </a>
-            `).join('');
-
-            // 다른 맘곁 만나기 섹션
-            const otherMates = Object.entries(mateConfig)
-                .filter(([key]) => key !== mateType)
-                .map(([key, mate]) => `
-                    <a class="side-menu-item" href="#" onclick="switchMate('${key}'); return false;">
-                        <div class="item-icon">${mate.emoji}</div>
-                        <div class="item-info">
-                            <div class="item-name">${mate.name}</div>
-                        </div>
-                        <span class="item-arrow">›</span>
-                    </a>
-                `).join('');
-
-            container.innerHTML = `
-                <div class="side-menu-section">
-                    <div class="side-menu-section-title">마더스베이비 서비스</div>
-                    ${linksHTML}
-                </div>
-                <div class="side-menu-divider"></div>
-                <div class="side-menu-section">
-                    <div class="side-menu-section-title">다른 맘곁 만나기</div>
-                    ${otherMates}
-                </div>
-            `;
-        }
-
-        function switchMate(mateType) {
-            closeSideMenu();
-            // 기존 데이터 초기화하고 새 맘곁 선택
-            localStorage.removeItem('myMateData');
-            selectMate(mateType);
-        }
-
-        // ==================== MY MATE ====================
-        function saveMyMateData(lastMessage = null) {
-            if (!currentMate || !onboardingData.nickname) return;
-            
-            const mate = mateConfig[currentMate];
-            const data = {
-                type: currentMate,
-                name: mate.name,
-                emoji: mate.emoji,
-                avatarClass: mate.avatarClass,
-                onboardingData: onboardingData,
-                lastMessage: lastMessage || mate.getWelcome(onboardingData),
-                date: new Date().toLocaleDateString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' }).replace(/\. /g, '.').slice(0, -1)
-            };
-            localStorage.setItem('myMateData', JSON.stringify(data));
-        }
-
-        // 오늘의 한마디 (랜덤)
-        const dailyTips = [
-            "오늘 하루도 충분히 잘 하고 있어요 💚",
-            "완벽하지 않아도 괜찮아요. 그게 우리 모습이에요.",
-            "잠깐 멈춰서 숨 한번 깊게 쉬어보세요.",
-            "당신은 최고의 엄마예요. 늘 그랬어요.",
-            "오늘 나를 위한 5분, 만들어보는 건 어때요?",
-            "힘들 땐 힘들다고 말해도 괜찮아요.",
-            "아이에게 필요한 건 완벽한 엄마가 아니라 행복한 엄마예요.",
-            "지금 이 순간, 당신은 충분해요 💚"
-        ];
-
-        function getRandomTip() {
-            const today = new Date().toDateString();
-            const saved = localStorage.getItem('dailyTip');
-            if (saved) {
-                const data = JSON.parse(saved);
-                if (data.date === today) return data.tip;
-            }
-            const tip = dailyTips[Math.floor(Math.random() * dailyTips.length)];
-            localStorage.setItem('dailyTip', JSON.stringify({ date: today, tip }));
-            return tip;
-        }
-
-        function renderHomeScreen() {
-            const container = document.getElementById('homeContent');
-            const saved = localStorage.getItem('myMateData');
-            
-            if (saved) {
-                // 온보딩 완료 후 - 개인화된 홈
-                const data = JSON.parse(saved);
-                const mate = mateConfig[data.type];
-                const nickname = data.onboardingData?.nickname || '맘';
-                
-                // 메뉴 버튼 표시
-                const menuBtn = document.getElementById('menuBtn');
-                if (menuBtn) {
-                    menuBtn.style.display = 'flex';
-                }
-                
-                // 대화 히스토리 섹션 렌더링
-                const historySection = renderConversationHistory();
-                
-                container.innerHTML = `
-                    <div class="personalized-greeting">
-                        <h1>${nickname}, 오늘 하루는 어떠세요?</h1>
-                        <p>언제든 이야기 나눌 준비가 되어있어요</p>
-                    </div>
-
-                    <div class="main-mate-card" onclick="resumeChat()">
-                        <div class="main-mate-header">
-                            <div class="main-mate-avatar ${data.avatarClass}">${data.emoji}</div>
-                            <div class="main-mate-info">
-                                <div class="main-mate-greeting">나의 ${data.name}</div>
-                                <div class="main-mate-name">${data.date}에 대화함</div>
-                            </div>
-                        </div>
-                        <div class="main-mate-message">${truncate(data.lastMessage, 60)}</div>
-                        <div class="main-mate-action">
-                            <button class="main-mate-btn">이어서 대화하기</button>
-                        </div>
-                    </div>
-
-                    ${historySection}
-
-                    <div class="tip-card">
-                        <div class="tip-card-header">
-                            <span>💛</span>
-                            <span class="tip-card-label">오늘의 한마디</span>
-                        </div>
-                        <div class="tip-card-content">${getRandomTip()}</div>
-                    </div>
-
-                    <div class="section">
-                        <h2 class="section-title">바로가기</h2>
-                        <div class="quick-actions-mini">
-                            <button class="quick-action-mini-btn" onclick="quickAction('status')">
-                                <span class="icon green">💚</span>
-                                <span>마음 체크</span>
-                            </button>
-                            <button class="quick-action-mini-btn" onclick="quickAction('worry')">
-                                <span class="icon pink">✏️</span>
-                                <span>걱정 정리</span>
-                            </button>
-                            <button class="quick-action-mini-btn" onclick="quickAction('today')">
-                                <span class="icon olive">⏰</span>
-                                <span>오늘 할 일</span>
-                            </button>
-                        </div>
-                    </div>
-                `;
-           } else {
-                // 온보딩 전 - 심플 홈
-                const menuBtn = document.getElementById('menuBtn');
-                if (menuBtn) {
-                    menuBtn.style.display = 'none';
-                }
-                
-                container.innerHTML = `
-                    <div class="home-greeting" style="text-align: center; padding: 60px 20px;">
-                        <h1 class="home-title" style="font-size: 24px; margin-bottom: 12px;">맘, 오늘 하루는 어떠세요?</h1>
-                        <p style="color: #666; margin-bottom: 40px;">언제든 이야기 나눌 준비가 되어있어요</p>
-                        <button onclick="showMateSelection()" style="
-                            background: linear-gradient(135deg, #5E6B3A, #7A8B4A);
-                            color: white;
-                            border: none;
-                            padding: 16px 40px;
-                            border-radius: 30px;
-                            font-size: 16px;
-                            font-weight: 600;
-                            cursor: pointer;
-                            box-shadow: 0 4px 15px rgba(94, 107, 58, 0.3);
-                        ">대화 시작하기</button>
-                    </div>
-                `;
-            }
-        }
-function showMateSelection() {
-            const container = document.getElementById('homeContent');
-            container.innerHTML = `
-                <div style="padding: 20px;">
-                    <h2 style="text-align: center; margin-bottom: 30px; font-size: 20px;">어떤 맘곁과 대화할까요?</h2>
-                    <div class="mate-list">
-                        <div class="mate-card">
-                            <div class="mate-avatar purple">💜</div>
-                            <div class="mate-card-info">
-                                <div class="mate-card-name">예비맘곁</div>
-                                <div class="mate-card-desc">기다림의 여정을 함께해요.<br>어떤 마음이든 괜찮아요.</div>
-                            </div>
-                            <button class="mate-card-btn" onclick="selectMate('prep')">선택</button>
-                        </div>
-
-                        <div class="mate-card">
-                            <div class="mate-avatar pink">🤰</div>
-                            <div class="mate-card-info">
-                                <div class="mate-card-name">임신맘곁</div>
-                                <div class="mate-card-desc">열 달의 여정,<br>설렘과 걱정을 함께 나눠요.</div>
-                            </div>
-                            <button class="mate-card-btn" onclick="selectMate('pregnancy')">선택</button>
-                        </div>
-
-                        <div class="mate-card">
-                            <div class="mate-avatar olive">👶</div>
-                            <div class="mate-card-info">
-                                <div class="mate-card-name">새싹맘곁</div>
-                                <div class="mate-card-desc">육아 초보의 하루하루,<br>든든한 곁이 되어드릴게요.</div>
-                            </div>
-                            <button class="mate-card-btn" onclick="selectMate('infant')">선택</button>
-                        </div>
-
-                        <div class="mate-card">
-                            <div class="mate-avatar olive">🧒</div>
-                            <div class="mate-card-info">
-                                <div class="mate-card-name">우리맘곁</div>
-                                <div class="mate-card-desc">성장하는 아이와 함께,<br>육아 고민을 나눠요.</div>
-                            </div>
-                            <button class="mate-card-btn" onclick="selectMate('toddler')">선택</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        function renderOtherMates(currentType) {
-            const mates = [
-                { type: 'prep', emoji: '💜', avatarClass: 'purple', name: '예비맘곁', desc: '기다림의 여정을 함께해요.' },
-                { type: 'pregnancy', emoji: '🤰', avatarClass: 'pink', name: '임신맘곁', desc: '열 달의 설렘과 걱정을 나눠요.', badge: 'NEW' },
-                { type: 'infant', emoji: '👶', avatarClass: 'olive', name: '새싹맘곁', desc: '육아 초보의 든든한 곁.' },
-                { type: 'toddler', emoji: '🧒', avatarClass: 'olive', name: '우리맘곁', desc: '성장하는 아이와 함께.' }
-            ];
-            
-            return mates
-                .filter(m => m.type !== currentType)
-                .map(m => `
-                    <div class="mate-card">
-                        <div class="mate-avatar ${m.avatarClass}">${m.emoji}</div>
-                        <div class="mate-card-info">
-                            <div class="mate-card-name">${m.name}${m.badge ? ` <span class="badge">${m.badge}</span>` : ''}</div>
-                            <div class="mate-card-desc">${m.desc}</div>
-                        </div>
-                        <button class="mate-card-btn" onclick="selectMate('${m.type}')">대화</button>
-                    </div>
-                `).join('');
-        }
-
-        function updateMyMateSection() {
-            // 기존 함수는 renderHomeScreen으로 대체
-            renderHomeScreen();
-        }
-
-        function truncate(text, length) {
-            if (!text) return '';
-            if (text.length <= length) return text;
-            return text.substring(0, length) + '...';
-        }
-
-        function resumeChat() {
-            const saved = localStorage.getItem('myMateData');
-            if (!saved) return;
-            
-            const data = JSON.parse(saved);
-            currentMate = data.type;
-            onboardingData = data.onboardingData;
-            
-            // 저장된 대화 히스토리 확인
-            const savedHistory = localStorage.getItem('chatHistory_' + currentMate);
-            if (savedHistory) {
-                restoreChat(JSON.parse(savedHistory));
-            } else {
-                startChat();
+                // 오프라인 또는 API 오류 시 기본 응답
+                addMessage(getOfflineResponse(text), 'ai');
             }
         }
         
-        // 대화 복원 함수
-        function restoreChat(history) {
-            const mate = mateConfig[currentMate];
-            if (!mate) {
-                console.error('restoreChat: mate not found for', currentMate);
-                return;
+        // 오프라인 응답
+        function getOfflineResponse(text) {
+            const info = stageInfo[currentStage];
+            if (text.includes('안녕') || text.includes('반가')) {
+                return `안녕하세요! ${info.name}이에요 ${info.icon}\n\n무엇이 궁금하세요?`;
             }
-            
-            const avatarEl = document.getElementById('chatAvatar');
-            const nameEl = document.getElementById('chatHeaderName');
-            if (avatarEl) {
-                avatarEl.textContent = mate.emoji;
-                avatarEl.className = `chat-header-avatar ${mate.avatarClass}`;
-            }
-            if (nameEl) nameEl.textContent = mate.name;
-            
-            const messagesContainer = document.getElementById('chatMessages');
-            messagesContainer.innerHTML = `
-                <div class="chat-date"><span>${getTodayDateStr()}</span></div>
-                <div class="typing-indicator" id="typingIndicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            `;
-            
-            conversationHistory = [];
-            currentQuickAction = null; // Quick Action 맥락 리셋
-            showScreen('chatScreen');
-            
-            // 저장된 메시지들 복원
-            history.forEach(msg => {
-                addMessageWithoutSave(msg.text, msg.type, msg.time);
-                conversationHistory.push({
-                    role: msg.type === 'user' ? 'user' : 'assistant',
-                    content: msg.text
-                });
-            });
-            
-            // 스크롤 맨 아래로 (렌더링 완료 대기)
-            setTimeout(() => {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                // 이미지 등 로딩 후 한번 더
-                setTimeout(() => {
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }, 200);
-            }, 300);
+            return `좋은 질문이에요! 잠시 후 다시 시도해주시면 더 자세한 답변을 드릴 수 있어요. ${info.icon}`;
         }
         
-        // 저장 없이 메시지 추가 (복원용)
-        function addMessageWithoutSave(text, type, savedTime) {
-            const messagesContainer = document.getElementById('chatMessages');
-            const typingIndicator = document.getElementById('typingIndicator');
-            const mate = mateConfig[currentMate];
-            const time = savedTime || new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: true });
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}`;
-            
-            if (type === 'ai') {
-                messageDiv.innerHTML = `
-                    <div class="message-avatar ${mate.avatarClass}">${mate.emoji}</div>
-                    <div class="message-content">
-                        <div class="message-name">${mate.name}</div>
-                        <div class="message-bubble">${escapeHtml(text)}</div>
-                        <div class="message-time">${time}</div>
-                    </div>
-                `;
-            } else {
-                messageDiv.innerHTML = `
-                    <div class="message-content">
-                        <div class="message-bubble">${escapeHtml(text)}</div>
-                        <div class="message-time">${time}</div>
-                    </div>
-                `;
-            }
-            
-            messagesContainer.insertBefore(messageDiv, typingIndicator);
+        // 위기 감지
+        function checkCrisis(text) {
+            const crisisKeywords = ['죽고싶', '자살', '힘들어', '못살겠', '끝내고싶', '포기하고싶'];
+            const hasCrisis = crisisKeywords.some(keyword => text.includes(keyword));
+            document.getElementById('crisisBanner').classList.toggle('show', hasCrisis);
         }
         
-        // 대화 히스토리 저장
-        function saveChatHistory(text, type) {
-            if (!currentMate) return;
-            
-            const key = 'chatHistory_' + currentMate;
-            let history = [];
-            
-            try {
-                const saved = localStorage.getItem(key);
-                if (saved) history = JSON.parse(saved);
-            } catch(e) {}
-            
-            const now = new Date();
-            const time = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: true });
-            const timestamp = now.toISOString(); // ISO 형식 타임스탬프 추가
-            
-            history.push({ text, type, time, timestamp });
-            
-            // 최근 100개만 유지 (더 많이 저장)
-            if (history.length > 100) {
-                history = history.slice(-100);
-            }
-            
-            try {
-                localStorage.setItem(key, JSON.stringify(history));
-            } catch(e) {
-                console.log('Failed to save chat history');
-            }
-        }
-        // 서버에서 대화 기록 로드 후 로컬에 병합
-        async function loadServerHistory() {
-            if (!visitorId) return;
-            try {
-                const messages = await loadHistory();
-                if (messages && messages.length > 0) {
-                    // 서버 데이터를 로컬 형식으로 변환하여 저장
-                    const grouped = {};
-                    messages.forEach(msg => {
-                        const date = new Date(msg.created_at).toLocaleDateString();
-                        if (!grouped[date]) grouped[date] = [];
-                        grouped[date].push({
-                            role: msg.role,
-                            content: msg.content,
-                            time: new Date(msg.created_at).toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit'}),
-                            timestamp: msg.created_at
-                        });
-                    });
-                    // 현재 맘곁 타입으로 저장
-                    if (currentMate) {
-                        const key = 'chatHistory_' + currentMate;
-                        localStorage.setItem(key, JSON.stringify(
-                            messages.map(m => ({
-                                role: m.role === 'assistant' ? 'ai' : m.role,
-                                text: m.content,
-                                time: new Date(m.created_at).toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit'}),
-                                timestamp: m.created_at
-                            }))
-                        ));
-                    }
-                    console.log('서버 히스토리 로드 완료:', messages.length, '개');
-                }
-            } catch (e) {
-                console.error('서버 히스토리 로드 실패:', e);
-            }
-        }
-        // ==================== 대화 히스토리 관리 함수들 ====================
-        
-        // 모든 대화 히스토리 가져오기
-        function getAllConversations() {
-            const conversations = [];
-            const mateTypes = ['prep', 'pregnancy', 'infant', 'toddler'];
-            
-            mateTypes.forEach(mateType => {
-                const key = 'chatHistory_' + mateType;
-                try {
-                    const saved = localStorage.getItem(key);
-                    if (saved) {
-                        const history = JSON.parse(saved);
-                        if (history.length > 0) {
-                            // 마지막 메시지 정보 추출
-                            const lastMsg = history[history.length - 1];
-                            const mate = mateConfig[mateType];
-                            
-                            conversations.push({
-                                mateType,
-                                mateName: mate?.name || mateType,
-                                emoji: mate?.emoji || '💚',
-                                avatarClass: mate?.avatarClass || 'olive',
-                                lastMessage: lastMsg.text,
-                                lastTime: lastMsg.time,
-                                timestamp: lastMsg.timestamp || new Date().toISOString(),
-                                messageCount: history.length
-                            });
-                        }
-                    }
-                } catch(e) {}
-            });
-            
-            // 최신 순으로 정렬
-            conversations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            return conversations;
-        }
-        
-        // 날짜별로 그룹핑
-        function groupConversationsByDate(conversations) {
-            const groups = {};
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            const yesterday = new Date(today);
-            yesterday.setDate(yesterday.getDate() - 1);
-            
-            const weekAgo = new Date(today);
-            weekAgo.setDate(weekAgo.getDate() - 7);
-            
-            conversations.forEach(conv => {
-                const convDate = new Date(conv.timestamp);
-                convDate.setHours(0, 0, 0, 0);
-                
-                let dateLabel;
-                if (convDate.getTime() === today.getTime()) {
-                    dateLabel = '오늘';
-                } else if (convDate.getTime() === yesterday.getTime()) {
-                    dateLabel = '어제';
-                } else if (convDate >= weekAgo) {
-                    dateLabel = `${convDate.getMonth() + 1}월 ${convDate.getDate()}일`;
-                } else {
-                    dateLabel = `${convDate.getMonth() + 1}월 ${convDate.getDate()}일`;
-                }
-                
-                if (!groups[dateLabel]) {
-                    groups[dateLabel] = {
-                        label: dateLabel,
-                        date: convDate,
-                        items: []
-                    };
-                }
-                groups[dateLabel].items.push(conv);
-            });
-            
-            // 날짜순 정렬 (최신 먼저)
-            return Object.values(groups).sort((a, b) => b.date - a.date);
-        }
-        
-        // 최근 7일 대화만 필터링
-        function getRecentConversations(days = 7) {
-            const all = getAllConversations();
-            const cutoff = new Date();
-            cutoff.setDate(cutoff.getDate() - days);
-            
-            return all.filter(conv => new Date(conv.timestamp) >= cutoff);
-        }
-        
-        // 대화 히스토리 HTML 렌더링
-        function renderConversationHistory() {
-            const recent = getRecentConversations(7);
-            const all = getAllConversations();
-            
-            if (all.length === 0) {
-                return `
-                    <div class="chat-history-section">
-                        <div class="chat-history-header">
-                            <span class="chat-history-title">💬 이전 대화</span>
-                        </div>
-                        <div class="no-history-message">
-                            아직 대화 기록이 없어요.<br>맘곁과 대화를 시작해보세요!
-                        </div>
-                    </div>
-                `;
-            }
-            
-            const grouped = groupConversationsByDate(recent);
-            const olderCount = all.length - recent.length;
-            
-            let html = `
-                <div class="chat-history-section">
-                    <div class="chat-history-header">
-                        <span class="chat-history-title">💬 이전 대화</span>
-                        <span class="chat-history-count">최근 7일 · ${recent.length}개</span>
-                    </div>
-            `;
-            
-            grouped.forEach(group => {
-                html += `
-                    <div class="date-group">
-                        <div class="date-group-header">
-                            <span class="date-group-label">${group.label}</span>
-                            <span class="date-group-count">${group.items.length}개</span>
-                            <div class="date-group-line"></div>
-                        </div>
-                `;
-                
-                group.items.forEach(conv => {
-                    html += `
-                        <div class="history-item" onclick="resumeChatWith('${conv.mateType}')">
-                            <div class="history-item-avatar ${conv.avatarClass}">${conv.emoji}</div>
-                            <div class="history-item-content">
-                                <div class="history-item-name">${conv.mateName}</div>
-                                <div class="history-item-preview">${truncate(conv.lastMessage, 30)}</div>
-                            </div>
-                            <div class="history-item-time">${conv.lastTime}</div>
-                            <div class="history-item-arrow">›</div>
-                        </div>
-                    `;
-                });
-                
-                html += `</div>`;
-            });
-            
-            // 전체 보기 버튼 (더 오래된 대화가 있을 때)
-            if (olderCount > 0 || all.length > 3) {
-                html += `
-                    <button class="view-all-btn" onclick="showAllConversations()">
-                        📂 전체 대화 보기 (${all.length}개)
-                    </button>
-                `;
-            }
-            
-            html += `</div>`;
-            return html;
-        }
-        
-        // 특정 맘곁과 대화 이어가기
-        function resumeChatWith(mateType) {
-            currentMate = mateType;
-            const mate = mateConfig[mateType];
-            if (mate) {
-                onboardingData = { nickname: '맘' };
-                conversationHistory = [];
-                showScreen('chatScreen');
-                const savedHistory = localStorage.getItem('chatHistory_' + mateType);
-                if (savedHistory) {
-                    restoreChat(JSON.parse(savedHistory));
-                }
+        // 키보드 이벤트
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
             }
         }
         
-        // 전체 대화 보기 모달
-        function showAllConversations() {
-            const modal = document.getElementById('historyModal');
-            const content = document.getElementById('historyModalContent');
-            
-            const all = getAllConversations();
-            const grouped = groupConversationsByDate(all);
-            
-            let html = '';
-            grouped.forEach(group => {
-                html += `
-                    <div class="date-group">
-                        <div class="date-group-header">
-                            <span class="date-group-label">${group.label}</span>
-                            <span class="date-group-count">${group.items.length}개</span>
-                            <div class="date-group-line"></div>
-                        </div>
-                `;
-                
-                group.items.forEach(conv => {
-                    html += `
-                        <div class="history-item" onclick="resumeChatWith('${conv.mateType}'); closeHistoryModal();">
-                            <div class="history-item-avatar ${conv.avatarClass}">${conv.emoji}</div>
-                            <div class="history-item-content">
-                                <div class="history-item-name">${conv.mateName}</div>
-                                <div class="history-item-preview">${truncate(conv.lastMessage, 30)}</div>
-                            </div>
-                            <div class="history-item-time">${conv.lastTime}</div>
-                            <div class="history-item-arrow">›</div>
-                        </div>
-                    `;
-                });
-                
-                html += `</div>`;
-            });
-            
-            content.innerHTML = html;
-            modal.classList.add('active');
-        }
-        
-        function closeHistoryModal() {
-            document.getElementById('historyModal').classList.remove('active');
-        }
-
-        // Quick Action 프롬프트
-        const quickActionPrompts = {
-            status: {
-                mate: 'infant',
-                initialMessage: '오늘 기분이 어떠세요?\n\n1점(힘들어요)부터 10점(최고예요)까지,\n숫자로 표현해볼까요? 💚\n\n숫자만 말씀해주셔도 좋고,\n그냥 편하게 이야기해주셔도 좋아요.',
-                context: '사용자가 "마음 체크" 기능을 사용 중입니다. 1~10점 사이의 숫자로 오늘 기분을 표현하도록 요청했습니다. 사용자가 숫자만 답하면 그것은 기분 점수입니다. 예: "7" = 7점(꽤 좋음), "3" = 3점(힘듦). 점수에 공감하며 따뜻하게 반응해주세요.'
-            },
-            worry: {
-                mate: 'infant', 
-                initialMessage: '요즘 마음에 걸리는 게 있으신가요?\n\n크든 작든 상관없어요.\n말로 꺼내놓으면 조금은 가벼워지기도 하더라고요.\n\n편하게 이야기해주세요 💚',
-                context: '사용자가 "걱정 정리" 기능을 사용 중입니다. 걱정거리를 말하면 공감하고, 정리하는 것을 도와주세요. 해결책을 강요하지 말고 들어주는 것에 집중하세요.'
-            },
-            today: {
-                mate: 'infant',
-                initialMessage: '오늘 하루, 딱 하나만 한다면\n뭘 하고 싶으세요?\n\n거창한 게 아니어도 괜찮아요.\n"커피 한 잔 마시기"도 좋고,\n"5분 눈 붙이기"도 좋아요 💚',
-                context: '사용자가 "오늘 할 일 정하기" 기능을 사용 중입니다. 오늘 하고 싶은 것 하나를 정하도록 도와주세요. 작은 것도 괜찮다고 격려해주세요.'
-            }
-        };
-
-        function quickAction(type) {
-            console.log('🎯 quickAction called:', type);
-            
-            const action = quickActionPrompts[type];
-            if (!action) {
-                console.error('No action found for type:', type);
-                return;
-            }
-            
-            // Quick Action 맥락 저장
-            currentQuickAction = action;
-            
-            console.log('Action found:', action);
-            
-            // 기본 mate 설정 (새싹맘곁)
-            currentMate = action.mate;
-            onboardingData = { nickname: '맘' }; // 기본 닉네임
-            
-            // 저장된 데이터가 있으면 사용
-            try {
-                const saved = localStorage.getItem('myMateData');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    if (data.type && mateConfig[data.type]) {
-                        currentMate = data.type;
-                    }
-                    if (data.onboardingData) {
-                        onboardingData = data.onboardingData;
-                    }
-                }
-            } catch (e) {
-                console.error('Error loading saved data:', e);
-            }
-            
-            console.log('currentMate:', currentMate, 'onboardingData:', onboardingData);
-            
-            const mate = mateConfig[currentMate];
-            if (!mate) {
-                console.error('No mate config for:', currentMate);
-                return;
-            }
-            
-            const avatarEl = document.getElementById('chatAvatar');
-            const nameEl = document.getElementById('chatHeaderName');
-            if (avatarEl) {
-                avatarEl.textContent = mate.emoji;
-                avatarEl.className = `chat-header-avatar ${mate.avatarClass}`;
-            }
-            if (nameEl) nameEl.textContent = mate.name;
-            
-            const messagesContainer = document.getElementById('chatMessages');
-            messagesContainer.innerHTML = `
-                <div class="chat-date"><span>${getTodayDateStr()}</span></div>
-                <div class="typing-indicator" id="typingIndicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            `;
-            
-            conversationHistory = [];
-            showScreen('chatScreen');
-            
-            // Quick Action 전용 메시지 표시
-            setTimeout(() => {
-                addMessage(action.initialMessage, 'ai');
-            }, 500);
-        }
-
-        // ==================== INIT ====================
+        // 초기화
         document.addEventListener('DOMContentLoaded', () => {
-            // 사용자 ID 초기화
-            visitorId = getVisitorId();
-            // 서버에서 이전 대화 불러오기
-            loadServerHistory().then(() => {
-                renderConversationHistory();
-            });
-            renderHomeScreen();
-            initSpeechRecognition();
-            
-            document.getElementById('chatInput').addEventListener('input', autoResizeInput);
-            document.getElementById('chatInput').addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-            
-            document.getElementById('globalInput').addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.isComposing) {
-                    const text = e.target.value.trim();
-                    if (text) selectMate('infant');
-                }
-            });
+            // 저장된 세션 확인
+            const savedStage = localStorage.getItem('momgyeot_stage');
+            if (savedStage && stageInfo[savedStage]) {
+                // 재방문 사용자는 바로 홈으로
+                // showHome();
+            }
         });
     </script>
 </body>
 </html>
-
-
