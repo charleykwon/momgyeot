@@ -527,7 +527,7 @@
             flex: 1;
             padding: 0 20px;
             overflow-y: auto;
-            padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+            padding-bottom: calc(80px + max(12px, env(safe-area-inset-bottom, 0px)));
         }
         
         .section-title {
@@ -602,13 +602,13 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: calc(70px + env(safe-area-inset-bottom, 0px));
             background: white;
             display: flex;
             justify-content: stretch;
-            align-items: center;
-            padding: 0;
-            padding-bottom: env(safe-area-inset-bottom, 0px);
+            align-items: flex-start;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
             border-top: 1px solid #f0f0f0;
         }
         
@@ -616,7 +616,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 4px;
             background: none;
             border: none;
@@ -624,8 +624,7 @@
             color: #BDBDBD;
             transition: color 0.2s;
             flex: 1;
-            height: 100%;
-            padding: 8px 0;
+            padding: 0;
         }
         
         .nav-item.active {
@@ -1133,6 +1132,8 @@
             content: '';
             position: absolute;
             bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 4px;
             height: 4px;
             background: #E8B4B8;
@@ -1903,7 +1904,7 @@
                 </div>
                 
                 <div class="noti-content">
-                    <div class="noti-item unread">
+                    <div class="noti-item unread" id="notiChat" style="cursor: pointer;">
                         <div class="noti-icon">💬</div>
                         <div class="noti-info">
                             <p class="noti-title">맘곁에서 답변이 도착했어요</p>
@@ -1911,7 +1912,7 @@
                             <p class="noti-time">방금 전</p>
                         </div>
                     </div>
-                    <div class="noti-item unread">
+                    <div class="noti-item unread" id="notiCalendar" style="cursor: pointer;">
                         <div class="noti-icon">📅</div>
                         <div class="noti-info">
                             <p class="noti-title">내일 일정이 있어요</p>
@@ -1919,7 +1920,7 @@
                             <p class="noti-time">1시간 전</p>
                         </div>
                     </div>
-                    <div class="noti-item">
+                    <div class="noti-item" id="notiWelcome" style="cursor: pointer;">
                         <div class="noti-icon">🎉</div>
                         <div class="noti-info">
                             <p class="noti-title">맘곁에 오신 것을 환영해요!</p>
@@ -2801,6 +2802,13 @@
             
             // ===== 알림 화면 뒤로가기 =====
             document.getElementById('notiBackBtn').addEventListener('click', showHome);
+            
+            // ===== 알림 아이템 클릭 =====
+            document.getElementById('notiChat').addEventListener('click', function() {
+                showChat('default', '🤱', '맘곁');
+            });
+            document.getElementById('notiCalendar').addEventListener('click', showCalendar);
+            document.getElementById('notiWelcome').addEventListener('click', showHome);
             
             // ===== 사이드 메뉴 =====
             document.getElementById('closeMenuBtn').addEventListener('click', closeSideMenu);
