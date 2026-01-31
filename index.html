@@ -602,26 +602,30 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: calc(85px + env(safe-area-inset-bottom, 0px));
+            height: calc(70px + env(safe-area-inset-bottom, 0px));
             background: white;
             display: flex;
-            justify-content: space-around;
-            align-items: flex-start;
-            padding-top: 12px;
+            justify-content: stretch;
+            align-items: center;
+            padding: 0;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
             border-top: 1px solid #f0f0f0;
-            padding-bottom: calc(25px + env(safe-area-inset-bottom, 0px));
         }
         
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 4px;
             background: none;
             border: none;
             cursor: pointer;
             color: #BDBDBD;
             transition: color 0.2s;
+            flex: 1;
+            height: 100%;
+            padding: 8px 0;
         }
         
         .nav-item.active {
@@ -1314,6 +1318,18 @@
             border-radius: 12px;
             margin-bottom: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .noti-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .noti-item:active {
+            transform: scale(0.98);
         }
         
         .noti-item.unread {
@@ -1887,30 +1903,46 @@
                 </div>
                 
                 <div class="noti-content">
-                    <div class="noti-item unread">
-                        <div class="noti-icon">💬</div>
+                    <a href="https://www.momgyeot.com" target="_blank" class="noti-item unread">
+                        <div class="noti-icon">🌸</div>
                         <div class="noti-info">
-                            <p class="noti-title">맘곁에서 답변이 도착했어요</p>
-                            <p class="noti-desc">임신 준비에 대한 답변을 확인해보세요.</p>
-                            <p class="noti-time">방금 전</p>
+                            <p class="noti-title">맘곁 태교</p>
+                            <p class="noti-desc">태교 음악과 명상으로 아기와 교감하세요</p>
+                            <p class="noti-time">www.momgyeot.com</p>
                         </div>
-                    </div>
-                    <div class="noti-item unread">
-                        <div class="noti-icon">📅</div>
+                    </a>
+                    <a href="https://mktaegyo.replit.app" target="_blank" class="noti-item unread">
+                        <div class="noti-icon">📖</div>
                         <div class="noti-info">
-                            <p class="noti-title">내일 일정이 있어요</p>
-                            <p class="noti-desc">산부인과 정기 검진 - 오후 2:00</p>
-                            <p class="noti-time">1시간 전</p>
+                            <p class="noti-title">새로쓰는 태교신기</p>
+                            <p class="noti-desc">현대적인 태교 가이드를 만나보세요</p>
+                            <p class="noti-time">mktaegyo.replit.app</p>
                         </div>
-                    </div>
-                    <div class="noti-item">
-                        <div class="noti-icon">🎉</div>
+                    </a>
+                    <a href="https://mothersbaby-ai.vercel.app/" target="_blank" class="noti-item">
+                        <div class="noti-icon">👶</div>
                         <div class="noti-info">
-                            <p class="noti-title">맘곁에 오신 것을 환영해요!</p>
-                            <p class="noti-desc">맘곁과 함께 건강한 임신 여정을 시작하세요.</p>
-                            <p class="noti-time">오늘</p>
+                            <p class="noti-title">맘곁 육아 컴패니언</p>
+                            <p class="noti-desc">AI와 함께하는 스마트 육아 도우미</p>
+                            <p class="noti-time">mothersbaby-ai.vercel.app</p>
                         </div>
-                    </div>
+                    </a>
+                    <a href="https://breastfeedingrealguide-10.replit.app" target="_blank" class="noti-item">
+                        <div class="noti-icon">🤱</div>
+                        <div class="noti-info">
+                            <p class="noti-title">모유수유 리얼 가이드 1.0</p>
+                            <p class="noti-desc">실전 모유수유 노하우를 확인하세요</p>
+                            <p class="noti-time">breastfeedingrealguide-10.replit.app</p>
+                        </div>
+                    </a>
+                    <a href="https://www.mothersbaby.co.kr" target="_blank" class="noti-item">
+                        <div class="noti-icon">🛒</div>
+                        <div class="noti-info">
+                            <p class="noti-title">마더스베이비 쇼핑몰</p>
+                            <p class="noti-desc">엄마와 아기를 위한 프리미엄 제품</p>
+                            <p class="noti-time">www.mothersbaby.co.kr</p>
+                        </div>
+                    </a>
                 </div>
             </div>
             
