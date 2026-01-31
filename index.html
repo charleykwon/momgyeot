@@ -2404,6 +2404,61 @@
             border-color: #444;
             color: #F0F0F0;
         }
+        
+        /* 추가 다크모드 - 아이콘 버튼 */
+        body.dark-mode .icon-btn {
+            background: #333;
+            color: #F0F0F0;
+        }
+        
+        /* 추가 다크모드 - 섹션 타이틀 */
+        body.dark-mode .section-title {
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .section-desc {
+            color: #999;
+        }
+        
+        /* 추가 다크모드 - 로그인 화면 */
+        body.dark-mode .login-screen {
+            background: linear-gradient(180deg, #1A1A1A 0%, #252525 100%);
+        }
+        
+        body.dark-mode .login-logo-icon {
+            background: #333;
+        }
+        
+        body.dark-mode .login-title {
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .login-subtitle {
+            color: #999;
+        }
+        
+        body.dark-mode .login-btn {
+            background: #333;
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .login-btn:hover {
+            background: #444;
+        }
+        
+        /* 추가 다크모드 - 편집/수정 버튼 */
+        body.dark-mode .edit-btn {
+            color: #8A9B5A;
+        }
+        
+        /* 추가 다크모드 - 프로필 닉네임 */
+        body.dark-mode .profile-nickname {
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .profile-days {
+            color: #8A9B5A;
+        }
     </style>
 </head>
 <body>
@@ -3412,15 +3467,25 @@
             alert(provider + ' 로그인은 준비 중이에요!');
         }
         
+        // 캘린더 변수
+        var calendarYear = new Date().getFullYear();
+        var calendarMonth = new Date().getMonth();
+        var calendarEvents = [
+            { date: '2026-01-30', title: '산부인과 정기 검진', time: '오후 2:00', color: '#E8B4B8' },
+            { date: '2026-01-30', title: '임산부 요가 수업', time: '오후 4:30', color: '#5E6B3A' },
+            { date: '2026-01-15', title: '태교 음악회', time: '오후 3:00', color: '#5E6B3A' }
+        ];
+        
         // 캘린더 생성
         function generateCalendar() {
             var container = document.getElementById('calendarDays');
             var today = new Date();
-            var year = today.getFullYear();
-            var month = today.getMonth();
             
-            var firstDay = new Date(year, month, 1).getDay();
-            var lastDate = new Date(year, month + 1, 0).getDate();
+            var firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
+            var lastDate = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+            
+            // 월 표시 업데이트
+            document.getElementById('currentMonth').textContent = calendarYear + '년 ' + (calendarMonth + 1) + '월';
             
             var html = '';
             
@@ -3431,12 +3496,169 @@
             
             // 날짜
             for (var d = 1; d <= lastDate; d++) {
-                var isToday = d === today.getDate() ? 'today' : '';
-                var hasEvent = (d === 30 || d === 15) ? 'has-event' : '';
-                html += '<div class="calendar-day ' + isToday + ' ' + hasEvent + '">' + d + '</div>';
+                var isToday = (d === today.getDate() && calendarMonth === today.getMonth() && calendarYear === today.getFullYear()) ? 'today' : '';
+                
+                // 일정 확인
+                var dateStr = calendarYear + '-' + String(calendarMonth + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+                var hasEvent = calendarEvents.some(e => e.date === dateStr) ? 'has-event' : '';
+                
+                html += '<div class="calendar-day ' + isToday + ' ' + hasEvent + '" onclick="selectDate(' + d + ')">' + d + '</div>';
             }
             
             container.innerHTML = html;
+            
+            // 오늘 일정 표시
+            updateTodayEvents();
+        }
+        
+        // 이전 달
+        function prevCalendarMonth() {
+            calendarMonth--;
+            if (calendarMonth < 0) {
+                calendarMonth = 11;
+                calendarYear--;
+            }
+            generateCalendar();
+        }
+        
+        // 다음 달
+        function nextCalendarMonth() {
+            calendarMonth++;
+            if (calendarMonth > 11) {
+                calendarMonth = 0;
+                calendarYear++;
+            }
+            generateCalendar();
+        }
+        
+        // 날짜 선택
+        function selectDate(day) {
+            var dateStr = calendarYear + '-' + String(calendarMonth + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+            var dayEvents = calendarEvents.filter(e => e.date === dateStr);
+            
+            var eventsHtml = '<h3>' + (calendarMonth + 1) + '월 ' + day + '일 일정</h3>';
+            
+            if (dayEvents.length > 0) {
+                dayEvents.forEach(function(event) {
+                    eventsHtml += `
+                        <div class="event-item">
+                            <div class="event-dot" style="background: ${event.color};"></div>
+                            <div class="event-info">
+                                <p class="event-title">${event.title}</p>
+                                <p class="event-time">${event.time}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                eventsHtml += '<p style="color: #8A8A8A; padding: 20px 0; text-align: center;">일정이 없어요</p>';
+            }
+            
+            eventsHtml += '<button onclick="showAddEventModal(\'' + dateStr + '\')" style="width: 100%; padding: 12px; margin-top: 12px; background: #5E6B3A; color: white; border: none; border-radius: 12px; font-size: 14px; cursor: pointer;">+ 일정 추가</button>';
+            
+            document.querySelector('.calendar-events').innerHTML = eventsHtml;
+        }
+        
+        // 오늘 일정 표시
+        function updateTodayEvents() {
+            var today = new Date();
+            var todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+            var todayEvents = calendarEvents.filter(e => e.date === todayStr);
+            
+            var eventsHtml = '<h3>오늘의 일정</h3>';
+            
+            if (todayEvents.length > 0) {
+                todayEvents.forEach(function(event) {
+                    eventsHtml += `
+                        <div class="event-item">
+                            <div class="event-dot" style="background: ${event.color};"></div>
+                            <div class="event-info">
+                                <p class="event-title">${event.title}</p>
+                                <p class="event-time">${event.time}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                eventsHtml += '<p style="color: #8A8A8A; padding: 20px 0; text-align: center;">오늘은 일정이 없어요 ✨</p>';
+            }
+            
+            document.querySelector('.calendar-events').innerHTML = eventsHtml;
+        }
+        
+        // 일정 추가 모달
+        function showAddEventModal(dateStr) {
+            var modal = document.createElement('div');
+            modal.id = 'addEventModal';
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;';
+            
+            var isDark = document.body.classList.contains('dark-mode');
+            var bgColor = isDark ? '#252525' : 'white';
+            var textColor = isDark ? '#F0F0F0' : '#3D4A2D';
+            var inputBg = isDark ? '#333' : '#F5F5F5';
+            
+            modal.innerHTML = `
+                <div style="background: ${bgColor}; border-radius: 20px; padding: 24px; width: 90%; max-width: 340px;">
+                    <h3 style="color: ${textColor}; margin-bottom: 16px;">새 일정 추가</h3>
+                    <p style="color: #8A8A8A; font-size: 14px; margin-bottom: 16px;">${dateStr}</p>
+                    <input type="text" id="eventTitle" placeholder="일정 제목" style="width: 100%; padding: 12px; border: none; background: ${inputBg}; border-radius: 12px; margin-bottom: 12px; color: ${textColor};">
+                    <input type="time" id="eventTime" style="width: 100%; padding: 12px; border: none; background: ${inputBg}; border-radius: 12px; margin-bottom: 16px; color: ${textColor};">
+                    <div style="display: flex; gap: 12px;">
+                        <button onclick="closeAddEventModal()" style="flex: 1; padding: 12px; background: ${inputBg}; color: ${textColor}; border: none; border-radius: 12px; cursor: pointer;">취소</button>
+                        <button onclick="addNewEvent('${dateStr}')" style="flex: 1; padding: 12px; background: #5E6B3A; color: white; border: none; border-radius: 12px; cursor: pointer;">추가</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        function closeAddEventModal() {
+            var modal = document.getElementById('addEventModal');
+            if (modal) modal.remove();
+        }
+        
+        function addNewEvent(dateStr) {
+            var title = document.getElementById('eventTitle').value.trim();
+            var time = document.getElementById('eventTime').value;
+            
+            if (!title) {
+                alert('일정 제목을 입력해주세요.');
+                return;
+            }
+            
+            var formattedTime = time ? formatTime(time) : '종일';
+            
+            calendarEvents.push({
+                date: dateStr,
+                title: title,
+                time: formattedTime,
+                color: '#5E6B3A'
+            });
+            
+            closeAddEventModal();
+            generateCalendar();
+            
+            // 마이페이지 일정 수 업데이트
+            updateEventCount();
+            
+            alert('일정이 추가되었어요! 📅');
+        }
+        
+        function formatTime(time24) {
+            var parts = time24.split(':');
+            var hours = parseInt(parts[0]);
+            var minutes = parts[1];
+            var period = hours >= 12 ? '오후' : '오전';
+            hours = hours > 12 ? hours - 12 : (hours === 0 ? 12 : hours);
+            return period + ' ' + hours + ':' + minutes;
+        }
+        
+        function updateEventCount() {
+            var countEl = document.querySelector('.stat-item:last-child .stat-num');
+            if (countEl) {
+                countEl.textContent = calendarEvents.length;
+            }
         }
         
         // ==================== RAG API 설정 ====================
@@ -3877,6 +4099,10 @@
             document.getElementById('calNavMy').addEventListener('click', showMyPage);
             document.getElementById('calMenuBtn').addEventListener('click', openSideMenu);
             document.getElementById('calNotiBtn').addEventListener('click', showNotification);
+            
+            // 캘린더 월 이동 버튼
+            document.getElementById('prevMonth').addEventListener('click', prevCalendarMonth);
+            document.getElementById('nextMonth').addEventListener('click', nextCalendarMonth);
             
             // ===== 마이페이지 네비게이션 =====
             document.getElementById('myNavHome').addEventListener('click', showHome);
