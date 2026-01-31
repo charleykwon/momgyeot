@@ -1918,6 +1918,333 @@
         .related-btn:active {
             transform: scale(0.95);
         }
+        
+        /* ==================== 설정 화면 ==================== */
+        .settings-screen {
+            background: #F5F5F5;
+        }
+        
+        .settings-content {
+            padding: 16px;
+            padding-bottom: 100px;
+            overflow-y: auto;
+            height: calc(100% - 60px);
+        }
+        
+        .settings-section {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        
+        .settings-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+            padding: 16px 16px 8px;
+        }
+        
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        .settings-item-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .settings-icon {
+            font-size: 22px;
+        }
+        
+        .settings-item-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .settings-item-desc {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+        
+        /* 토글 스위치 */
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #E0E0E0;
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #5E6B3A;
+        }
+        
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(22px);
+        }
+        
+        /* ==================== 약관 화면 ==================== */
+        .policy-screen {
+            background: #FDF8F3;
+        }
+        
+        .policy-content {
+            padding: 20px;
+            padding-bottom: 40px;
+            overflow-y: auto;
+            height: calc(100% - 60px);
+            font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .policy-loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+        
+        .policy-content h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #3D4A2D;
+            margin: 24px 0 12px;
+        }
+        
+        .policy-content h2:first-child {
+            margin-top: 0;
+        }
+        
+        .policy-content h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #5E6B3A;
+            margin: 20px 0 10px;
+        }
+        
+        .policy-content p {
+            margin-bottom: 12px;
+        }
+        
+        .policy-content ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        
+        .policy-content li {
+            margin-bottom: 8px;
+        }
+        
+        .policy-updated {
+            font-size: 12px;
+            color: #888;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #E0E0E0;
+        }
+        
+        /* ==================== 다크모드 ==================== */
+        body.dark-mode .screen {
+            background: #1A1A1A;
+        }
+        
+        body.dark-mode .home-screen,
+        body.dark-mode .my-screen,
+        body.dark-mode .calendar-screen,
+        body.dark-mode .settings-screen,
+        body.dark-mode .policy-screen {
+            background: #1A1A1A;
+        }
+        
+        body.dark-mode .screen-header {
+            background: #252525;
+            border-bottom-color: #333;
+        }
+        
+        body.dark-mode .screen-title,
+        body.dark-mode .menu-btn,
+        body.dark-mode .back-btn {
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .bottom-nav {
+            background: #252525;
+            border-top-color: #333;
+        }
+        
+        body.dark-mode .nav-item {
+            color: #888;
+        }
+        
+        body.dark-mode .nav-item.active {
+            color: #8A9B5A;
+        }
+        
+        body.dark-mode .greeting-card {
+            background: linear-gradient(135deg, #3D4A2D, #4A5530);
+        }
+        
+        body.dark-mode .mate-card {
+            background: #252525;
+        }
+        
+        body.dark-mode .mate-name {
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .mate-desc {
+            color: #888;
+        }
+        
+        body.dark-mode .quick-menu {
+            background: #252525;
+        }
+        
+        body.dark-mode .quick-item span {
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .settings-section {
+            background: #252525;
+        }
+        
+        body.dark-mode .settings-section-title {
+            color: #888;
+        }
+        
+        body.dark-mode .settings-item {
+            border-bottom-color: #333;
+        }
+        
+        body.dark-mode .settings-item-title {
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .settings-item-desc {
+            color: #888;
+        }
+        
+        body.dark-mode .policy-content {
+            color: #E0E0E0;
+        }
+        
+        body.dark-mode .policy-content h2 {
+            color: #8A9B5A;
+        }
+        
+        body.dark-mode .policy-content h3 {
+            color: #A0B06A;
+        }
+        
+        body.dark-mode .my-content {
+            background: #1A1A1A;
+        }
+        
+        body.dark-mode .profile-section {
+            background: #252525;
+        }
+        
+        body.dark-mode .profile-info h2,
+        body.dark-mode .profile-info p {
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .my-stats {
+            background: #252525;
+        }
+        
+        body.dark-mode .stat-num,
+        body.dark-mode .stat-label {
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .my-menu-item {
+            background: #252525;
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .my-menu-item:hover {
+            background: #333;
+        }
+        
+        body.dark-mode .chat-screen {
+            background: #1A1A1A;
+        }
+        
+        body.dark-mode .chat-header {
+            background: #252525;
+            border-bottom-color: #333;
+        }
+        
+        body.dark-mode .chat-title span {
+            color: #F0F0F0;
+        }
+        
+        body.dark-mode .chat-messages {
+            background: #1A1A1A;
+        }
+        
+        body.dark-mode .message.bot .message-content {
+            background: #252525;
+            color: #E0E0E0;
+        }
+        
+        body.dark-mode .message.user .message-content {
+            background: #4A5530;
+        }
+        
+        body.dark-mode .chat-input-area {
+            background: #252525;
+            border-top-color: #333;
+        }
+        
+        body.dark-mode .chat-input {
+            background: #1A1A1A;
+            color: #F0F0F0;
+            border-color: #333;
+        }
     </style>
 </head>
 <body>
@@ -2248,9 +2575,19 @@
                             <span>저장한 답변</span>
                             <span class="menu-arrow">›</span>
                         </button>
-                        <button class="my-menu-item" type="button">
+                        <button class="my-menu-item" type="button" id="goToSettingsBtn">
                             <span class="menu-icon">⚙️</span>
                             <span>설정</span>
+                            <span class="menu-arrow">›</span>
+                        </button>
+                        <button class="my-menu-item" type="button" id="goToTermsBtn">
+                            <span class="menu-icon">📄</span>
+                            <span>이용약관</span>
+                            <span class="menu-arrow">›</span>
+                        </button>
+                        <button class="my-menu-item" type="button" id="goToPrivacyBtn">
+                            <span class="menu-icon">🔒</span>
+                            <span>개인정보처리방침</span>
                             <span class="menu-arrow">›</span>
                         </button>
                         <button class="my-menu-item" type="button">
@@ -2266,6 +2603,77 @@
                     <button class="nav-item" type="button" id="myNavCalendar"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg><span>캘린더</span></button>
                     <button class="nav-item" type="button" id="myNavChat"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>채팅</span></button>
                     <button class="nav-item active" type="button" id="myNavMy"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>마이</span></button>
+                </div>
+            </div>
+            
+            <!-- 설정 화면 -->
+            <div class="page settings-screen hidden" id="settingsScreen">
+                <div class="screen-header">
+                    <button class="back-btn" type="button" id="settingsBackBtn">←</button>
+                    <h1 class="screen-title">설정</h1>
+                    <div style="width: 40px;"></div>
+                </div>
+                
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3 class="settings-section-title">화면 설정</h3>
+                        <div class="settings-item">
+                            <div class="settings-item-info">
+                                <span class="settings-icon">🌙</span>
+                                <div>
+                                    <p class="settings-item-title">다크 모드</p>
+                                    <p class="settings-item-desc">어두운 화면으로 전환합니다</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3 class="settings-section-title">알림 설정</h3>
+                        <div class="settings-item">
+                            <div class="settings-item-info">
+                                <span class="settings-icon">🔔</span>
+                                <div>
+                                    <p class="settings-item-title">푸시 알림</p>
+                                    <p class="settings-item-desc">상담 답변, 일정 알림을 받습니다</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="pushNotiToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3 class="settings-section-title">앱 정보</h3>
+                        <div class="settings-item" style="cursor: default;">
+                            <div class="settings-item-info">
+                                <span class="settings-icon">📱</span>
+                                <div>
+                                    <p class="settings-item-title">버전</p>
+                                    <p class="settings-item-desc">1.0.0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 약관 화면 (이용약관 / 개인정보처리방침 공용) -->
+            <div class="page policy-screen hidden" id="policyScreen">
+                <div class="screen-header">
+                    <button class="back-btn" type="button" id="policyBackBtn">←</button>
+                    <h1 class="screen-title" id="policyTitle">이용약관</h1>
+                    <div style="width: 40px;"></div>
+                </div>
+                
+                <div class="policy-content" id="policyContent">
+                    <div class="policy-loading">불러오는 중...</div>
                 </div>
             </div>
             
@@ -3478,6 +3886,166 @@
                     });
                 } catch (error) {
                     console.error('알림 발송 오류:', error);
+                }
+            }
+            
+            // ==================== 설정 화면 ====================
+            document.getElementById('goToSettingsBtn')?.addEventListener('click', function() {
+                showPage('settingsScreen');
+            });
+            
+            document.getElementById('settingsBackBtn')?.addEventListener('click', function() {
+                showPage('myScreen');
+            });
+            
+            // 다크모드 토글
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            
+            // 저장된 다크모드 설정 불러오기
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+                if (darkModeToggle) darkModeToggle.checked = true;
+            }
+            
+            darkModeToggle?.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('darkMode', 'true');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('darkMode', 'false');
+                }
+            });
+            
+            // ==================== 약관 화면 ====================
+            document.getElementById('goToTermsBtn')?.addEventListener('click', function() {
+                loadPolicy('terms');
+            });
+            
+            document.getElementById('goToPrivacyBtn')?.addEventListener('click', function() {
+                loadPolicy('privacy');
+            });
+            
+            document.getElementById('policyBackBtn')?.addEventListener('click', function() {
+                showPage('myScreen');
+            });
+            
+            // 약관 불러오기
+            async function loadPolicy(type) {
+                const titleEl = document.getElementById('policyTitle');
+                const contentEl = document.getElementById('policyContent');
+                
+                titleEl.textContent = type === 'terms' ? '이용약관' : '개인정보처리방침';
+                contentEl.innerHTML = '<div class="policy-loading">불러오는 중...</div>';
+                
+                showPage('policyScreen');
+                
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/policies?type=eq.${type}&select=*`, {
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data && data.length > 0 && data[0].content) {
+                        contentEl.innerHTML = data[0].content;
+                    } else {
+                        // 기본 약관 표시
+                        contentEl.innerHTML = getDefaultPolicy(type);
+                    }
+                } catch (error) {
+                    console.error('약관 로드 오류:', error);
+                    contentEl.innerHTML = getDefaultPolicy(type);
+                }
+            }
+            
+            // 기본 약관 내용
+            function getDefaultPolicy(type) {
+                if (type === 'terms') {
+                    return `
+                        <h2>서비스 이용약관</h2>
+                        
+                        <h3>제1조 (목적)</h3>
+                        <p>이 약관은 맘곁(이하 "회사")이 제공하는 육아 AI 동반자 서비스(이하 "서비스")의 이용조건 및 절차, 회사와 이용자의 권리, 의무 및 책임사항 등을 규정함을 목적으로 합니다.</p>
+                        
+                        <h3>제2조 (정의)</h3>
+                        <p>① "서비스"란 회사가 제공하는 AI 기반 육아 상담, 전문가 연결, 정보 제공 등 관련 제반 서비스를 의미합니다.</p>
+                        <p>② "이용자"란 본 약관에 따라 회사가 제공하는 서비스를 받는 자를 의미합니다.</p>
+                        
+                        <h3>제3조 (약관의 효력 및 변경)</h3>
+                        <p>① 이 약관은 서비스를 이용하고자 하는 모든 이용자에게 적용됩니다.</p>
+                        <p>② 회사는 필요한 경우 관련 법령을 위배하지 않는 범위 내에서 이 약관을 변경할 수 있습니다.</p>
+                        
+                        <h3>제4조 (서비스의 제공)</h3>
+                        <p>① 회사는 다음과 같은 서비스를 제공합니다:</p>
+                        <ul>
+                            <li>AI 기반 육아 상담 서비스</li>
+                            <li>전문가 상담 연결 서비스</li>
+                            <li>육아 정보 제공 서비스</li>
+                            <li>캘린더 및 일정 관리 서비스</li>
+                        </ul>
+                        
+                        <h3>제5조 (서비스 이용의 제한)</h3>
+                        <p>회사는 다음 각 호에 해당하는 경우 서비스 이용을 제한할 수 있습니다:</p>
+                        <ul>
+                            <li>타인의 정보를 도용하거나 허위 정보를 기재한 경우</li>
+                            <li>서비스 운영을 방해한 경우</li>
+                            <li>관련 법령에 위배되는 행위를 한 경우</li>
+                        </ul>
+                        
+                        <h3>제6조 (면책조항)</h3>
+                        <p>① 회사가 제공하는 정보는 의료적 조언을 대체하지 않으며, 참고용으로만 활용해야 합니다.</p>
+                        <p>② 긴급한 의료 상황에서는 반드시 전문 의료기관을 방문하시기 바랍니다.</p>
+                        
+                        <div class="policy-updated">최종 업데이트: 2026년 1월 1일</div>
+                    `;
+                } else {
+                    return `
+                        <h2>개인정보 처리방침</h2>
+                        
+                        <h3>제1조 (개인정보의 수집 및 이용목적)</h3>
+                        <p>맘곁(이하 "회사")은 다음의 목적을 위하여 개인정보를 수집 및 이용합니다:</p>
+                        <ul>
+                            <li>회원 가입 및 관리</li>
+                            <li>서비스 제공 및 개선</li>
+                            <li>상담 예약 및 연락</li>
+                            <li>맞춤형 정보 제공</li>
+                        </ul>
+                        
+                        <h3>제2조 (수집하는 개인정보의 항목)</h3>
+                        <p>회사는 다음과 같은 개인정보를 수집합니다:</p>
+                        <ul>
+                            <li>필수항목: 닉네임, 연락처</li>
+                            <li>선택항목: 아기 이름/태명, 출산예정일, 아기 생년월일</li>
+                            <li>자동수집항목: 서비스 이용기록, 접속 로그</li>
+                        </ul>
+                        
+                        <h3>제3조 (개인정보의 보유 및 이용기간)</h3>
+                        <p>① 회사는 이용자의 개인정보를 회원 탈퇴 시까지 보유합니다.</p>
+                        <p>② 관련 법령에 따라 일정 기간 보관이 필요한 경우 해당 기간 동안 보관합니다.</p>
+                        
+                        <h3>제4조 (개인정보의 제3자 제공)</h3>
+                        <p>회사는 이용자의 동의 없이 개인정보를 제3자에게 제공하지 않습니다. 다만, 다음의 경우는 예외로 합니다:</p>
+                        <ul>
+                            <li>법령에 의한 요청이 있는 경우</li>
+                            <li>이용자가 사전에 동의한 경우</li>
+                        </ul>
+                        
+                        <h3>제5조 (이용자의 권리)</h3>
+                        <p>이용자는 언제든지 자신의 개인정보를 조회, 수정, 삭제할 수 있으며, 회원 탈퇴를 요청할 수 있습니다.</p>
+                        
+                        <h3>제6조 (개인정보 보호책임자)</h3>
+                        <p>회사는 개인정보 보호를 위해 개인정보 보호책임자를 지정하고 있습니다.</p>
+                        <ul>
+                            <li>담당부서: 고객지원팀</li>
+                            <li>연락처: help@momgyeot.com</li>
+                        </ul>
+                        
+                        <div class="policy-updated">최종 업데이트: 2026년 1월 1일</div>
+                    `;
                 }
             }
         });
