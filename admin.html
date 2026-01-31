@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맘곁 관리자</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #F5F5F5;
+            min-height: 100vh;
+        }
+        
+        /* 로그인 화면 */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
+        
+        .login-logo {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #3D4A2D;
+            margin-bottom: 8px;
+        }
+        
+        .login-subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 32px;
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+            letter-spacing: 4px;
+        }
+        
+        .login-input:focus {
+            outline: none;
+            border-color: #5E6B3A;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #5E6B3A;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .login-btn:hover {
+            background: #4A5530;
+        }
+        
+        .login-error {
+            color: #E53935;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+        
+        /* 관리자 화면 */
+        .admin-screen {
+            display: none;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #5E6B3A, #7A8B4A);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .admin-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* 탭 메뉴 */
+        .tab-menu {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: #5E6B3A;
+            border-bottom-color: #5E6B3A;
+        }
+        
+        /* 통계 카드 */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 16px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #5E6B3A;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        /* 예약 목록 */
+        .reservation-list {
+            padding: 16px;
+        }
+        
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .list-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .refresh-btn {
+            padding: 8px 12px;
+            background: #F0F0F0;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .refresh-btn:hover {
+            background: #E0E0E0;
+        }
+        
+        .reservation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .reservation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .reservation-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .reservation-info p {
+            font-size: 13px;
+            color: #888;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+        
+        .status-completed {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        
+        .status-cancelled {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        
+        .reservation-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .detail-item {
+            font-size: 13px;
+        }
+        
+        .detail-label {
+            color: #888;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .reservation-memo {
+            background: #F9F9F9;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .reservation-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .btn-complete {
+            background: #5E6B3A;
+            color: white;
+        }
+        
+        .btn-call {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        
+        .btn-cancel {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        /* 알림 로그 */
+        .log-item {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .log-time {
+            color: #888;
+            font-size: 11px;
+        }
+        
+        .log-message {
+            color: #333;
+            margin-top: 4px;
+            white-space: pre-line;
+        }
+        
+        /* 반응형 */
+        @media (max-width: 500px) {
+            .stats-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            
+            .stat-card {
+                padding: 12px 8px;
+            }
+            
+            .stat-number {
+                font-size: 22px;
+            }
+            
+            .reservation-details {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- 로그인 화면 -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <div class="login-logo">🔐</div>
+            <h1 class="login-title">맘곁 관리자</h1>
+            <p class="login-subtitle">관리자 비밀번호를 입력하세요</p>
+            <input type="password" class="login-input" id="passwordInput" placeholder="••••••" maxlength="10">
+            <button class="login-btn" id="loginBtn">로그인</button>
+            <p class="login-error" id="loginError">비밀번호가 올바르지 않습니다</p>
+        </div>
+    </div>
+    
+    <!-- 관리자 화면 -->
+    <div class="admin-screen" id="adminScreen">
+        <div class="admin-header">
+            <h1 class="admin-title">🌿 맘곁 관리자</h1>
+            <button class="logout-btn" id="logoutBtn">로그아웃</button>
+        </div>
+        
+        <div class="tab-menu">
+            <button class="tab-btn active" data-tab="reservations">📅 상담예약</button>
+            <button class="tab-btn" data-tab="logs">📋 알림로그</button>
+        </div>
+        
+        <!-- 상담예약 탭 -->
+        <div class="tab-content" id="reservationsTab">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number" id="statTotal">0</div>
+                    <div class="stat-label">전체</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statPending">0</div>
+                    <div class="stat-label">대기중</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statCompleted">0</div>
+                    <div class="stat-label">완료</div>
+                </div>
+            </div>
+            
+            <div class="reservation-list">
+                <div class="list-header">
+                    <h2 class="list-title">예약 목록</h2>
+                    <button class="refresh-btn" id="refreshBtn">🔄 새로고침</button>
+                </div>
+                <div id="reservationList">
+                    <!-- 예약 카드들 -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- 알림로그 탭 -->
+        <div class="tab-content hidden" id="logsTab">
+            <div class="reservation-list">
+                <div class="list-header">
+                    <h2 class="list-title">알림 발송 로그</h2>
+                    <button class="refresh-btn" id="refreshLogsBtn">🔄 새로고침</button>
+                </div>
+                <div id="logList">
+                    <!-- 로그 아이템들 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase 설정
+        const SUPABASE_URL = 'https://oeyhdglnqalgowvrxbsm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9leWhkZ2xucWFsZ293dnJ4YnNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk0MTkyNzgsImV4cCI6MjA4NDk5NTI3OH0.RRuEiT7EgLvvAUMB88lqNcN7bbUMupxSQd3EbmDIwt4';
+        
+        // 관리자 비밀번호 (간단한 보안)
+        const ADMIN_PASSWORD = 'momgyeot2026';
+        
+        // 로그인 처리
+        document.getElementById('loginBtn').addEventListener('click', login);
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+        
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminScreen').style.display = 'block';
+                loadReservations();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+        
+        // 로그아웃
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            document.getElementById('adminScreen').style.display = 'none';
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('loginError').style.display = 'none';
+        });
+        
+        // 탭 전환
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const tab = this.dataset.tab;
+                document.getElementById('reservationsTab').classList.toggle('hidden', tab !== 'reservations');
+                document.getElementById('logsTab').classList.toggle('hidden', tab !== 'logs');
+                
+                if (tab === 'logs') loadLogs();
+            });
+        });
+        
+        // 새로고침
+        document.getElementById('refreshBtn').addEventListener('click', loadReservations);
+        document.getElementById('refreshLogsBtn').addEventListener('click', loadLogs);
+        
+        // 예약 목록 불러오기
+        async function loadReservations() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/consultation_reservations?select=*&order=created_at.desc`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                const data = await response.json();
+                renderReservations(data);
+                updateStats(data);
+            } catch (error) {
+                console.error('예약 로드 오류:', error);
+                document.getElementById('reservationList').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>데이터를 불러올 수 없습니다</p></div>';
+            }
+        }
+        
+        // 예약 목록 렌더링
+        function renderReservations(reservations) {
+            const container = document.getElementById('reservationList');
+            
+            if (!reservations || reservations.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>예약이 없습니다</p></div>';
+                return;
+            }
+            
+            container.innerHTML = reservations.map(r => {
+                const statusClass = r.status === 'completed' ? 'status-completed' : 
+                                   r.status === 'cancelled' ? 'status-cancelled' : 'status-pending';
+                const statusText = r.status === 'completed' ? '완료' : 
+                                  r.status === 'cancelled' ? '취소' : '대기중';
+                const date = new Date(r.created_at).toLocaleString('ko-KR');
+                
+                return `
+                    <div class="reservation-card" data-id="${r.id}">
+                        <div class="reservation-header">
+                            <div class="reservation-info">
+                                <h3>${r.nickname}</h3>
+                                <p>${date}</p>
+                            </div>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="reservation-details">
+                            <div class="detail-item">
+                                <span class="detail-label">📞 연락처: </span>
+                                <span class="detail-value">${r.phone}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">👶 아기: </span>
+                                <span class="detail-value">${r.baby_name || '-'}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">📋 분야: </span>
+                                <span class="detail-value">${r.category}</span>
+                            </div>
+                        </div>
+                        ${r.memo ? `<div class="reservation-memo">💬 ${r.memo}</div>` : ''}
+                        <div class="reservation-actions">
+                            <button class="action-btn btn-call" onclick="callUser('${r.phone}')">📞 전화</button>
+                            ${r.status === 'pending' ? `
+                                <button class="action-btn btn-complete" onclick="updateStatus(${r.id}, 'completed')">✅ 완료</button>
+                                <button class="action-btn btn-cancel" onclick="updateStatus(${r.id}, 'cancelled')">❌ 취소</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // 통계 업데이트
+        function updateStats(reservations) {
+            const total = reservations.length;
+            const pending = reservations.filter(r => r.status === 'pending').length;
+            const completed = reservations.filter(r => r.status === 'completed').length;
+            
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statCompleted').textContent = completed;
+        }
+        
+        // 전화 걸기
+        function callUser(phone) {
+            window.location.href = `tel:${phone.replace(/-/g, '')}`;
+        }
+        
+        // 상태 업데이트
+        async function updateStatus(id, status) {
+            const confirmMsg = status === 'completed' ? '상담 완료 처리하시겠습니까?' : '예약을 취소하시겠습니까?';
+            if (!confirm(confirmMsg)) return;
+            
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/consultation_reservations?id=eq.${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({ status: status })
+                });
+                
+                loadReservations();
+            } catch (error) {
+                console.error('상태 업데이트 오류:', error);
+                alert('처리 중 오류가 발생했습니다.');
+            }
+        }
+        
+        // 알림 로그 불러오기
+        async function loadLogs() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/notification_logs?select=*&order=created_at.desc&limit=50`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                const data = await response.json();
+                renderLogs(data);
+            } catch (error) {
+                console.error('로그 로드 오류:', error);
+            }
+        }
+        
+        // 로그 렌더링
+        function renderLogs(logs) {
+            const container = document.getElementById('logList');
+            
+            if (!logs || logs.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>알림 로그가 없습니다</p></div>';
+                return;
+            }
+            
+            container.innerHTML = logs.map(log => {
+                const date = new Date(log.created_at).toLocaleString('ko-KR');
+                return `
+                    <div class="log-item">
+                        <div class="log-time">${date} | ${log.type} → ${log.recipient}</div>
+                        <div class="log-message">${log.message}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>
