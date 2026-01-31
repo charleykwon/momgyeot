@@ -604,7 +604,7 @@
             right: 0;
             height: calc(85px + env(safe-area-inset-bottom, 0px));
             background: white;
-            
+            display: flex;
             justify-content: space-around;
             align-items: flex-start;
             padding-top: 12px;
@@ -613,9 +613,9 @@
         }
         
         .nav-item {
-            
+            display: flex;
             flex-direction: column;
-            
+            align-items: center;
             gap: 4px;
             background: none;
             border: none;
@@ -864,9 +864,11 @@
         }
         
         .chat-input-area {
-            
+            display: flex;
+            align-items: center;
             gap: 10px;
-            padding: 12px 16px 32px;
+            padding: 12px 16px;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom, 20px));
             background: white;
             border-top: 1px solid #f0f0f0;
         }
@@ -893,10 +895,11 @@
             border-radius: 50%;
             color: white;
             cursor: pointer;
-            
-            
-            
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: background 0.2s;
+            flex-shrink: 0;
         }
         
         .send-btn:hover {
@@ -912,9 +915,9 @@
             border-radius: 50%;
             color: white;
             cursor: pointer;
-            
-            
-            
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.3s;
             flex-shrink: 0;
         }
@@ -1303,7 +1306,8 @@
         }
         
         .noti-item {
-            
+            display: flex;
+            align-items: flex-start;
             gap: 12px;
             background: white;
             padding: 16px;
@@ -1322,11 +1326,15 @@
             height: 40px;
             background: #f5f5f5;
             border-radius: 50%;
-            
-            
-            
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 18px;
             flex-shrink: 0;
+        }
+        
+        .noti-info {
+            flex: 1;
         }
         
         .noti-title {
@@ -1437,8 +1445,8 @@
         }
         
         .side-menu-item {
-            
-            
+            display: flex;
+            align-items: center;
             gap: 14px;
             width: 100%;
             padding: 14px 24px;
@@ -1448,6 +1456,8 @@
             color: #3D4A2D;
             cursor: pointer;
             text-align: left;
+            text-decoration: none;
+            font-family: inherit;
         }
         
         .side-menu-item:hover {
@@ -1880,7 +1890,7 @@
                     <div class="noti-item unread">
                         <div class="noti-icon">💬</div>
                         <div class="noti-info">
-                            <p class="noti-title">예비맘곁에서 답변이 도착했어요</p>
+                            <p class="noti-title">맘곁에서 답변이 도착했어요</p>
                             <p class="noti-desc">임신 준비에 대한 답변을 확인해보세요.</p>
                             <p class="noti-time">방금 전</p>
                         </div>
@@ -1924,22 +1934,29 @@
                             <span class="side-icon">🏠</span>
                             <span>홈</span>
                         </button>
-                        <button class="side-menu-item" type="button" id="sideSaessak">
-                            <span class="side-icon">🌱</span>
-                            <span>예비맘곁</span>
-                        </button>
-                        <button class="side-menu-item" type="button" id="sideYebi">
-                            <span class="side-icon">🤰</span>
-                            <span>임신맘곁</span>
-                        </button>
-                        <button class="side-menu-item" type="button" id="sideAgi">
+                        
+                        <div class="side-divider"></div>
+                        
+                        <a href="https://www.momgyeot.com" target="_blank" class="side-menu-item">
+                            <span class="side-icon">🌸</span>
+                            <span>맘곁 태교</span>
+                        </a>
+                        <a href="https://mktaegyo.replit.app" target="_blank" class="side-menu-item">
+                            <span class="side-icon">📖</span>
+                            <span>새로쓰는 태교신기</span>
+                        </a>
+                        <a href="https://mothersbaby-ai.vercel.app/" target="_blank" class="side-menu-item">
                             <span class="side-icon">👶</span>
-                            <span>초보맘곁</span>
-                        </button>
-                        <button class="side-menu-item" type="button" id="sideExpert">
-                            <span class="side-icon">👩‍⚕️</span>
-                            <span>전문가 연결</span>
-                        </button>
+                            <span>맘곁 육아 컴패니언</span>
+                        </a>
+                        <a href="https://breastfeedingrealguide-10.replit.app" target="_blank" class="side-menu-item">
+                            <span class="side-icon">🤱</span>
+                            <span>모유수유 리얼 가이드</span>
+                        </a>
+                        <a href="https://www.mothersbaby.co.kr" target="_blank" class="side-menu-item">
+                            <span class="side-icon">🛒</span>
+                            <span>쇼핑몰</span>
+                        </a>
                         
                         <div class="side-divider"></div>
                         
@@ -2774,18 +2791,6 @@
             document.getElementById('sideMenuOverlay').addEventListener('click', closeSideMenu);
             
             document.getElementById('sideHome').addEventListener('click', showHome);
-            document.getElementById('sideSaessak').addEventListener('click', function() {
-                showChat('saessak', '🌱', '예비맘곁');
-            });
-            document.getElementById('sideYebi').addEventListener('click', function() {
-                showChat('yebi', '🤰', '임신맘곁');
-            });
-            document.getElementById('sideAgi').addEventListener('click', function() {
-                showChat('agi', '👶', '초보맘곁');
-            });
-            document.getElementById('sideExpert').addEventListener('click', function() {
-                showChat('expert', '👩‍⚕️', '전문가 연결');
-            });
             document.getElementById('sideCalendar').addEventListener('click', showCalendar);
             document.getElementById('sideSettings').addEventListener('click', function() {
                 alert('설정 화면은 준비 중이에요!');
