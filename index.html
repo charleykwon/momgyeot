@@ -1372,6 +1372,380 @@
             margin-top: 6px;
         }
         
+        /* ==================== 전문가 연결 화면 ==================== */
+        .expert-screen {
+            display: flex;
+            flex-direction: column;
+            background: #FDF8F3;
+        }
+        
+        .expert-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 60px 20px 20px;
+            background: #FDF8F3;
+        }
+        
+        .expert-header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #3D4A2D;
+        }
+        
+        .expert-content {
+            flex: 1;
+            padding: 0 20px 20px;
+            overflow-y: auto;
+            padding-bottom: calc(80px + max(12px, env(safe-area-inset-bottom, 0px)));
+        }
+        
+        .expert-intro {
+            text-align: center;
+            padding: 30px 0 40px;
+        }
+        
+        .expert-icon {
+            font-size: 60px;
+            margin-bottom: 16px;
+        }
+        
+        .expert-intro h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #3D4A2D;
+            margin-bottom: 8px;
+        }
+        
+        .expert-intro p {
+            font-size: 15px;
+            color: #8A8A8A;
+            line-height: 1.5;
+        }
+        
+        .expert-options {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .expert-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .expert-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .expert-card.kakao {
+            border-color: #FEE500;
+            background: linear-gradient(135deg, #FFFEF5, white);
+        }
+        
+        .expert-card.reservation {
+            border-color: #E8B4B8;
+            background: linear-gradient(135deg, #FFF9F9, white);
+        }
+        
+        .expert-card-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border-radius: 12px;
+            background: #F5F5F5;
+        }
+        
+        .expert-card.kakao .expert-card-icon {
+            background: #FEE500;
+        }
+        
+        .expert-card.reservation .expert-card-icon {
+            background: #FCE4E8;
+        }
+        
+        .expert-card-content {
+            flex: 1;
+        }
+        
+        .expert-card-content h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #3D4A2D;
+            margin-bottom: 4px;
+        }
+        
+        .expert-card-content p {
+            font-size: 13px;
+            color: #8A8A8A;
+            margin-bottom: 6px;
+        }
+        
+        .expert-card-tag {
+            display: inline-block;
+            font-size: 11px;
+            color: #5E6B3A;
+            background: rgba(94, 107, 58, 0.1);
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+        
+        .expert-card-arrow {
+            font-size: 20px;
+            color: #BDBDBD;
+        }
+        
+        .expert-info {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .expert-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #3D4A2D;
+            margin-bottom: 12px;
+        }
+        
+        .expert-info ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .expert-info li {
+            font-size: 14px;
+            color: #666;
+            padding: 8px 0;
+            border-bottom: 1px solid #F0F0F0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .expert-info li:last-child {
+            border-bottom: none;
+        }
+        
+        .expert-info li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #5E6B3A;
+            font-weight: bold;
+        }
+        
+        /* ==================== 상담 예약 모달 ==================== */
+        .reservation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .reservation-modal.hidden {
+            display: none;
+        }
+        
+        .reservation-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        
+        .reservation-content {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            max-height: 85vh;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: modalSlideUp 0.3s ease;
+        }
+        
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .reservation-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        
+        .reservation-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #3D4A2D;
+        }
+        
+        .close-modal-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #F5F5F5;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .reservation-body {
+            padding: 20px;
+            max-height: calc(85vh - 80px);
+            overflow-y: auto;
+        }
+        
+        .reservation-notice {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: linear-gradient(135deg, #FFF9F0, #FFF5E8);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 1px solid #F5E6D3;
+        }
+        
+        .notice-icon {
+            font-size: 32px;
+        }
+        
+        .reservation-notice p {
+            font-size: 14px;
+            color: #5D4E37;
+            line-height: 1.5;
+        }
+        
+        .reservation-notice strong {
+            color: #5E6B3A;
+            font-weight: 700;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #3D4A2D;
+            margin-bottom: 8px;
+        }
+        
+        .form-group .required {
+            color: #E8B4B8;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #333;
+            background: #FAFAFA;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #5E6B3A;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(94, 107, 58, 0.1);
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #BDBDBD;
+        }
+        
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+        
+        .form-group textarea {
+            resize: none;
+            font-family: inherit;
+        }
+        
+        .reservation-submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #5E6B3A, #7A8B4A);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        
+        .reservation-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(94, 107, 58, 0.3);
+        }
+        
+        .reservation-submit-btn:disabled {
+            background: #BDBDBD;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .reservation-footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-top: 16px;
+        }
+        
         /* ==================== 사이드 메뉴 ==================== */
         .side-menu {
             position: absolute;
@@ -1931,6 +2305,137 @@
                 </div>
             </div>
             
+            <!-- 전문가 연결 화면 -->
+            <div class="page expert-screen hidden" id="expertScreen">
+                <div class="expert-header">
+                    <button class="back-btn" type="button" id="expertBackBtn">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <h1>전문가 연결</h1>
+                    <div style="width: 24px;"></div>
+                </div>
+                
+                <div class="expert-content">
+                    <div class="expert-intro">
+                        <div class="expert-icon">👩‍⚕️</div>
+                        <h2>전문 상담이 필요하신가요?</h2>
+                        <p>모유수유, 육아 전문가와<br>1:1 상담을 받아보세요</p>
+                    </div>
+                    
+                    <div class="expert-options">
+                        <a href="http://pf.kakao.com/_xkxjxaAn/chat" target="_blank" class="expert-card kakao">
+                            <div class="expert-card-icon">💬</div>
+                            <div class="expert-card-content">
+                                <h3>카카오톡 상담</h3>
+                                <p>실시간 채팅 상담</p>
+                                <span class="expert-card-tag">바로 연결</span>
+                            </div>
+                            <div class="expert-card-arrow">→</div>
+                        </a>
+                        
+                        <button class="expert-card reservation" type="button" id="reservationBtn">
+                            <div class="expert-card-icon">📅</div>
+                            <div class="expert-card-content">
+                                <h3>상담 예약</h3>
+                                <p>원하는 시간에 상담 예약</p>
+                                <span class="expert-card-tag">예약 가능</span>
+                            </div>
+                            <div class="expert-card-arrow">→</div>
+                        </button>
+                    </div>
+                    
+                    <div class="expert-info">
+                        <h4>상담 안내</h4>
+                        <ul>
+                            <li>모유수유 전문 상담 (IBCLC)</li>
+                            <li>신생아 케어 상담</li>
+                            <li>산후조리 상담</li>
+                            <li>육아 고민 상담</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bottom-nav">
+                    <button class="nav-item" type="button" id="expertNavHome">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        <span>홈</span>
+                    </button>
+                    <button class="nav-item" type="button" id="expertNavCalendar">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <span>캘린더</span>
+                    </button>
+                    <button class="nav-item" type="button" id="expertNavChat">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        <span>채팅</span>
+                    </button>
+                    <button class="nav-item" type="button" id="expertNavMy">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <span>마이</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 상담 예약 모달 -->
+            <div class="reservation-modal hidden" id="reservationModal">
+                <div class="reservation-overlay" id="reservationOverlay"></div>
+                <div class="reservation-content">
+                    <div class="reservation-header">
+                        <h2>📅 상담 예약</h2>
+                        <button class="close-modal-btn" type="button" id="closeReservationBtn">✕</button>
+                    </div>
+                    
+                    <div class="reservation-body">
+                        <div class="reservation-notice">
+                            <span class="notice-icon">📞</span>
+                            <p>평일 기준 <strong>24시간 이내</strong>에<br>전문 상담사가 연락드립니다</p>
+                        </div>
+                        
+                        <form id="reservationForm">
+                            <div class="form-group">
+                                <label for="resPhone">연락처 <span class="required">*</span></label>
+                                <input type="tel" id="resPhone" placeholder="010-0000-0000" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="resNickname">닉네임 <span class="required">*</span></label>
+                                <input type="text" id="resNickname" placeholder="닉네임을 입력해주세요" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="resBabyName">아기 이름 (태명)</label>
+                                <input type="text" id="resBabyName" placeholder="아기 이름 또는 태명">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="resCategory">상담 분야</label>
+                                <select id="resCategory">
+                                    <option value="모유수유">모유수유 상담</option>
+                                    <option value="신생아케어">신생아 케어</option>
+                                    <option value="산후조리">산후조리 상담</option>
+                                    <option value="육아고민">육아 고민 상담</option>
+                                    <option value="기타">기타</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="resMemo">상담 내용 (선택)</label>
+                                <textarea id="resMemo" placeholder="상담받고 싶은 내용을 간단히 적어주세요" rows="3"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="reservation-submit-btn" id="submitReservation">
+                                예약 신청하기
+                            </button>
+                        </form>
+                        
+                        <p class="reservation-footer">
+                            ※ 개인정보는 상담 목적으로만 사용됩니다
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
             <!-- 사이드 메뉴 -->
             <div class="side-menu hidden" id="sideMenu">
                 <div class="side-menu-overlay" id="sideMenuOverlay"></div>
@@ -2248,10 +2753,15 @@
         
         function selectMate(type) {
             if (type === 'expert') {
-                alert('전문가 연결 기능은 준비 중이에요!');
+                showExpert();
                 return;
             }
             startOnboarding(type);
+        }
+        
+        function showExpert() {
+            hideAll();
+            document.getElementById('expertScreen').classList.remove('hidden');
         }
         
         function showIntro() {
@@ -2842,6 +3352,134 @@
                     showIntro();
                 }
             });
+            
+            // 전문가 연결 화면 이벤트
+            document.getElementById('expertBackBtn').addEventListener('click', showHome);
+            document.getElementById('expertNavHome').addEventListener('click', showHome);
+            document.getElementById('expertNavCalendar').addEventListener('click', showCalendar);
+            document.getElementById('expertNavChat').addEventListener('click', function() {
+                // 마지막 사용한 채팅으로 이동 또는 홈
+                showHome();
+            });
+            document.getElementById('expertNavMy').addEventListener('click', showMyPage);
+            
+            // 상담 예약 버튼 - 모달 열기
+            document.getElementById('reservationBtn').addEventListener('click', function() {
+                document.getElementById('reservationModal').classList.remove('hidden');
+            });
+            
+            // 상담 예약 모달 닫기
+            document.getElementById('closeReservationBtn').addEventListener('click', closeReservationModal);
+            document.getElementById('reservationOverlay').addEventListener('click', closeReservationModal);
+            
+            function closeReservationModal() {
+                document.getElementById('reservationModal').classList.add('hidden');
+                document.getElementById('reservationForm').reset();
+            }
+            
+            // 전화번호 자동 포맷
+            document.getElementById('resPhone').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^0-9]/g, '');
+                if (value.length > 3 && value.length <= 7) {
+                    value = value.slice(0, 3) + '-' + value.slice(3);
+                } else if (value.length > 7) {
+                    value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+                }
+                e.target.value = value;
+            });
+            
+            // 상담 예약 폼 제출
+            document.getElementById('reservationForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const phone = document.getElementById('resPhone').value.trim();
+                const nickname = document.getElementById('resNickname').value.trim();
+                const babyName = document.getElementById('resBabyName').value.trim();
+                const category = document.getElementById('resCategory').value;
+                const memo = document.getElementById('resMemo').value.trim();
+                
+                // 유효성 검사
+                if (!phone || phone.length < 12) {
+                    alert('올바른 연락처를 입력해주세요.');
+                    return;
+                }
+                if (!nickname) {
+                    alert('닉네임을 입력해주세요.');
+                    return;
+                }
+                
+                const submitBtn = document.getElementById('submitReservation');
+                submitBtn.disabled = true;
+                submitBtn.textContent = '예약 중...';
+                
+                try {
+                    // Supabase에 예약 데이터 저장
+                    const reservationData = {
+                        phone: phone,
+                        nickname: nickname,
+                        baby_name: babyName || null,
+                        category: category,
+                        memo: memo || null,
+                        status: 'pending',
+                        created_at: new Date().toISOString()
+                    };
+                    
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/consultation_reservations`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Prefer': 'return=representation'
+                        },
+                        body: JSON.stringify(reservationData)
+                    });
+                    
+                    if (response.ok) {
+                        // SMS 알림 발송 (전문가에게)
+                        await sendExpertNotification(nickname, phone, category, babyName);
+                        
+                        closeReservationModal();
+                        alert('✅ 상담 예약이 완료되었습니다!\n\n평일 기준 24시간 이내에\n전문 상담사가 연락드릴게요. 💕');
+                    } else {
+                        throw new Error('예약 저장 실패');
+                    }
+                } catch (error) {
+                    console.error('예약 오류:', error);
+                    alert('예약 중 오류가 발생했어요.\n잠시 후 다시 시도해주세요.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '예약 신청하기';
+                }
+            });
+            
+            // 전문가에게 SMS 알림 발송
+            async function sendExpertNotification(nickname, phone, category, babyName) {
+                const expertPhone = '01075732475'; // 박보림 IBCLC
+                const message = `[맘곁 상담예약]\n닉네임: ${nickname}\n연락처: ${phone}\n분야: ${category}${babyName ? '\n아기: ' + babyName : ''}\n\n24시간 내 연락 부탁드립니다.`;
+                
+                try {
+                    // Supabase Edge Function 또는 외부 SMS API 호출
+                    // 여기서는 알림 로그만 저장 (실제 SMS는 서버사이드에서 처리)
+                    await fetch(`${SUPABASE_URL}/rest/v1/notification_logs`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                        },
+                        body: JSON.stringify({
+                            type: 'sms',
+                            recipient: expertPhone,
+                            message: message,
+                            status: 'pending',
+                            created_at: new Date().toISOString()
+                        })
+                    });
+                } catch (error) {
+                    console.error('알림 발송 오류:', error);
+                }
+            }
         });
     </script>
 </body>
