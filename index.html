@@ -49,14 +49,8 @@
             bottom: 0;
             width: 100%;
             height: 100%;
-            height: 100dvh;
             background: #FDF8F3;
             overflow: hidden;
-            /* iOS Safe Area */
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
         }
         
         .home-indicator {
@@ -82,13 +76,21 @@
         /* ==================== 인트로 화면 ==================== */
         .intro-screen {
             background: #000;
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
         }
         
         .intro-bg {
             position: absolute;
             top: 0;
             left: 0;
+            right: 0;
+            bottom: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
@@ -112,6 +114,8 @@
             position: absolute;
             top: 0;
             left: 0;
+            right: 0;
+            bottom: 0;
             width: 100%;
             height: 100%;
             background: linear-gradient(180deg,
@@ -128,12 +132,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            
+            display: flex;
             flex-direction: column;
-            
-            
+            justify-content: center;
+            align-items: center;
             padding: 24px;
-            padding-bottom: 45px;
+            padding-top: calc(24px + env(safe-area-inset-top, 0px));
+            padding-bottom: calc(45px + env(safe-area-inset-bottom, 0px));
             z-index: 10;
             text-align: center;
         }
@@ -329,12 +334,14 @@
         /* ==================== 로그인 화면 ==================== */
         .login-screen {
             background: #FDF8F5;
-            
+            display: flex;
             flex-direction: column;
+            height: 100%;
         }
         
         .login-header {
-            padding: 60px 28px 0;
+            padding: 28px;
+            padding-top: calc(28px + env(safe-area-inset-top, 44px));
             flex: 1;
         }
         
@@ -457,15 +464,17 @@
         /* ==================== 홈 화면 ==================== */
         .home-screen {
             background: #FDF8F5;
-            
+            display: flex;
             flex-direction: column;
+            height: 100%;
         }
         
         .home-header {
-            
+            display: flex;
             justify-content: space-between;
-            
-            padding: 60px 20px 20px;
+            align-items: center;
+            padding: 20px;
+            padding-top: calc(20px + env(safe-area-inset-top, 44px));
         }
         
         .home-greeting {
@@ -618,15 +627,17 @@
         /* ==================== 온보딩 화면 ==================== */
         .onboarding-screen {
             background: #FDF8F3;
-            
+            display: flex;
             flex-direction: column;
+            height: 100%;
         }
         
         .onboarding-header {
-            
-            
+            display: flex;
+            align-items: center;
             justify-content: space-between;
             padding: 16px 20px;
+            padding-top: calc(16px + env(safe-area-inset-top, 44px));
             background: #FDF8F3;
         }
         
@@ -760,15 +771,17 @@
         /* ==================== 채팅 화면 ==================== */
         .chat-screen {
             background: #FDF8F5;
-            
+            display: flex;
             flex-direction: column;
+            height: 100%;
         }
         
         .chat-header {
-            
-            
+            display: flex;
+            align-items: center;
             justify-content: space-between;
-            padding: 50px 16px 16px;
+            padding: 16px;
+            padding-top: calc(16px + env(safe-area-inset-top, 44px));
             background: white;
             border-bottom: 1px solid #f0f0f0;
         }
@@ -1000,10 +1013,11 @@
         
         /* ==================== 공통 헤더 ==================== */
         .screen-header {
-            
-            
+            display: flex;
+            align-items: center;
             justify-content: space-between;
-            padding: 50px 16px 16px;
+            padding: 16px;
+            padding-top: calc(16px + env(safe-area-inset-top, 44px));
             background: white;
             border-bottom: 1px solid #f0f0f0;
         }
@@ -1027,8 +1041,9 @@
         /* ==================== 캘린더 화면 ==================== */
         .calendar-screen {
             background: #FDF8F5;
-            
+            display: flex;
             flex-direction: column;
+            height: 100%;
         }
         
         .calendar-content {
@@ -1149,8 +1164,9 @@
         /* ==================== 마이페이지 화면 ==================== */
         .my-screen {
             background: #FDF8F5;
-            
+            display: flex;
             flex-direction: column;
+            height: 100%;
         }
         
         .my-content {
