@@ -738,19 +738,29 @@
             color: #888;
         }
         
-        .onboarding-input {
+        .onboarding-input-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
             width: 100%;
-            padding: 18px 20px;
-            border: 2px solid #E8E8E8;
-            border-radius: 16px;
-            font-size: 16px;
+        }
+        
+        .onboarding-input {
+            flex: 1;
+            padding: 18px 24px;
+            border: 2px solid #D0D0D0;
+            border-radius: 28px;
+            font-size: 17px;
             font-family: inherit;
-            transition: border-color 0.2s;
+            transition: all 0.3s;
+            background: #FAFAFA;
         }
         
         .onboarding-input:focus {
             outline: none;
             border-color: #5E6B3A;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(94, 107, 58, 0.1);
         }
         
         .onboarding-input::placeholder {
@@ -758,26 +768,29 @@
         }
         
         .onboarding-next-btn {
-            margin-top: auto;
-            padding: 18px;
+            padding: 18px 24px;
             background: #5E6B3A;
             color: white;
             border: none;
-            border-radius: 16px;
-            font-size: 16px;
+            border-radius: 28px;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             font-family: inherit;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         
         .onboarding-next-btn:hover {
             background: #4A5530;
+            transform: translateY(-1px);
         }
         
         .onboarding-next-btn:disabled {
             background: #CCC;
             cursor: not-allowed;
+            transform: none;
         }
         
         /* ==================== 채팅 화면 ==================== */
@@ -811,15 +824,16 @@
             flex: 1;
             padding: 20px 16px;
             overflow-y: auto;
-            
+            display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 8px;
         }
         
         .message {
-            
+            display: flex;
             gap: 10px;
             max-width: 85%;
+            margin-bottom: 16px;
         }
         
         .message.bot {
@@ -911,8 +925,8 @@
         
         /* 마이크 버튼 */
         .mic-btn {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             background: #3D3D3D;
             border: none;
             border-radius: 50%;
@@ -926,7 +940,8 @@
         }
         
         .mic-btn:hover {
-            background: #5E6B3A;
+            background: #4a4a4a;
+            transform: scale(1.05);
         }
         
         .mic-btn.recording {
@@ -936,39 +951,40 @@
         
         @keyframes pulse-mic {
             0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(94, 107, 58, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(94, 107, 58, 0); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(94, 107, 58, 0); }
         }
         
-        /* 음파 아이콘 */
+        /* 음파 아이콘 - 세로 바 3개 */
         .sound-wave {
-            
-            
-            
-            gap: 2px;
-            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 24px;
         }
         
         .sound-wave .bar {
             width: 3px;
-            height: 8px;
             background: white;
             border-radius: 2px;
-            transition: height 0.1s;
+            transition: height 0.15s ease;
         }
         
+        .sound-wave .bar:nth-child(1) { height: 10px; }
+        .sound-wave .bar:nth-child(2) { height: 18px; }
+        .sound-wave .bar:nth-child(3) { height: 10px; }
+        
         .mic-btn.recording .sound-wave .bar {
-            animation: wave-bar 0.6s ease-in-out infinite;
+            animation: wave-bar 0.5s ease-in-out infinite;
         }
         
         .mic-btn.recording .sound-wave .bar:nth-child(1) { animation-delay: 0s; }
-        .mic-btn.recording .sound-wave .bar:nth-child(2) { animation-delay: 0.1s; }
-        .mic-btn.recording .sound-wave .bar:nth-child(3) { animation-delay: 0.2s; }
-        .mic-btn.recording .sound-wave .bar:nth-child(4) { animation-delay: 0.1s; }
-        .mic-btn.recording .sound-wave .bar:nth-child(5) { animation-delay: 0s; }
+        .mic-btn.recording .sound-wave .bar:nth-child(2) { animation-delay: 0.15s; }
+        .mic-btn.recording .sound-wave .bar:nth-child(3) { animation-delay: 0.3s; }
         
         @keyframes wave-bar {
-            0%, 100% { height: 8px; }
-            50% { height: 18px; }
+            0%, 100% { height: 10px; }
+            50% { height: 20px; }
         }
         
         /* 녹음 중 인디케이터 */
@@ -2400,9 +2416,15 @@
         }
         
         body.dark-mode .onboarding-input {
-            background: #252525;
+            background: #2A2A2A;
             border-color: #444;
             color: #F0F0F0;
+        }
+        
+        body.dark-mode .onboarding-input:focus {
+            border-color: #8A9B5A;
+            background: #333;
+            box-shadow: 0 0 0 4px rgba(138, 155, 90, 0.2);
         }
         
         /* 추가 다크모드 - 아이콘 버튼 */
@@ -2675,8 +2697,6 @@
                     <input type="text" class="chat-input" placeholder="메시지를 입력하세요..." id="chatInput">
                     <button class="mic-btn" type="button" id="micBtn" aria-label="음성 입력">
                         <div class="sound-wave">
-                            <span class="bar"></span>
-                            <span class="bar"></span>
                             <span class="bar"></span>
                             <span class="bar"></span>
                             <span class="bar"></span>
@@ -3293,8 +3313,10 @@
             html += '</div>';
             
             if (question.type === 'input') {
+                html += '<div class="onboarding-input-row">';
                 html += '<input type="text" class="onboarding-input" placeholder="' + question.placeholder + '" id="onboardingInput">';
                 html += '<button class="onboarding-next-btn" id="onboardingNextBtn" disabled>완료</button>';
+                html += '</div>';
             } else {
                 html += '<div class="onboarding-options">';
                 question.options.forEach(function(opt, idx) {
@@ -3768,7 +3790,7 @@
                     var data = await response.json();
                     return {
                         title: '',
-                        content: data.answer,
+                        content: cleanText(data.answer),
                         related: data.related || []
                     };
                 } else {
@@ -3779,6 +3801,16 @@
                 console.error('Fetch error:', error);
                 return fallbackSearch(query);
             }
+        }
+        
+        // 깨진 문자 정리 함수
+        function cleanText(text) {
+            if (!text) return '';
+            // 깨진 이모지/유니코드 제거 (replacement character)
+            text = text.replace(/[\uFFFD�]+/g, '');
+            // 연속된 공백 정리
+            text = text.replace(/\s{2,}/g, ' ');
+            return text.trim();
         }
         
         // Supabase 직접 검색 (API 배포 전 테스트용)
@@ -4136,7 +4168,9 @@
             // 내용을 문단으로 분리
             var paragraphs = content.split('\n').filter(function(p) { return p.trim(); });
             paragraphs.forEach(function(p) {
-                html += `<p>${escapeHtml(p)}</p>`;
+                // 마크다운 처리
+                var formattedText = formatMarkdown(escapeHtml(p));
+                html += `<p>${formattedText}</p>`;
             });
             
             // 관련 주제
@@ -4155,6 +4189,17 @@
             `;
             
             return html;
+        }
+        
+        // 마크다운 변환 함수
+        function formatMarkdown(text) {
+            // **텍스트** -> <strong>텍스트</strong>
+            text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            // *텍스트* -> <em>텍스트</em>
+            text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+            // 깨진 이모지 (placeholder) 제거/대체
+            text = text.replace(/[\uFFFD�]+/g, '');
+            return text;
         }
         
         // 관련 주제 검색
