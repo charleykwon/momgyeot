@@ -1116,10 +1116,11 @@
         }
         
         .calendar-day {
+            position: relative;
             aspect-ratio: 1;
-            
-            
-            
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 14px;
             border-radius: 50%;
             cursor: pointer;
@@ -1131,15 +1132,14 @@
         .calendar-day.has-event::after {
             content: '';
             position: absolute;
-            bottom: 4px;
+            bottom: 2px;
             left: 50%;
             transform: translateX(-50%);
-            width: 4px;
-            height: 4px;
+            width: 5px;
+            height: 5px;
             background: #E8B4B8;
             border-radius: 50%;
         }
-        .calendar-day { position: relative; }
         
         .calendar-events h3 {
             font-size: 16px;
@@ -2816,10 +2816,28 @@
             
             document.getElementById('sideHome').addEventListener('click', showHome);
             document.getElementById('sideCalendar').addEventListener('click', showCalendar);
+            
+            // 대화 기록
+            document.getElementById('sideHistory').addEventListener('click', function() {
+                closeSideMenu();
+                alert('대화 기록 기능은 준비 중이에요!');
+            });
+            
+            // 저장한 답변
+            document.getElementById('sideSaved').addEventListener('click', function() {
+                closeSideMenu();
+                alert('저장한 답변 기능은 준비 중이에요!');
+            });
+            
+            // 설정
             document.getElementById('sideSettings').addEventListener('click', function() {
+                closeSideMenu();
                 alert('설정 화면은 준비 중이에요!');
             });
+            
+            // 로그아웃
             document.getElementById('sideLogout').addEventListener('click', function() {
+                closeSideMenu();
                 if (confirm('로그아웃 하시겠어요?')) {
                     showIntro();
                 }
