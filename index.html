@@ -2489,6 +2489,333 @@
         body.dark-mode .profile-days {
             color: #8A9B5A;
         }
+        
+        /* ==================== 대화 기록 화면 ==================== */
+        .history-screen {
+            background: #FDF8F5;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .history-content {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+        }
+        
+        .history-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60%;
+            text-align: center;
+        }
+        
+        .history-empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .history-empty h3 {
+            font-size: 18px;
+            color: #5E6B3A;
+            margin-bottom: 8px;
+        }
+        
+        .history-empty p {
+            font-size: 14px;
+            color: #8A8A8A;
+        }
+        
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .history-item {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-align: left;
+            width: 100%;
+            position: relative;
+        }
+        
+        .history-item:hover, .history-item:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .history-item-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .history-item-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #E8B4B8, #F0D0D3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .history-item-meta {
+            flex: 1;
+        }
+        
+        .history-item-type {
+            font-size: 15px;
+            font-weight: 600;
+            color: #3D4A2D;
+        }
+        
+        .history-item-date {
+            font-size: 12px;
+            color: #8A8A8A;
+            margin-top: 2px;
+        }
+        
+        .history-item-preview {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .history-item-count {
+            font-size: 12px;
+            color: #5E6B3A;
+            margin-top: 8px;
+        }
+        
+        .history-delete-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(244, 67, 54, 0.1);
+            border: none;
+            color: #F44336;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .clear-all-btn {
+            background: none;
+            border: none;
+            color: #F44336;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        /* ==================== 저장한 답변 화면 ==================== */
+        .saved-screen {
+            background: #FDF8F5;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .saved-content {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+        }
+        
+        .saved-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60%;
+            text-align: center;
+        }
+        
+        .saved-empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .saved-empty h3 {
+            font-size: 18px;
+            color: #5E6B3A;
+            margin-bottom: 8px;
+        }
+        
+        .saved-empty p {
+            font-size: 14px;
+            color: #8A8A8A;
+        }
+        
+        .saved-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .saved-item {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            position: relative;
+        }
+        
+        .saved-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .saved-item-icon {
+            font-size: 20px;
+        }
+        
+        .saved-item-title {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 600;
+            color: #3D4A2D;
+        }
+        
+        .saved-item-date {
+            font-size: 12px;
+            color: #8A8A8A;
+        }
+        
+        .saved-item-content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            background: #F8F8F8;
+            padding: 12px;
+            border-radius: 12px;
+            max-height: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .saved-item-content.expanded {
+            max-height: none;
+        }
+        
+        .saved-item-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(transparent, #F8F8F8);
+        }
+        
+        .saved-item-content.expanded::after {
+            display: none;
+        }
+        
+        .saved-item-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .saved-action-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #E0E0E0;
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .saved-action-btn:hover, .saved-action-btn:active {
+            background: #F5F5F5;
+        }
+        
+        .saved-action-btn.delete {
+            color: #F44336;
+            border-color: #FFCDD2;
+        }
+        
+        .saved-action-btn.delete:hover {
+            background: #FFEBEE;
+        }
+        
+        /* 다크모드 - 대화 기록 & 저장한 답변 */
+        body.dark-mode .history-screen,
+        body.dark-mode .saved-screen {
+            background: #1a1a1a;
+        }
+        
+        body.dark-mode .history-item,
+        body.dark-mode .saved-item {
+            background: #2a2a2a;
+        }
+        
+        body.dark-mode .history-item-type,
+        body.dark-mode .saved-item-title {
+            color: #E8B4B8;
+        }
+        
+        body.dark-mode .history-item-preview,
+        body.dark-mode .history-item-date,
+        body.dark-mode .saved-item-date {
+            color: #999;
+        }
+        
+        body.dark-mode .saved-item-content {
+            background: #333;
+            color: #ccc;
+        }
+        
+        body.dark-mode .saved-item-content::after {
+            background: linear-gradient(transparent, #333);
+        }
+        
+        body.dark-mode .saved-action-btn {
+            background: #333;
+            border-color: #444;
+            color: #ccc;
+        }
+        
+        body.dark-mode .history-empty h3,
+        body.dark-mode .saved-empty h3 {
+            color: #E8B4B8;
+        }
+        
+        body.dark-mode .history-empty p,
+        body.dark-mode .saved-empty p {
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -2787,16 +3114,16 @@
                     </div>
                     
                     <div class="my-stats">
-                        <div class="stat-item">
-                            <span class="stat-num">3</span>
+                        <div class="stat-item" onclick="showHistoryScreen()">
+                            <span class="stat-num" id="chatCountStat">0</span>
                             <span class="stat-label">대화 수</span>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-num">1</span>
+                        <div class="stat-item" onclick="showSavedScreen()">
+                            <span class="stat-num" id="savedCountStat">0</span>
                             <span class="stat-label">저장됨</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-num">0</span>
+                            <span class="stat-num" id="scheduleCountStat">0</span>
                             <span class="stat-label">일정</span>
                         </div>
                     </div>
@@ -2807,12 +3134,12 @@
                             <span>내 정보 관리</span>
                             <span class="menu-arrow">›</span>
                         </button>
-                        <button class="my-menu-item" type="button">
+                        <button class="my-menu-item" type="button" id="goToHistoryBtn">
                             <span class="menu-icon">💬</span>
                             <span>대화 기록</span>
                             <span class="menu-arrow">›</span>
                         </button>
-                        <button class="my-menu-item" type="button">
+                        <button class="my-menu-item" type="button" id="goToSavedBtn">
                             <span class="menu-icon">⭐</span>
                             <span>저장한 답변</span>
                             <span class="menu-arrow">›</span>
@@ -2845,6 +3172,46 @@
                     <button class="nav-item" type="button" id="myNavCalendar"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg><span>캘린더</span></button>
                     <button class="nav-item" type="button" id="myNavChat"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>채팅</span></button>
                     <button class="nav-item active" type="button" id="myNavMy"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>마이</span></button>
+                </div>
+            </div>
+            
+            <!-- 대화 기록 화면 -->
+            <div class="page history-screen hidden" id="historyScreen">
+                <div class="screen-header">
+                    <button class="back-btn" type="button" id="historyBackBtn">←</button>
+                    <h1 class="screen-title">대화 기록</h1>
+                    <button class="clear-all-btn" type="button" id="clearHistoryBtn">전체삭제</button>
+                </div>
+                
+                <div class="history-content" id="historyContent">
+                    <!-- 동적으로 생성 -->
+                </div>
+                
+                <div class="bottom-nav">
+                    <button class="nav-item" type="button" id="historyNavHome"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>홈</span></button>
+                    <button class="nav-item" type="button" id="historyNavCalendar"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg><span>캘린더</span></button>
+                    <button class="nav-item" type="button" id="historyNavChat"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>채팅</span></button>
+                    <button class="nav-item active" type="button" id="historyNavMy"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>마이</span></button>
+                </div>
+            </div>
+            
+            <!-- 저장한 답변 화면 -->
+            <div class="page saved-screen hidden" id="savedScreen">
+                <div class="screen-header">
+                    <button class="back-btn" type="button" id="savedBackBtn">←</button>
+                    <h1 class="screen-title">저장한 답변</h1>
+                    <div style="width: 40px;"></div>
+                </div>
+                
+                <div class="saved-content" id="savedContent">
+                    <!-- 동적으로 생성 -->
+                </div>
+                
+                <div class="bottom-nav">
+                    <button class="nav-item" type="button" id="savedNavHome"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>홈</span></button>
+                    <button class="nav-item" type="button" id="savedNavCalendar"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg><span>캘린더</span></button>
+                    <button class="nav-item" type="button" id="savedNavChat"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>채팅</span></button>
+                    <button class="nav-item active" type="button" id="savedNavMy"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>마이</span></button>
                 </div>
             </div>
             
@@ -3448,6 +3815,9 @@
             document.getElementById('chatMateName').textContent = name;
             document.getElementById('chatScreen').classList.remove('hidden');
             
+            // 새 대화 세션 시작
+            startNewChatSession(type, name, icon);
+            
             // 환영 메시지 업데이트
             var welcomeMsg = document.querySelector('.chat-messages');
             welcomeMsg.innerHTML = `
@@ -3470,6 +3840,7 @@
         function showMyPage() {
             hideAll();
             document.getElementById('myScreen').classList.remove('hidden');
+            updateMyPageStats();
         }
         
         function showNotification() {
@@ -3710,6 +4081,15 @@
             
             var messages = document.getElementById('chatMessages');
             var icon = document.getElementById('chatMateIcon').textContent;
+            var mateName = document.getElementById('chatMateName')?.textContent || '맘곁';
+            
+            // 대화 세션 시작 (없으면)
+            if (!currentChatSession) {
+                startNewChatSession(currentOnboarding.type || 'default', mateName, icon);
+            }
+            
+            // 사용자 메시지 저장
+            addMessageToSession('user', text);
             
             // 사용자 메시지 추가
             messages.innerHTML += `
@@ -3745,8 +4125,14 @@
                 
                 // AI 응답 표시
                 if (response && response.content) {
+                    // AI 응답 저장
+                    addMessageToSession('bot', response.content);
+                    
                     messages.innerHTML += formatBotMessage(icon, response);
                 } else {
+                    var fallbackMsg = '죄송해요, 관련 정보를 찾지 못했어요. 다른 방식으로 질문해 주시거나, 전문가 상담을 이용해 보세요!';
+                    addMessageToSession('bot', fallbackMsg);
+                    
                     messages.innerHTML += `
                         <div class="message bot">
                             <div class="message-avatar">${icon}</div>
@@ -4425,13 +4811,13 @@
             // 대화 기록
             document.getElementById('sideHistory').addEventListener('click', function() {
                 closeSideMenu();
-                alert('대화 기록 기능은 준비 중이에요!');
+                showHistoryScreen();
             });
             
             // 저장한 답변
             document.getElementById('sideSaved').addEventListener('click', function() {
                 closeSideMenu();
-                alert('저장한 답변 기능은 준비 중이에요!');
+                showSavedScreen();
             });
             
             // 설정
@@ -4735,6 +5121,381 @@
                     `;
                 }
             }
+        });
+        
+        // ==================== 대화 기록 & 저장한 답변 시스템 ====================
+        const CHAT_HISTORY_KEY = 'momgyeot_chat_history';
+        const SAVED_ANSWERS_KEY = 'momgyeot_saved_answers';
+        let currentChatSession = null;
+        
+        // 대화 기록 가져오기
+        function getChatHistory() {
+            try {
+                return JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY)) || [];
+            } catch {
+                return [];
+            }
+        }
+        
+        // 저장한 답변 가져오기
+        function getSavedAnswers() {
+            try {
+                return JSON.parse(localStorage.getItem(SAVED_ANSWERS_KEY)) || [];
+            } catch {
+                return [];
+            }
+        }
+        
+        // 새 대화 세션 시작
+        function startNewChatSession(mateType, mateName, mateIcon) {
+            currentChatSession = {
+                id: 'chat_' + Date.now(),
+                mateType: mateType,
+                mateName: mateName,
+                mateIcon: mateIcon,
+                messages: [],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            return currentChatSession;
+        }
+        
+        // 메시지 추가
+        function addMessageToSession(role, content) {
+            if (!currentChatSession) return;
+            
+            currentChatSession.messages.push({
+                role: role,
+                content: content,
+                timestamp: new Date().toISOString()
+            });
+            currentChatSession.updatedAt = new Date().toISOString();
+            
+            // 저장
+            saveChatSession();
+        }
+        
+        // 대화 세션 저장
+        function saveChatSession() {
+            if (!currentChatSession || currentChatSession.messages.length === 0) return;
+            
+            let history = getChatHistory();
+            const existingIndex = history.findIndex(h => h.id === currentChatSession.id);
+            
+            if (existingIndex >= 0) {
+                history[existingIndex] = currentChatSession;
+            } else {
+                history.unshift(currentChatSession);
+            }
+            
+            // 최대 50개 유지
+            if (history.length > 50) {
+                history = history.slice(0, 50);
+            }
+            
+            localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history));
+            updateMyPageStats();
+        }
+        
+        // 답변 저장하기
+        function saveAnswer(title, content, mateType) {
+            let saved = getSavedAnswers();
+            
+            // 중복 체크
+            const exists = saved.some(s => s.content === content);
+            if (exists) {
+                showToast('이미 저장된 답변이에요');
+                return false;
+            }
+            
+            saved.unshift({
+                id: 'saved_' + Date.now(),
+                title: title,
+                content: content,
+                mateType: mateType,
+                savedAt: new Date().toISOString()
+            });
+            
+            // 최대 100개 유지
+            if (saved.length > 100) {
+                saved = saved.slice(0, 100);
+            }
+            
+            localStorage.setItem(SAVED_ANSWERS_KEY, JSON.stringify(saved));
+            updateMyPageStats();
+            showToast('답변이 저장되었어요! ⭐');
+            return true;
+        }
+        
+        // 마이페이지 통계 업데이트
+        function updateMyPageStats() {
+            const history = getChatHistory();
+            const saved = getSavedAnswers();
+            
+            const chatStat = document.getElementById('chatCountStat');
+            const savedStat = document.getElementById('savedCountStat');
+            
+            if (chatStat) chatStat.textContent = history.length;
+            if (savedStat) savedStat.textContent = saved.length;
+        }
+        
+        // 상대 시간 포맷
+        function formatRelativeTime(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+            
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return '방금 전';
+            if (minutes < 60) return minutes + '분 전';
+            if (hours < 24) return hours + '시간 전';
+            if (days < 7) return days + '일 전';
+            
+            return date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+        }
+        
+        // 대화 기록 화면 표시
+        function showHistoryScreen() {
+            renderHistoryScreen();
+            showPage('historyScreen');
+        }
+        
+        // 저장한 답변 화면 표시
+        function showSavedScreen() {
+            renderSavedScreen();
+            showPage('savedScreen');
+        }
+        
+        // 대화 기록 렌더링
+        function renderHistoryScreen() {
+            const container = document.getElementById('historyContent');
+            const history = getChatHistory();
+            
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="history-empty">
+                        <div class="history-empty-icon">💬</div>
+                        <h3>대화 기록이 없어요</h3>
+                        <p>맘곁과 대화를 시작해보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '<div class="history-list">';
+            
+            history.forEach((chat, index) => {
+                const lastMsg = chat.messages[chat.messages.length - 1];
+                const preview = lastMsg ? lastMsg.content.substring(0, 80) + (lastMsg.content.length > 80 ? '...' : '') : '대화 없음';
+                
+                html += `
+                    <button class="history-item" onclick="loadChatHistory('${chat.id}')">
+                        <div class="history-item-header">
+                            <div class="history-item-icon">${chat.mateIcon || '🤱'}</div>
+                            <div class="history-item-meta">
+                                <div class="history-item-type">${chat.mateName || '맘곁'}</div>
+                                <div class="history-item-date">${formatRelativeTime(chat.updatedAt)}</div>
+                            </div>
+                        </div>
+                        <div class="history-item-preview">${preview}</div>
+                        <div class="history-item-count">메시지 ${chat.messages.length}개</div>
+                        <button class="history-delete-btn" onclick="event.stopPropagation(); deleteHistory(${index})">×</button>
+                    </button>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        // 저장한 답변 렌더링
+        function renderSavedScreen() {
+            const container = document.getElementById('savedContent');
+            const saved = getSavedAnswers();
+            
+            if (saved.length === 0) {
+                container.innerHTML = `
+                    <div class="saved-empty">
+                        <div class="saved-empty-icon">⭐</div>
+                        <h3>저장한 답변이 없어요</h3>
+                        <p>유용한 답변을 저장해보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '<div class="saved-list">';
+            
+            saved.forEach((item, index) => {
+                html += `
+                    <div class="saved-item">
+                        <div class="saved-item-header">
+                            <span class="saved-item-icon">⭐</span>
+                            <span class="saved-item-title">${item.title}</span>
+                            <span class="saved-item-date">${formatRelativeTime(item.savedAt)}</span>
+                        </div>
+                        <div class="saved-item-content" id="savedContent${index}">${item.content}</div>
+                        <div class="saved-item-actions">
+                            <button class="saved-action-btn" onclick="toggleSavedExpand(${index})">더보기</button>
+                            <button class="saved-action-btn" onclick="copySavedAnswer(${index})">복사</button>
+                            <button class="saved-action-btn delete" onclick="deleteSaved(${index})">삭제</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        // 대화 기록 불러오기
+        function loadChatHistory(chatId) {
+            const history = getChatHistory();
+            const chat = history.find(h => h.id === chatId);
+            
+            if (chat) {
+                currentChatSession = chat;
+                showChat(chat.mateType, chat.mateIcon, chat.mateName);
+                
+                // 메시지 복원
+                const messagesDiv = document.getElementById('chatMessages');
+                messagesDiv.innerHTML = '';
+                
+                chat.messages.forEach(msg => {
+                    if (msg.role === 'user') {
+                        messagesDiv.innerHTML += `<div class="message user-message">${msg.content}</div>`;
+                    } else {
+                        messagesDiv.innerHTML += `
+                            <div class="message bot-message">
+                                <div class="bot-avatar">${chat.mateIcon || '🤱'}</div>
+                                <div class="bot-content">
+                                    <div class="bot-name">${chat.mateName || '맘곁'}</div>
+                                    <div class="bot-text">${msg.content}</div>
+                                    <button class="save-answer-btn" onclick="saveAnswer('${chat.mateName}의 답변', this.previousElementSibling.textContent, '${chat.mateType}')">⭐ 저장</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+        }
+        
+        // 대화 기록 삭제
+        function deleteHistory(index) {
+            if (!confirm('이 대화를 삭제할까요?')) return;
+            
+            let history = getChatHistory();
+            history.splice(index, 1);
+            localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history));
+            
+            renderHistoryScreen();
+            updateMyPageStats();
+            showToast('삭제되었어요');
+        }
+        
+        // 저장한 답변 삭제
+        function deleteSaved(index) {
+            if (!confirm('이 답변을 삭제할까요?')) return;
+            
+            let saved = getSavedAnswers();
+            saved.splice(index, 1);
+            localStorage.setItem(SAVED_ANSWERS_KEY, JSON.stringify(saved));
+            
+            renderSavedScreen();
+            updateMyPageStats();
+            showToast('삭제되었어요');
+        }
+        
+        // 전체 삭제
+        function clearAllHistory() {
+            if (!confirm('모든 대화 기록을 삭제할까요?')) return;
+            
+            localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify([]));
+            renderHistoryScreen();
+            updateMyPageStats();
+            showToast('전체 삭제되었어요');
+        }
+        
+        // 저장 답변 더보기 토글
+        function toggleSavedExpand(index) {
+            const content = document.getElementById('savedContent' + index);
+            content.classList.toggle('expanded');
+        }
+        
+        // 저장 답변 복사
+        function copySavedAnswer(index) {
+            const saved = getSavedAnswers();
+            const item = saved[index];
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(item.content);
+                showToast('복사되었어요!');
+            }
+        }
+        
+        // 토스트 메시지
+        function showToast(message) {
+            const existing = document.querySelector('.toast-message');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 20px;
+                font-size: 14px;
+                z-index: 9999;
+                animation: fadeInOut 2s ease;
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 2000);
+        }
+        
+        // 이벤트 리스너 추가 (DOMContentLoaded 이후)
+        document.addEventListener('DOMContentLoaded', function() {
+            // 마이페이지 메뉴 버튼
+            const historyBtn = document.getElementById('goToHistoryBtn');
+            const savedBtn = document.getElementById('goToSavedBtn');
+            
+            if (historyBtn) historyBtn.addEventListener('click', showHistoryScreen);
+            if (savedBtn) savedBtn.addEventListener('click', showSavedScreen);
+            
+            // 대화 기록 화면 네비게이션
+            const historyBackBtn = document.getElementById('historyBackBtn');
+            const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+            
+            if (historyBackBtn) historyBackBtn.addEventListener('click', showMyPage);
+            if (clearHistoryBtn) clearHistoryBtn.addEventListener('click', clearAllHistory);
+            
+            document.getElementById('historyNavHome')?.addEventListener('click', showHome);
+            document.getElementById('historyNavCalendar')?.addEventListener('click', showCalendar);
+            document.getElementById('historyNavChat')?.addEventListener('click', function() { showChat('default', '🤱', '맘곁'); });
+            document.getElementById('historyNavMy')?.addEventListener('click', showMyPage);
+            
+            // 저장한 답변 화면 네비게이션
+            const savedBackBtn = document.getElementById('savedBackBtn');
+            if (savedBackBtn) savedBackBtn.addEventListener('click', showMyPage);
+            
+            document.getElementById('savedNavHome')?.addEventListener('click', showHome);
+            document.getElementById('savedNavCalendar')?.addEventListener('click', showCalendar);
+            document.getElementById('savedNavChat')?.addEventListener('click', function() { showChat('default', '🤱', '맘곁'); });
+            document.getElementById('savedNavMy')?.addEventListener('click', showMyPage);
+            
+            // 통계 업데이트
+            updateMyPageStats();
         });
     </script>
 </body>
