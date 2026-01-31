@@ -2932,7 +2932,18 @@
             document.getElementById('calendarScreen').classList.add('hidden');
             document.getElementById('myScreen').classList.add('hidden');
             document.getElementById('notificationScreen').classList.add('hidden');
+            document.getElementById('settingsScreen').classList.add('hidden');
+            document.getElementById('policyScreen').classList.add('hidden');
+            document.getElementById('expertScreen').classList.add('hidden');
             closeSideMenu();
+        }
+        
+        function showPage(pageId) {
+            hideAll();
+            var page = document.getElementById(pageId);
+            if (page) {
+                page.classList.remove('hidden');
+            }
         }
         
         // 온보딩 데이터
