@@ -371,6 +371,154 @@
         .hidden {
             display: none !important;
         }
+        
+        /* 약관 관리 */
+        .policy-editor {
+            padding: 16px;
+        }
+        
+        .policy-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .policy-tab {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #E0E0E0;
+            background: white;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .policy-tab.active {
+            border-color: #5E6B3A;
+            background: #F5F8F0;
+            color: #5E6B3A;
+        }
+        
+        .editor-area {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .editor-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .editor-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .save-policy-btn {
+            padding: 8px 16px;
+            background: #5E6B3A;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .save-policy-btn:hover {
+            background: #4A5530;
+        }
+        
+        .policy-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 12px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: monospace;
+            line-height: 1.6;
+            resize: vertical;
+        }
+        
+        .policy-textarea:focus {
+            outline: none;
+            border-color: #5E6B3A;
+        }
+        
+        .editor-help {
+            margin-top: 12px;
+            padding: 12px;
+            background: #F9F9F9;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .editor-help code {
+            background: #E8E8E8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        
+        .preview-area {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .preview-area h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        
+        .policy-preview {
+            padding: 16px;
+            background: #FDF8F3;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.8;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .policy-preview h2 {
+            font-size: 18px;
+            color: #3D4A2D;
+            margin: 20px 0 10px;
+        }
+        
+        .policy-preview h2:first-child {
+            margin-top: 0;
+        }
+        
+        .policy-preview h3 {
+            font-size: 15px;
+            color: #5E6B3A;
+            margin: 16px 0 8px;
+        }
+        
+        .policy-preview p {
+            margin-bottom: 10px;
+        }
+        
+        .policy-preview ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .policy-preview li {
+            margin-bottom: 6px;
+        }
     </style>
 </head>
 <body>
@@ -395,6 +543,7 @@
         
         <div class="tab-menu">
             <button class="tab-btn active" data-tab="reservations">📅 상담예약</button>
+            <button class="tab-btn" data-tab="policies">📄 약관관리</button>
             <button class="tab-btn" data-tab="logs">📋 알림로그</button>
         </div>
         
@@ -435,6 +584,40 @@
                 </div>
                 <div id="logList">
                     <!-- 로그 아이템들 -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- 약관 관리 탭 -->
+        <div class="tab-content hidden" id="policiesTab">
+            <div class="reservation-list">
+                <div class="policy-editor">
+                    <div class="policy-tabs">
+                        <button class="policy-tab active" data-policy="terms">이용약관</button>
+                        <button class="policy-tab" data-policy="privacy">개인정보처리방침</button>
+                    </div>
+                    
+                    <div class="editor-area">
+                        <div class="editor-toolbar">
+                            <span class="editor-label" id="editingLabel">이용약관 편집</span>
+                            <button class="save-policy-btn" id="savePolicyBtn">💾 저장</button>
+                        </div>
+                        <textarea class="policy-textarea" id="policyEditor" placeholder="HTML 형식으로 약관 내용을 입력하세요..."></textarea>
+                        <div class="editor-help">
+                            <p><strong>HTML 태그 사용법:</strong></p>
+                            <code>&lt;h2&gt;제목&lt;/h2&gt;</code> - 큰 제목<br>
+                            <code>&lt;h3&gt;소제목&lt;/h3&gt;</code> - 소제목<br>
+                            <code>&lt;p&gt;내용&lt;/p&gt;</code> - 문단<br>
+                            <code>&lt;ul&gt;&lt;li&gt;항목&lt;/li&gt;&lt;/ul&gt;</code> - 목록
+                        </div>
+                    </div>
+                    
+                    <div class="preview-area">
+                        <h3>미리보기</h3>
+                        <div class="policy-preview" id="policyPreview">
+                            <!-- 미리보기 영역 -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -483,9 +666,91 @@
                 const tab = this.dataset.tab;
                 document.getElementById('reservationsTab').classList.toggle('hidden', tab !== 'reservations');
                 document.getElementById('logsTab').classList.toggle('hidden', tab !== 'logs');
+                document.getElementById('policiesTab').classList.toggle('hidden', tab !== 'policies');
                 
                 if (tab === 'logs') loadLogs();
+                if (tab === 'policies') loadPolicyContent('terms');
             });
+        });
+        
+        // 약관 탭 전환
+        document.querySelectorAll('.policy-tab').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.policy-tab').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                loadPolicyContent(this.dataset.policy);
+            });
+        });
+        
+        // 현재 편집 중인 약관 타입
+        let currentPolicyType = 'terms';
+        
+        // 약관 내용 불러오기
+        async function loadPolicyContent(type) {
+            currentPolicyType = type;
+            const label = type === 'terms' ? '이용약관' : '개인정보처리방침';
+            document.getElementById('editingLabel').textContent = label + ' 편집';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/policies?type=eq.${type}&select=*`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                const data = await response.json();
+                const editor = document.getElementById('policyEditor');
+                const preview = document.getElementById('policyPreview');
+                
+                if (data && data.length > 0) {
+                    editor.value = data[0].content || '';
+                    preview.innerHTML = data[0].content || '<p style="color:#888">내용이 없습니다</p>';
+                } else {
+                    editor.value = '';
+                    preview.innerHTML = '<p style="color:#888">내용이 없습니다</p>';
+                }
+            } catch (error) {
+                console.error('약관 로드 오류:', error);
+            }
+        }
+        
+        // 약관 저장
+        document.getElementById('savePolicyBtn').addEventListener('click', async function() {
+            const content = document.getElementById('policyEditor').value;
+            const btn = this;
+            
+            btn.disabled = true;
+            btn.textContent = '저장 중...';
+            
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/policies?type=eq.${currentPolicyType}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        updated_at: new Date().toISOString()
+                    })
+                });
+                
+                document.getElementById('policyPreview').innerHTML = content || '<p style="color:#888">내용이 없습니다</p>';
+                alert('저장되었습니다!');
+            } catch (error) {
+                console.error('저장 오류:', error);
+                alert('저장 중 오류가 발생했습니다.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '💾 저장';
+            }
+        });
+        
+        // 에디터 실시간 미리보기
+        document.getElementById('policyEditor').addEventListener('input', function() {
+            document.getElementById('policyPreview').innerHTML = this.value || '<p style="color:#888">내용이 없습니다</p>';
         });
         
         // 새로고침
