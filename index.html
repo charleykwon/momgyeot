@@ -2,12 +2,8 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#FDF8F3">
-    <title>맘곁 - 엄마와 아기를 위한 AI 동반자</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맘곁 관리자</title>
     <style>
         * {
             margin: 0;
@@ -15,374 +11,33 @@
             box-sizing: border-box;
         }
         
-        /* iOS Safe Area 지원 */
-        html {
-            height: 100%;
-            height: -webkit-fill-available;
-        }
-        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000;  /* 빈 공간이 검은색으로 보이도록 */
-            min-height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #F5F5F5;
             min-height: 100vh;
-            min-height: 100dvh;
-            min-height: -webkit-fill-available;
-            overflow: hidden;
-            /* PWA 전체화면 지원 */
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
         }
         
-        /* 풀스크린 - 아이폰 프레임 제거 */
-        .iphone-frame {
-            display: contents;
-        }
-        
-        .notch {
-            display: none;
-        }
-        
-        .screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            height: 100vh;
-            height: 100dvh;
-            height: -webkit-fill-available;
-            background: #FDF8F3;
-            overflow: hidden;
-        }
-        
-        .home-indicator {
-            display: none;
-        }
-        
-        /* 화면 전환 */
-        .page {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            transition: opacity 0.3s, transform 0.3s;
-        }
-        
-        .page.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateX(20px);
-        }
-        
-        /* ==================== 인트로 화면 ==================== */
-        .intro-screen {
-            background: #000;
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            height: 100dvh !important;
-            height: -webkit-fill-available !important;
-            z-index: 100;
-        }
-        
-        .intro-bg {
-            position: fixed;
-            top: -50px;
-            left: -50px;
-            right: -50px;
-            bottom: -50px;
-            width: calc(100% + 100px);
-            height: calc(100% + 100px);
-            overflow: hidden;
-        }
-        
-        .intro-bg img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center center;
-            transform: scale(1.3);
-            animation: slowZoom 25s ease-in-out infinite alternate;
-        }
-        
-        @keyframes slowZoom {
-            0% { transform: scale(1.3) translateY(0); }
-            100% { transform: scale(1.4) translateY(-3%); }
-        }
-        
-        .intro-overlay {
-            position: fixed;
-            top: -50px;
-            left: -50px;
-            right: -50px;
-            bottom: -50px;
-            width: calc(100% + 100px);
-            height: calc(100% + 100px);
-            background: linear-gradient(180deg,
-                rgba(0, 0, 0, 0.1) 0%,
-                rgba(0, 0, 0, 0.2) 30%,
-                rgba(0, 0, 0, 0.5) 70%,
-                rgba(0, 0, 0, 0.7) 100%
-            );
-        }
-        
-        .intro-content {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
-            padding-top: calc(24px + env(safe-area-inset-top, 0px));
-            padding-bottom: calc(45px + env(safe-area-inset-bottom, 0px));
-            z-index: 10;
-            text-align: center;
-        }
-        
-        .intro-logo {
-            margin-bottom: 24px;
-            opacity: 0;
-            animation: fadeInDown 1s ease 0.3s forwards;
-        }
-        
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .intro-logo-icon {
-            width: 56px;
-            height: 56px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            
-            
-            
-            font-size: 28px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            margin: 0 auto 12px;
-        }
-        
-        .intro-brand {
-            font-size: 12px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
-            letter-spacing: 2px;
-        }
-        
-        .intro-headline h1 {
-            font-size: 26px;
-            font-weight: 700;
-            color: #FFFFFF;
-            line-height: 1.6;
-            margin-bottom: 16px;
-            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .intro-headline h1 span.highlight {
-            color: #E8B4B8;
-        }
-        
-        /* 타이핑 효과 */
-        .typing-line {
-            display: block;
-            overflow: hidden;
-            white-space: nowrap;
-            width: 0;
-            opacity: 0;
-        }
-        
-        .typing-line.line1 {
-            animation: typing 1.2s steps(12) 1s forwards, blink 0.5s step-end 1s 2;
-        }
-        
-        .typing-line.line2 {
-            animation: typing 1.2s steps(12) 2.4s forwards, blink 0.5s step-end 2.4s 2;
-        }
-        
-        .typing-line.line3 {
-            animation: typing 1.5s steps(15) 3.8s forwards;
-        }
-        
-        @keyframes typing {
-            from {
-                width: 0;
-                opacity: 1;
-            }
-            to {
-                width: 100%;
-                opacity: 1;
-            }
-        }
-        
-        @keyframes blink {
-            50% { border-color: transparent; }
-        }
-        
-        /* 서브 카피 - 마음 효과 */
-        .intro-subtitle {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.8;
-            margin-bottom: 32px;
-            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            animation: heartFadeIn 2s ease 5.5s forwards;
-        }
-        
-        .intro-subtitle .heart-text {
-            display: inline-block;
-            animation: heartBeat 1.5s ease-in-out 6.5s infinite;
-        }
-        
-        @keyframes heartFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(20px) scale(0.9);
-            }
-            50% {
-                opacity: 0.5;
-                transform: translateY(10px) scale(0.95);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        @keyframes heartBeat {
-            0%, 100% {
-                transform: scale(1);
-            }
-            15% {
-                transform: scale(1.05);
-            }
-            30% {
-                transform: scale(1);
-            }
-            45% {
-                transform: scale(1.03);
-            }
-        }
-        
-        .intro-cta {
-            margin-bottom: 24px;
-            opacity: 0;
-            animation: fadeInUp 1s ease 7s forwards;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .intro-btn {
-            display: inline-flex;
-            
-            gap: 10px;
-            padding: 18px 40px;
-            background: #E8B4B8;
-            color: #3D4A2D;
-            border: none;
-            border-radius: 32px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 8px 32px rgba(232, 180, 184, 0.4);
-            transition: all 0.3s;
-            font-family: inherit;
-        }
-        
-        .intro-btn:hover {
-            background: #F0C4C8;
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(232, 180, 184, 0.5);
-        }
-        
-        .intro-footer {
-            position: absolute;
-            bottom: 30px;
-            left: 0;
-            right: 0;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.5);
-            text-align: center;
-            opacity: 0;
-            animation: fadeIn 1s ease 7.5s forwards;
-        }
-        
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-        
-        /* ==================== 로그인 화면 ==================== */
+        /* 로그인 화면 */
         .login-screen {
-            background: #FDF8F5;
             display: flex;
-            flex-direction: column;
-            height: 100%;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
         }
         
-        .login-header {
-            padding: 28px;
-            padding-top: calc(28px + env(safe-area-inset-top, 44px));
-            flex: 1;
-        }
-        
-        .back-btn {
-            width: 40px;
-            height: 40px;
-            background: rgba(94, 107, 58, 0.1);
-            border: none;
-            border-radius: 50%;
-            
-            
-            
-            cursor: pointer;
-            margin-bottom: 40px;
-            font-size: 18px;
-            color: #5E6B3A;
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
         }
         
         .login-logo {
-            margin-bottom: 32px;
-        }
-        
-        .login-logo-icon {
-            width: 64px;
-            height: 64px;
-            background: #fff;
-            border-radius: 20px;
-            
-            
-            
-            font-size: 32px;
-            box-shadow: 0 4px 20px rgba(94, 107, 58, 0.15);
+            font-size: 48px;
             margin-bottom: 16px;
         }
         
@@ -390,3097 +45,599 @@
             font-size: 24px;
             font-weight: 700;
             color: #3D4A2D;
-            line-height: 1.4;
             margin-bottom: 8px;
         }
         
-        .login-desc {
+        .login-subtitle {
             font-size: 14px;
-            color: #8A8A8A;
+            color: #888;
+            margin-bottom: 32px;
         }
         
-        .login-buttons {
-            padding: 28px;
-            padding-bottom: 48px;
+        .login-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+            letter-spacing: 4px;
+        }
+        
+        .login-input:focus {
+            outline: none;
+            border-color: #5E6B3A;
         }
         
         .login-btn {
             width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 15px;
+            padding: 14px;
+            background: #5E6B3A;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            
-            
-            
-            gap: 12px;
-            margin-bottom: 12px;
-            border: none;
-            font-family: inherit;
-            transition: all 0.2s;
         }
         
         .login-btn:hover {
-            transform: translateY(-1px);
-        }
-        
-        .login-btn-kakao {
-            background: #FEE500;
-            color: #000;
-        }
-        
-        .login-btn-google {
-            background: #fff;
-            color: #333;
-            border: 1px solid #E0E0E0;
-        }
-        
-        .login-btn-apple {
-            background: #000;
-            color: #fff;
-        }
-        
-        .divider {
-            
-            
-            gap: 16px;
-            margin: 20px 0;
-        }
-        
-        .divider-line {
-            flex: 1;
-            height: 1px;
-            background: #E0E0E0;
-        }
-        
-        .divider-text {
-            font-size: 12px;
-            color: #8A8A8A;
-        }
-        
-        .login-btn-guest {
-            background: rgba(94, 107, 58, 0.1);
-            color: #5E6B3A;
-        }
-        
-        /* 버튼 아이콘 */
-        .btn-icon {
-            width: 20px;
-            height: 20px;
-        }
-        
-        /* ==================== 홈 화면 ==================== */
-        .home-screen {
-            background: #FDF8F5;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        .home-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            padding-top: calc(20px + env(safe-area-inset-top, 44px));
-        }
-        
-        .home-greeting {
-            
-            
-            gap: 12px;
-        }
-        
-        .greeting-emoji {
-            font-size: 32px;
-        }
-        
-        .greeting-text {
-            font-size: 14px;
-            color: #8A8A8A;
-        }
-        
-        .greeting-name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #3D4A2D;
-        }
-        
-        .home-icons {
-            
-            gap: 8px;
-        }
-        
-        .icon-btn {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-        
-        .home-content {
-            flex: 1;
-            padding: 0 20px;
-            overflow-y: auto;
-            padding-bottom: calc(80px + max(12px, env(safe-area-inset-bottom, 0px)));
-        }
-        
-        .section-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #3D4A2D;
-            margin-bottom: 4px;
-        }
-        
-        .section-desc {
-            font-size: 14px;
-            color: #8A8A8A;
-            margin-bottom: 20px;
-        }
-        
-        .mate-cards {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        
-        .mate-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            position: relative;
-        }
-        
-        .mate-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(94, 107, 58, 0.15);
-        }
-        
-        .mate-tag {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            font-size: 10px;
-            font-weight: 600;
-            color: #5E6B3A;
-            background: rgba(94, 107, 58, 0.1);
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
-        
-        .mate-icon {
-            font-size: 40px;
-            margin-bottom: 12px;
-            margin-top: 8px;
-        }
-        
-        .mate-card h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: #3D4A2D;
-            margin-bottom: 6px;
-        }
-        
-        .mate-card p {
-            font-size: 12px;
-            color: #8A8A8A;
-            line-height: 1.4;
-        }
-        
-        /* 하단 네비게이션 */
-        .bottom-nav {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            display: flex;
-            justify-content: stretch;
-            align-items: flex-start;
-            padding-top: 12px;
-            padding-bottom: 12px;
-            padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
-            border-top: 1px solid #f0f0f0;
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 4px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #BDBDBD;
-            transition: color 0.2s;
-            flex: 1;
-            padding: 0;
-        }
-        
-        .nav-item.active {
-            color: #5E6B3A;
-        }
-        
-        .nav-item span {
-            font-size: 11px;
-            font-weight: 500;
-        }
-        
-        /* ==================== 온보딩 화면 ==================== */
-        .onboarding-screen {
-            background: #FDF8F3;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        .onboarding-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
-            padding-top: calc(16px + env(safe-area-inset-top, 44px));
-            background: #FDF8F3;
-        }
-        
-        .onboarding-progress {
-            font-size: 14px;
-            font-weight: 600;
-            color: #5E6B3A;
-            background: rgba(94, 107, 58, 0.1);
-            padding: 6px 16px;
-            border-radius: 20px;
-        }
-        
-        .onboarding-content {
-            flex: 1;
-            padding: 20px 24px;
-            
-            flex-direction: column;
-            overflow-y: auto;
-        }
-        
-        .onboarding-question {
-            margin-bottom: 32px;
-        }
-        
-        .onboarding-question h2 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #3D4A2D;
-            line-height: 1.4;
-            margin-bottom: 8px;
-        }
-        
-        .onboarding-question p {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .onboarding-options {
-            
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .onboarding-option {
-            
-            
-            gap: 14px;
-            padding: 18px 20px;
-            background: white;
-            border: 2px solid #E8E8E8;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-            font-family: inherit;
-        }
-        
-        .onboarding-option:hover {
-            border-color: #5E6B3A;
-            background: rgba(94, 107, 58, 0.03);
-        }
-        
-        .onboarding-option.selected {
-            border-color: #5E6B3A;
-            background: rgba(94, 107, 58, 0.08);
-        }
-        
-        .onboarding-option .option-icon {
-            font-size: 24px;
-        }
-        
-        .onboarding-option .option-text {
-            flex: 1;
-        }
-        
-        .onboarding-option .option-text strong {
-            display: block;
-            font-size: 16px;
-            font-weight: 600;
-            color: #3D4A2D;
-            margin-bottom: 2px;
-        }
-        
-        .onboarding-option .option-text span {
-            font-size: 13px;
-            color: #888;
-        }
-        
-        .onboarding-input {
-            width: 100%;
-            padding: 18px 20px;
-            border: 2px solid #E8E8E8;
-            border-radius: 16px;
-            font-size: 16px;
-            font-family: inherit;
-            transition: border-color 0.2s;
-        }
-        
-        .onboarding-input:focus {
-            outline: none;
-            border-color: #5E6B3A;
-        }
-        
-        .onboarding-input::placeholder {
-            color: #AAA;
-        }
-        
-        .onboarding-next-btn {
-            margin-top: auto;
-            padding: 18px;
-            background: #5E6B3A;
-            color: white;
-            border: none;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        
-        .onboarding-next-btn:hover {
             background: #4A5530;
         }
         
-        .onboarding-next-btn:disabled {
-            background: #CCC;
-            cursor: not-allowed;
-        }
-        
-        /* ==================== 채팅 화면 ==================== */
-        .chat-screen {
-            background: #FDF8F5;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        .chat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            padding-top: calc(16px + env(safe-area-inset-top, 44px));
-            background: white;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .chat-title {
-            
-            
-            gap: 8px;
-            font-size: 17px;
-            font-weight: 600;
-            color: #3D4A2D;
-        }
-        
-        .chat-messages {
-            flex: 1;
-            padding: 20px 16px;
-            overflow-y: auto;
-            
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        .message {
-            
-            gap: 10px;
-            max-width: 85%;
-        }
-        
-        .message.bot {
-            align-self: flex-start;
-        }
-        
-        .message.user {
-            align-self: flex-end;
-            flex-direction: row-reverse;
-        }
-        
-        .message-avatar {
-            width: 36px;
-            height: 36px;
-            background: white;
-            border-radius: 50%;
-            
-            
-            
-            font-size: 18px;
-            flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        
-        .message-content {
-            background: white;
-            padding: 12px 16px;
-            border-radius: 18px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-        
-        .message.user .message-content {
-            background: #5E6B3A;
-            color: white;
-        }
-        
-        .message-content p {
+        .login-error {
+            color: #E53935;
             font-size: 14px;
-            line-height: 1.5;
-            margin: 0;
+            margin-top: 12px;
+            display: none;
         }
         
-        .message-content p + p {
-            margin-top: 6px;
+        /* 관리자 화면 */
+        .admin-screen {
+            display: none;
         }
         
-        .chat-input-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            padding-bottom: calc(12px + env(safe-area-inset-bottom, 20px));
-            background: white;
-            border-top: 1px solid #f0f0f0;
-        }
-        
-        .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #E8E8E8;
-            border-radius: 24px;
-            font-size: 15px;
-            outline: none;
-            font-family: inherit;
-        }
-        
-        .chat-input:focus {
-            border-color: #5E6B3A;
-        }
-        
-        .send-btn {
-            width: 44px;
-            height: 44px;
-            background: #5E6B3A;
-            border: none;
-            border-radius: 50%;
+        .admin-header {
+            background: linear-gradient(135deg, #5E6B3A, #7A8B4A);
             color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-            flex-shrink: 0;
-        }
-        
-        .send-btn:hover {
-            background: #3D4A2D;
-        }
-        
-        /* 마이크 버튼 */
-        .mic-btn {
-            width: 44px;
-            height: 44px;
-            background: #3D3D3D;
-            border: none;
-            border-radius: 50%;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            flex-shrink: 0;
-        }
-        
-        .mic-btn:hover {
-            background: #5E6B3A;
-        }
-        
-        .mic-btn.recording {
-            background: #5E6B3A;
-            animation: pulse-mic 1.5s infinite;
-        }
-        
-        @keyframes pulse-mic {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(94, 107, 58, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(94, 107, 58, 0); }
-        }
-        
-        /* 음파 아이콘 */
-        .sound-wave {
-            
-            
-            
-            gap: 2px;
-            height: 20px;
-        }
-        
-        .sound-wave .bar {
-            width: 3px;
-            height: 8px;
-            background: white;
-            border-radius: 2px;
-            transition: height 0.1s;
-        }
-        
-        .mic-btn.recording .sound-wave .bar {
-            animation: wave-bar 0.6s ease-in-out infinite;
-        }
-        
-        .mic-btn.recording .sound-wave .bar:nth-child(1) { animation-delay: 0s; }
-        .mic-btn.recording .sound-wave .bar:nth-child(2) { animation-delay: 0.1s; }
-        .mic-btn.recording .sound-wave .bar:nth-child(3) { animation-delay: 0.2s; }
-        .mic-btn.recording .sound-wave .bar:nth-child(4) { animation-delay: 0.1s; }
-        .mic-btn.recording .sound-wave .bar:nth-child(5) { animation-delay: 0s; }
-        
-        @keyframes wave-bar {
-            0%, 100% { height: 8px; }
-            50% { height: 18px; }
-        }
-        
-        /* 녹음 중 인디케이터 */
-        .recording-indicator {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(94, 107, 58, 0.95);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            white-space: nowrap;
-            margin-bottom: 10px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-            
-            
-            gap: 8px;
-        }
-        
-        .recording-indicator.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .recording-indicator::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid rgba(94, 107, 58, 0.95);
-        }
-        
-        .recording-dot {
-            width: 8px;
-            height: 8px;
-            background: #FF6B6B;
-            border-radius: 50%;
-            animation: blink-dot 1s infinite;
-        }
-        
-        @keyframes blink-dot {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        
-        /* 채팅 입력 영역 수정 */
-        .chat-input-area {
-            position: relative;
-        }
-        
-        /* ==================== 공통 헤더 ==================== */
-        .screen-header {
+            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px;
-            padding-top: calc(16px + env(safe-area-inset-top, 44px));
-            background: white;
-            border-bottom: 1px solid #f0f0f0;
         }
         
-        .screen-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #3D4A2D;
-        }
-        
-        .menu-btn {
-            width: 40px;
-            height: 40px;
-            background: none;
-            border: none;
+        .admin-title {
             font-size: 20px;
-            cursor: pointer;
-            color: #5E6B3A;
-        }
-        
-        /* ==================== 캘린더 화면 ==================== */
-        .calendar-screen {
-            background: #FDF8F5;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        .calendar-content {
-            flex: 1;
-            padding: 20px 16px;
-            overflow-y: auto;
-            padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
-        }
-        
-        .calendar-nav {
-            
-            
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        
-        .calendar-nav button {
-            width: 36px;
-            height: 36px;
-            background: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-            color: #5E6B3A;
-        }
-        
-        .calendar-month {
-            font-size: 18px;
             font-weight: 600;
-            color: #3D4A2D;
         }
         
-        .calendar-weekdays {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        
-        .calendar-weekdays span {
-            font-size: 12px;
-            color: #8A8A8A;
-            padding: 8px 0;
-        }
-        
-        .calendar-weekdays span:first-child { color: #E8B4B8; }
-        .calendar-weekdays span:last-child { color: #5E6B3A; }
-        
-        .calendar-days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            margin-bottom: 24px;
-        }
-        
-        .calendar-day {
-            position: relative;
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .calendar-day:hover { background: rgba(94, 107, 58, 0.1); }
-        .calendar-day.today { background: #5E6B3A; color: white; font-weight: 600; }
-        .calendar-day.has-event::after {
-            content: '';
-            position: absolute;
-            bottom: 2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 5px;
-            height: 5px;
-            background: #E8B4B8;
-            border-radius: 50%;
-        }
-        
-        .calendar-events h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #3D4A2D;
-            margin-bottom: 12px;
-        }
-        
-        .event-item {
-            
-            
-            gap: 12px;
-            background: white;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        
-        .event-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        
-        .event-title {
-            font-size: 14px;
-            font-weight: 500;
-            color: #3D4A2D;
-        }
-        
-        .event-time {
-            font-size: 12px;
-            color: #8A8A8A;
-            margin-top: 2px;
-        }
-        
-        /* ==================== 마이페이지 화면 ==================== */
-        .my-screen {
-            background: #FDF8F5;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        .my-content {
-            flex: 1;
-            padding: 20px 16px;
-            overflow-y: auto;
-            padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
-        }
-        
-        .profile-section {
-            
-            
-            gap: 16px;
-            background: white;
-            padding: 0;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        
-        .profile-avatar {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #E8B4B8, #F0D0D3);
-            border-radius: 50%;
-            
-            
-            
-            font-size: 28px;
-        }
-        
-        .profile-info {
-            flex: 1;
-        }
-        
-        .profile-info h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #3D4A2D;
-        }
-        
-        .profile-info p {
-            font-size: 13px;
-            color: #8A8A8A;
-            margin-top: 4px;
-        }
-        
-        .profile-info strong { color: #5E6B3A; }
-        
-        .edit-btn {
+        .logout-btn {
             padding: 8px 16px;
-            background: rgba(94, 107, 58, 0.1);
+            background: rgba(255,255,255,0.2);
+            color: white;
             border: none;
-            border-radius: 20px;
-            color: #5E6B3A;
-            font-size: 13px;
-            font-weight: 500;
+            border-radius: 8px;
+            font-size: 14px;
             cursor: pointer;
         }
         
-        .my-stats {
-            
-            gap: 12px;
-            margin-bottom: 24px;
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
         }
         
-        .stat-item {
+        /* 탭 메뉴 */
+        .tab-menu {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .tab-btn {
             flex: 1;
+            padding: 16px;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: #5E6B3A;
+            border-bottom-color: #5E6B3A;
+        }
+        
+        /* 통계 카드 */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 16px;
+        }
+        
+        .stat-card {
             background: white;
             padding: 16px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         
-        .stat-num {
-            display: block;
-            font-size: 24px;
+        .stat-number {
+            font-size: 28px;
             font-weight: 700;
             color: #5E6B3A;
         }
         
         .stat-label {
             font-size: 12px;
-            color: #8A8A8A;
-        }
-        
-        .my-menu-list {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        
-        .my-menu-item {
-            
-            
-            width: 100%;
-            padding: 16px 20px;
-            background: none;
-            border: none;
-            border-bottom: 1px solid #f5f5f5;
-            cursor: pointer;
-            text-align: left;
-            font-size: 15px;
-            color: #3D4A2D;
-            gap: 12px;
-        }
-        
-        .my-menu-item:last-child { border-bottom: none; }
-        .menu-icon { font-size: 18px; }
-        .menu-arrow { margin-left: auto; color: #BDBDBD; }
-        
-        /* ==================== 알림 화면 ==================== */
-        .notification-screen {
-            background: #FDF8F5;
-            
-            flex-direction: column;
-        }
-        
-        .noti-content {
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
-        }
-        
-        .noti-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            background: white;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .noti-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        
-        .noti-item:active {
-            transform: scale(0.98);
-        }
-        
-        .noti-item.unread {
-            background: linear-gradient(135deg, #fff 0%, #f8fff5 100%);
-            border-left: 3px solid #5E6B3A;
-        }
-        
-        .noti-icon {
-            width: 40px;
-            height: 40px;
-            background: #f5f5f5;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        
-        .noti-info {
-            flex: 1;
-        }
-        
-        .noti-title {
-            font-size: 14px;
-            font-weight: 500;
-            color: #3D4A2D;
-        }
-        
-        .noti-desc {
-            font-size: 13px;
-            color: #666;
+            color: #888;
             margin-top: 4px;
         }
         
-        .noti-time {
-            font-size: 11px;
-            color: #BDBDBD;
-            margin-top: 6px;
+        /* 예약 목록 */
+        .reservation-list {
+            padding: 16px;
         }
         
-        /* ==================== 전문가 연결 화면 ==================== */
-        .expert-screen {
+        .list-header {
             display: flex;
-            flex-direction: column;
-            background: #FDF8F3;
-        }
-        
-        .expert-header {
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 60px 20px 20px;
-            background: #FDF8F3;
-        }
-        
-        .expert-header h1 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #3D4A2D;
-        }
-        
-        .expert-content {
-            flex: 1;
-            padding: 0 20px 20px;
-            overflow-y: auto;
-            padding-bottom: calc(80px + max(12px, env(safe-area-inset-bottom, 0px)));
-        }
-        
-        .expert-intro {
-            text-align: center;
-            padding: 30px 0 40px;
-        }
-        
-        .expert-icon {
-            font-size: 60px;
-            margin-bottom: 16px;
-        }
-        
-        .expert-intro h2 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #3D4A2D;
-            margin-bottom: 8px;
-        }
-        
-        .expert-intro p {
-            font-size: 15px;
-            color: #8A8A8A;
-            line-height: 1.5;
-        }
-        
-        .expert-options {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 30px;
-        }
-        
-        .expert-card {
-            display: flex;
             align-items: center;
-            gap: 16px;
-            padding: 20px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            text-decoration: none;
-            color: inherit;
-            border: 2px solid transparent;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        
-        .expert-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        }
-        
-        .expert-card.kakao {
-            border-color: #FEE500;
-            background: linear-gradient(135deg, #FFFEF5, white);
-        }
-        
-        .expert-card.reservation {
-            border-color: #E8B4B8;
-            background: linear-gradient(135deg, #FFF9F9, white);
-        }
-        
-        .expert-card-icon {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            border-radius: 12px;
-            background: #F5F5F5;
-        }
-        
-        .expert-card.kakao .expert-card-icon {
-            background: #FEE500;
-        }
-        
-        .expert-card.reservation .expert-card-icon {
-            background: #FCE4E8;
-        }
-        
-        .expert-card-content {
-            flex: 1;
-        }
-        
-        .expert-card-content h3 {
-            font-size: 17px;
-            font-weight: 600;
-            color: #3D4A2D;
-            margin-bottom: 4px;
-        }
-        
-        .expert-card-content p {
-            font-size: 13px;
-            color: #8A8A8A;
-            margin-bottom: 6px;
-        }
-        
-        .expert-card-tag {
-            display: inline-block;
-            font-size: 11px;
-            color: #5E6B3A;
-            background: rgba(94, 107, 58, 0.1);
-            padding: 3px 8px;
-            border-radius: 10px;
-        }
-        
-        .expert-card-arrow {
-            font-size: 20px;
-            color: #BDBDBD;
-        }
-        
-        .expert-info {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        
-        .expert-info h4 {
-            font-size: 15px;
-            font-weight: 600;
-            color: #3D4A2D;
             margin-bottom: 12px;
         }
         
-        .expert-info ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .list-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
         }
         
-        .expert-info li {
-            font-size: 14px;
-            color: #666;
-            padding: 8px 0;
-            border-bottom: 1px solid #F0F0F0;
-            padding-left: 20px;
-            position: relative;
+        .refresh-btn {
+            padding: 8px 12px;
+            background: #F0F0F0;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
         }
         
-        .expert-info li:last-child {
-            border-bottom: none;
+        .refresh-btn:hover {
+            background: #E0E0E0;
         }
         
-        .expert-info li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: #5E6B3A;
-            font-weight: bold;
-        }
-        
-        /* ==================== 상담 예약 모달 ==================== */
-        .reservation-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 300;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .reservation-modal.hidden {
-            display: none;
-        }
-        
-        .reservation-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-        }
-        
-        .reservation-content {
-            position: relative;
-            width: 90%;
-            max-width: 400px;
-            max-height: 85vh;
+        .reservation-card {
             background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            animation: modalSlideUp 0.3s ease;
-        }
-        
-        @keyframes modalSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         
         .reservation-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 20px;
-            border-bottom: 1px solid #F0F0F0;
+            align-items: flex-start;
+            margin-bottom: 12px;
         }
         
-        .reservation-header h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #3D4A2D;
-        }
-        
-        .close-modal-btn {
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: #F5F5F5;
-            border-radius: 50%;
+        .reservation-info h3 {
             font-size: 16px;
-            cursor: pointer;
-            color: #666;
-        }
-        
-        .reservation-body {
-            padding: 20px;
-            max-height: calc(85vh - 80px);
-            overflow-y: auto;
-        }
-        
-        .reservation-notice {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px;
-            background: linear-gradient(135deg, #FFF9F0, #FFF5E8);
-            border-radius: 12px;
-            margin-bottom: 24px;
-            border: 1px solid #F5E6D3;
-        }
-        
-        .notice-icon {
-            font-size: 32px;
-        }
-        
-        .reservation-notice p {
-            font-size: 14px;
-            color: #5D4E37;
-            line-height: 1.5;
-        }
-        
-        .reservation-notice strong {
-            color: #5E6B3A;
-            font-weight: 700;
-        }
-        
-        .form-group {
-            margin-bottom: 18px;
-        }
-        
-        .form-group label {
-            display: block;
-            font-size: 14px;
             font-weight: 600;
-            color: #3D4A2D;
-            margin-bottom: 8px;
-        }
-        
-        .form-group .required {
-            color: #E8B4B8;
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #E0E0E0;
-            border-radius: 12px;
-            font-size: 15px;
             color: #333;
-            background: #FAFAFA;
-            transition: all 0.2s;
-            box-sizing: border-box;
+            margin-bottom: 4px;
         }
         
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #5E6B3A;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(94, 107, 58, 0.1);
+        .reservation-info p {
+            font-size: 13px;
+            color: #888;
         }
         
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: #BDBDBD;
-        }
-        
-        .form-group select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            padding-right: 40px;
-        }
-        
-        .form-group textarea {
-            resize: none;
-            font-family: inherit;
-        }
-        
-        .reservation-submit-btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #5E6B3A, #7A8B4A);
-            color: white;
-            border: none;
+        .status-badge {
+            padding: 4px 10px;
             border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 8px;
-        }
-        
-        .reservation-submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(94, 107, 58, 0.3);
-        }
-        
-        .reservation-submit-btn:disabled {
-            background: #BDBDBD;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .reservation-footer {
-            text-align: center;
             font-size: 12px;
-            color: #999;
-            margin-top: 16px;
+            font-weight: 500;
         }
         
-        /* ==================== 사이드 메뉴 ==================== */
-        .side-menu {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 200;
+        .status-pending {
+            background: #FFF3E0;
+            color: #E65100;
         }
         
-        .side-menu.hidden { display: none; }
-        
-        .side-menu-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4);
+        .status-completed {
+            background: #E8F5E9;
+            color: #2E7D32;
         }
         
-        .side-menu-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 280px;
-            height: 100%;
-            background: white;
-            border-radius: 0 24px 24px 0;
-            overflow: hidden;
-            animation: slideIn 0.3s ease;
+        .status-cancelled {
+            background: #FFEBEE;
+            color: #C62828;
         }
         
-        @keyframes slideIn {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
+        .reservation-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
         }
         
-        .side-menu-header {
-            
-            
-            justify-content: space-between;
-            padding: 60px 20px 20px;
-            background: linear-gradient(135deg, #5E6B3A, #7A8B4A);
-            color: white;
+        .detail-item {
+            font-size: 13px;
         }
         
-        .side-profile {
-            
-            
-            gap: 12px;
+        .detail-label {
+            color: #888;
         }
         
-        .side-avatar {
-            width: 48px;
-            height: 48px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            
-            
-            
-            font-size: 22px;
+        .detail-value {
+            color: #333;
+            font-weight: 500;
         }
         
-        .side-name {
-            font-size: 16px;
-            font-weight: 600;
+        .reservation-memo {
+            background: #F9F9F9;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
         }
         
-        .side-email {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-        
-        .close-menu-btn {
-            width: 32px;
-            height: 32px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        
-        .side-menu-list {
-            padding: 16px 0;
-        }
-        
-        .side-menu-item {
+        .reservation-actions {
             display: flex;
-            align-items: center;
-            gap: 14px;
-            width: 100%;
-            padding: 14px 24px;
-            background: none;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 10px;
             border: none;
-            font-size: 15px;
-            color: #3D4A2D;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
-            text-align: left;
-            text-decoration: none;
-            font-family: inherit;
         }
         
-        .side-menu-item:hover {
-            background: rgba(94, 107, 58, 0.08);
-        }
-        
-        .side-icon { font-size: 18px; }
-        
-        .side-divider {
-            height: 1px;
-            background: #FDF8F3;
-            margin: 12px 24px;
-        }
-        
-        /* ==================== RAG 응답 스타일 ==================== */
-        .typing-indicator {
-            color: #8A8A8A;
-            font-style: italic;
-        }
-        
-        .typing-indicator .dots {
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-        
-        .answer-title {
-            color: #5E6B3A;
-            font-size: 15px;
-            margin-bottom: 8px !important;
-        }
-        
-        .related-topics {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #f0f0f0;
-        }
-        
-        .related-label {
-            font-size: 12px;
-            color: #8A8A8A;
-            margin-bottom: 8px !important;
-        }
-        
-        .related-btn {
-            display: inline-block;
-            padding: 6px 12px;
-            margin: 4px 4px 4px 0;
-            background: #F0F2E8;
-            border: 1px solid #D5DAC7;
-            border-radius: 16px;
-            font-size: 12px;
-            color: #5E6B3A;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .related-btn:hover {
+        .btn-complete {
             background: #5E6B3A;
             color: white;
-            border-color: #5E6B3A;
         }
         
-        .related-btn:active {
-            transform: scale(0.95);
+        .btn-call {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        
+        .btn-cancel {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        /* 알림 로그 */
+        .log-item {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .log-time {
+            color: #888;
+            font-size: 11px;
+        }
+        
+        .log-message {
+            color: #333;
+            margin-top: 4px;
+            white-space: pre-line;
+        }
+        
+        /* 반응형 */
+        @media (max-width: 500px) {
+            .stats-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            
+            .stat-card {
+                padding: 12px 8px;
+            }
+            
+            .stat-number {
+                font-size: 22px;
+            }
+            
+            .reservation-details {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
-    <div class="iphone-frame">
-        <div class="notch"></div>
-        
-        <div class="screen">
-            <!-- 인트로 화면 -->
-            <div class="page intro-screen" id="introScreen">
-                <div class="intro-bg">
-                    <img src="intro-bg.png" alt="배경">
-                </div>
-                <div class="intro-overlay"></div>
-                
-                <div class="intro-content">
-                    <div class="intro-logo">
-                        <div class="intro-logo-icon">🤱</div>
-                        <div class="intro-brand">맘곁 MOMGYEOT</div>
-                    </div>
-                    
-                    <div class="intro-headline">
-                        <h1>
-                            <span class="typing-line line1">아기를 품은 엄마,</span>
-                            <span class="typing-line line2">그 곁을 지키는 아빠,</span>
-                            <span class="typing-line line3">그 둘을 받쳐주는 <span class="highlight">맘곁</span>.</span>
-                        </h1>
-                    </div>
-                    
-                    <p class="intro-subtitle">
-                        <span class="heart-text">아이만이 아니라, 부모의 마음까지</span><br>
-                        <span class="heart-text">함께 돌보는 동반자가 되고 싶어요. 💕</span>
-                    </p>
-                    
-                    <div class="intro-cta">
-                        <button class="intro-btn" onclick="showLogin()">
-                            시작하기 <span>→</span>
-                        </button>
-                    </div>
-                    
-                    <div class="intro-footer">© 2026 맘곁 Momgyeot</div>
-                </div>
-            </div>
-            
-            <!-- 로그인 화면 -->
-            <div class="page login-screen hidden" id="loginScreen">
-                <div class="login-header">
-                    <button class="back-btn" onclick="showIntro()">←</button>
-                    
-                    <div class="login-logo">
-                        <div class="login-logo-icon">🤱</div>
-                        <h2 class="login-title">맘곁에 오신 것을<br>환영해요</h2>
-                        <p class="login-desc">간편하게 로그인하고 시작하세요</p>
-                    </div>
-                </div>
-                
-                <div class="login-buttons">
-                    <button class="login-btn login-btn-kakao" onclick="loginWith('kakao')">
-                        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 3C6.5 3 2 6.58 2 11c0 2.84 1.86 5.33 4.64 6.77l-.96 3.56c-.08.3.23.55.5.4l4.13-2.73c.56.06 1.12.1 1.69.1 5.5 0 10-3.58 10-8S17.5 3 12 3z"/>
-                        </svg>
-                        카카오로 시작하기
-                    </button>
-                    
-                    <button class="login-btn login-btn-google" onclick="loginWith('google')">
-                        <svg class="btn-icon" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                        </svg>
-                        Google로 계속하기
-                    </button>
-                    
-                    <button class="login-btn login-btn-apple" onclick="loginWith('apple')">
-                        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-                        </svg>
-                        Apple로 계속하기
-                    </button>
-                    
-                    <div class="divider">
-                        <div class="divider-line"></div>
-                        <span class="divider-text">또는</span>
-                        <div class="divider-line"></div>
-                    </div>
-                    
-                    <button class="login-btn login-btn-guest" onclick="guestLogin()">
-                        로그인 없이 둘러보기
-                    </button>
-                </div>
-            </div>
-            
-            <!-- 홈 화면 -->
-            <div class="page home-screen hidden" id="homeScreen">
-                <div class="home-header">
-                    <button class="menu-btn" type="button" id="homeMenuBtn">☰</button>
-                    <div class="home-greeting">
-                        <span class="greeting-emoji">👋</span>
-                        <div>
-                            <p class="greeting-text">안녕하세요!</p>
-                            <p class="greeting-name" id="userName">게스트님</p>
-                        </div>
-                    </div>
-                    <div class="home-icons">
-                        <button class="icon-btn" type="button" id="homeNotiBtn">🔔</button>
-                    </div>
-                </div>
-                
-                <div class="home-content">
-                    <h2 class="section-title">맘곁 선택하기</h2>
-                    <p class="section-desc">나에게 맞는 맘곁을 선택해주세요</p>
-                    
-                    <div class="mate-cards">
-                        <button class="mate-card" type="button" id="cardSaessak">
-                            <span class="mate-tag">임신준비</span>
-                            <div class="mate-icon">🌱</div>
-                            <h3>예비맘곁</h3>
-                            <p>임신을 준비하는<br>예비 엄마를 위해</p>
-                        </button>
-                        
-                        <button class="mate-card" type="button" id="cardYebi">
-                            <span class="mate-tag">임신중</span>
-                            <div class="mate-icon">🤰</div>
-                            <h3>임신맘곁</h3>
-                            <p>소중한 생명과 함께하는<br>임신 기간 동안</p>
-                        </button>
-                        
-                        <button class="mate-card" type="button" id="cardAgi">
-                            <span class="mate-tag">출산후</span>
-                            <div class="mate-icon">👶</div>
-                            <h3>초보맘곁</h3>
-                            <p>아기와 함께하는<br>육아의 모든 순간</p>
-                        </button>
-                        
-                        <button class="mate-card" type="button" id="cardExpert">
-                            <span class="mate-tag">전문상담</span>
-                            <div class="mate-icon">👩‍⚕️</div>
-                            <h3>전문가 연결</h3>
-                            <p>전문 상담이<br>필요할 때</p>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- 하단 네비게이션 -->
-                <div class="bottom-nav">
-                    <button class="nav-item active" type="button" id="navHome">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                        </svg>
-                        <span>홈</span>
-                    </button>
-                    <button class="nav-item" type="button" id="navCalendar">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
-                        </svg>
-                        <span>캘린더</span>
-                    </button>
-                    <button class="nav-item" type="button" id="navChat">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
-                        </svg>
-                        <span>채팅</span>
-                    </button>
-                    <button class="nav-item" type="button" id="navMy">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </svg>
-                        <span>마이</span>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- 온보딩 화면 -->
-            <div class="page onboarding-screen hidden" id="onboardingScreen">
-                <div class="onboarding-header">
-                    <button class="back-btn" type="button" id="onboardingBackBtn">←</button>
-                    <div class="onboarding-progress">
-                        <span id="onboardingStep">1</span> / <span id="onboardingTotal">3</span>
-                    </div>
-                    <div style="width: 40px;"></div>
-                </div>
-                
-                <div class="onboarding-content" id="onboardingContent">
-                    <!-- 동적으로 생성됨 -->
-                </div>
-            </div>
-            
-            <!-- 채팅 화면 -->
-            <div class="page chat-screen hidden" id="chatScreen">
-                <div class="chat-header">
-                    <button class="back-btn" type="button" id="chatBackBtn">←</button>
-                    <div class="chat-title">
-                        <span id="chatMateIcon">🌱</span>
-                        <span id="chatMateName">예비맘곁</span>
-                    </div>
-                    <div style="width: 40px;"></div>
-                </div>
-                
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message bot">
-                        <div class="message-avatar">🤱</div>
-                        <div class="message-content">
-                            <p>안녕하세요! 맘곁이에요 😊</p>
-                            <p>무엇이든 편하게 물어보세요.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="chat-input-area">
-                    <div class="recording-indicator" id="recordingIndicator">
-                        <span class="recording-dot"></span>
-                        듣고 있어요...
-                    </div>
-                    <input type="text" class="chat-input" placeholder="메시지를 입력하세요..." id="chatInput">
-                    <button class="mic-btn" type="button" id="micBtn" aria-label="음성 입력">
-                        <div class="sound-wave">
-                            <span class="bar"></span>
-                            <span class="bar"></span>
-                            <span class="bar"></span>
-                            <span class="bar"></span>
-                            <span class="bar"></span>
-                        </div>
-                    </button>
-                    <button class="send-btn" type="button" id="sendBtn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- 캘린더 화면 -->
-            <div class="page calendar-screen hidden" id="calendarScreen">
-                <div class="screen-header">
-                    <button class="menu-btn" type="button" id="calMenuBtn">☰</button>
-                    <h1 class="screen-title">캘린더</h1>
-                    <button class="icon-btn" type="button" id="calNotiBtn">🔔</button>
-                </div>
-                
-                <div class="calendar-content">
-                    <div class="calendar-nav">
-                        <button type="button" id="prevMonth">‹</button>
-                        <span class="calendar-month" id="currentMonth">2026년 1월</span>
-                        <button type="button" id="nextMonth">›</button>
-                    </div>
-                    
-                    <div class="calendar-weekdays">
-                        <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
-                    </div>
-                    
-                    <div class="calendar-days" id="calendarDays">
-                        <!-- 자바스크립트로 생성 -->
-                    </div>
-                    
-                    <div class="calendar-events">
-                        <h3>오늘의 일정</h3>
-                        <div class="event-item">
-                            <div class="event-dot" style="background: #E8B4B8;"></div>
-                            <div class="event-info">
-                                <p class="event-title">산부인과 정기 검진</p>
-                                <p class="event-time">오후 2:00</p>
-                            </div>
-                        </div>
-                        <div class="event-item">
-                            <div class="event-dot" style="background: #5E6B3A;"></div>
-                            <div class="event-info">
-                                <p class="event-title">임산부 요가 수업</p>
-                                <p class="event-time">오후 4:30</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bottom-nav">
-                    <button class="nav-item" type="button" id="calNavHome"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>홈</span></button>
-                    <button class="nav-item active" type="button" id="calNavCalendar"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg><span>캘린더</span></button>
-                    <button class="nav-item" type="button" id="calNavChat"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>채팅</span></button>
-                    <button class="nav-item" type="button" id="calNavMy"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>마이</span></button>
-                </div>
-            </div>
-            
-            <!-- 마이페이지 화면 -->
-            <div class="page my-screen hidden" id="myScreen">
-                <div class="screen-header">
-                    <button class="menu-btn" type="button" id="myMenuBtn">☰</button>
-                    <h1 class="screen-title">마이페이지</h1>
-                    <button class="icon-btn" type="button" id="myNotiBtn">🔔</button>
-                </div>
-                
-                <div class="my-content">
-                    <div class="profile-section">
-                        <div class="profile-avatar">👩</div>
-                        <div class="profile-info">
-                            <h2 id="profileName">게스트님</h2>
-                            <p>맘곁과 함께한 지 <strong>1일</strong></p>
-                        </div>
-                        <button class="edit-btn" type="button">편집</button>
-                    </div>
-                    
-                    <div class="my-stats">
-                        <div class="stat-item">
-                            <span class="stat-num">3</span>
-                            <span class="stat-label">대화 수</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-num">1</span>
-                            <span class="stat-label">저장됨</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-num">0</span>
-                            <span class="stat-label">일정</span>
-                        </div>
-                    </div>
-                    
-                    <div class="my-menu-list">
-                        <button class="my-menu-item" type="button">
-                            <span class="menu-icon">📋</span>
-                            <span>내 정보 관리</span>
-                            <span class="menu-arrow">›</span>
-                        </button>
-                        <button class="my-menu-item" type="button">
-                            <span class="menu-icon">💬</span>
-                            <span>대화 기록</span>
-                            <span class="menu-arrow">›</span>
-                        </button>
-                        <button class="my-menu-item" type="button">
-                            <span class="menu-icon">⭐</span>
-                            <span>저장한 답변</span>
-                            <span class="menu-arrow">›</span>
-                        </button>
-                        <button class="my-menu-item" type="button">
-                            <span class="menu-icon">⚙️</span>
-                            <span>설정</span>
-                            <span class="menu-arrow">›</span>
-                        </button>
-                        <button class="my-menu-item" type="button">
-                            <span class="menu-icon">❓</span>
-                            <span>도움말</span>
-                            <span class="menu-arrow">›</span>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="bottom-nav">
-                    <button class="nav-item" type="button" id="myNavHome"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>홈</span></button>
-                    <button class="nav-item" type="button" id="myNavCalendar"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg><span>캘린더</span></button>
-                    <button class="nav-item" type="button" id="myNavChat"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>채팅</span></button>
-                    <button class="nav-item active" type="button" id="myNavMy"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>마이</span></button>
-                </div>
-            </div>
-            
-            <!-- 알림 화면 -->
-            <div class="page notification-screen hidden" id="notificationScreen">
-                <div class="screen-header">
-                    <button class="back-btn" type="button" id="notiBackBtn">←</button>
-                    <h1 class="screen-title">알림</h1>
-                    <div style="width: 40px;"></div>
-                </div>
-                
-                <div class="noti-content">
-                    <div class="noti-item unread" id="notiChat" style="cursor: pointer;">
-                        <div class="noti-icon">💬</div>
-                        <div class="noti-info">
-                            <p class="noti-title">맘곁에서 답변이 도착했어요</p>
-                            <p class="noti-desc">임신 준비에 대한 답변을 확인해보세요.</p>
-                            <p class="noti-time">방금 전</p>
-                        </div>
-                    </div>
-                    <div class="noti-item unread" id="notiCalendar" style="cursor: pointer;">
-                        <div class="noti-icon">📅</div>
-                        <div class="noti-info">
-                            <p class="noti-title">내일 일정이 있어요</p>
-                            <p class="noti-desc">산부인과 정기 검진 - 오후 2:00</p>
-                            <p class="noti-time">1시간 전</p>
-                        </div>
-                    </div>
-                    <div class="noti-item" id="notiWelcome" style="cursor: pointer;">
-                        <div class="noti-icon">🎉</div>
-                        <div class="noti-info">
-                            <p class="noti-title">맘곁에 오신 것을 환영해요!</p>
-                            <p class="noti-desc">맘곁과 함께 건강한 임신 여정을 시작하세요.</p>
-                            <p class="noti-time">오늘</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 전문가 연결 화면 -->
-            <div class="page expert-screen hidden" id="expertScreen">
-                <div class="expert-header">
-                    <button class="back-btn" type="button" id="expertBackBtn">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M15 18l-6-6 6-6"/>
-                        </svg>
-                    </button>
-                    <h1>전문가 연결</h1>
-                    <div style="width: 24px;"></div>
-                </div>
-                
-                <div class="expert-content">
-                    <div class="expert-intro">
-                        <div class="expert-icon">👩‍⚕️</div>
-                        <h2>전문 상담이 필요하신가요?</h2>
-                        <p>모유수유, 육아 전문가와<br>1:1 상담을 받아보세요</p>
-                    </div>
-                    
-                    <div class="expert-options">
-                        <a href="http://pf.kakao.com/_xkxjxaAn/chat" target="_blank" class="expert-card kakao">
-                            <div class="expert-card-icon">💬</div>
-                            <div class="expert-card-content">
-                                <h3>카카오톡 상담</h3>
-                                <p>실시간 채팅 상담</p>
-                                <span class="expert-card-tag">바로 연결</span>
-                            </div>
-                            <div class="expert-card-arrow">→</div>
-                        </a>
-                        
-                        <button class="expert-card reservation" type="button" id="reservationBtn">
-                            <div class="expert-card-icon">📅</div>
-                            <div class="expert-card-content">
-                                <h3>상담 예약</h3>
-                                <p>원하는 시간에 상담 예약</p>
-                                <span class="expert-card-tag">예약 가능</span>
-                            </div>
-                            <div class="expert-card-arrow">→</div>
-                        </button>
-                    </div>
-                    
-                    <div class="expert-info">
-                        <h4>상담 안내</h4>
-                        <ul>
-                            <li>모유수유 전문 상담 (IBCLC)</li>
-                            <li>신생아 케어 상담</li>
-                            <li>산후조리 상담</li>
-                            <li>육아 고민 상담</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="bottom-nav">
-                    <button class="nav-item" type="button" id="expertNavHome">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                        <span>홈</span>
-                    </button>
-                    <button class="nav-item" type="button" id="expertNavCalendar">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                        <span>캘린더</span>
-                    </button>
-                    <button class="nav-item" type="button" id="expertNavChat">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                        <span>채팅</span>
-                    </button>
-                    <button class="nav-item" type="button" id="expertNavMy">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        <span>마이</span>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- 상담 예약 모달 -->
-            <div class="reservation-modal hidden" id="reservationModal">
-                <div class="reservation-overlay" id="reservationOverlay"></div>
-                <div class="reservation-content">
-                    <div class="reservation-header">
-                        <h2>📅 상담 예약</h2>
-                        <button class="close-modal-btn" type="button" id="closeReservationBtn">✕</button>
-                    </div>
-                    
-                    <div class="reservation-body">
-                        <div class="reservation-notice">
-                            <span class="notice-icon">📞</span>
-                            <p>평일 기준 <strong>24시간 이내</strong>에<br>전문 상담사가 연락드립니다</p>
-                        </div>
-                        
-                        <form id="reservationForm">
-                            <div class="form-group">
-                                <label for="resPhone">연락처 <span class="required">*</span></label>
-                                <input type="tel" id="resPhone" placeholder="010-0000-0000" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="resNickname">닉네임 <span class="required">*</span></label>
-                                <input type="text" id="resNickname" placeholder="닉네임을 입력해주세요" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="resBabyName">아기 이름 (태명)</label>
-                                <input type="text" id="resBabyName" placeholder="아기 이름 또는 태명">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="resCategory">상담 분야</label>
-                                <select id="resCategory">
-                                    <option value="모유수유">모유수유 상담</option>
-                                    <option value="신생아케어">신생아 케어</option>
-                                    <option value="산후조리">산후조리 상담</option>
-                                    <option value="육아고민">육아 고민 상담</option>
-                                    <option value="기타">기타</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="resMemo">상담 내용 (선택)</label>
-                                <textarea id="resMemo" placeholder="상담받고 싶은 내용을 간단히 적어주세요" rows="3"></textarea>
-                            </div>
-                            
-                            <button type="submit" class="reservation-submit-btn" id="submitReservation">
-                                예약 신청하기
-                            </button>
-                        </form>
-                        
-                        <p class="reservation-footer">
-                            ※ 개인정보는 상담 목적으로만 사용됩니다
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 사이드 메뉴 -->
-            <div class="side-menu hidden" id="sideMenu">
-                <div class="side-menu-overlay" id="sideMenuOverlay"></div>
-                <div class="side-menu-content">
-                    <div class="side-menu-header">
-                        <div class="side-profile">
-                            <div class="side-avatar">👩</div>
-                            <div>
-                                <p class="side-name" id="sideName">게스트님</p>
-                                <p class="side-email">맘곁과 함께해요 💕</p>
-                            </div>
-                        </div>
-                        <button class="close-menu-btn" type="button" id="closeMenuBtn">✕</button>
-                    </div>
-                    
-                    <div class="side-menu-list">
-                        <button class="side-menu-item" type="button" id="sideHome">
-                            <span class="side-icon">🏠</span>
-                            <span>홈</span>
-                        </button>
-                        
-                        <div class="side-divider"></div>
-                        
-                        <a href="https://www.momgyeot.com" target="_blank" class="side-menu-item">
-                            <span class="side-icon">🌸</span>
-                            <span>맘곁 태교</span>
-                        </a>
-                        <a href="https://mktaegyo.replit.app" target="_blank" class="side-menu-item">
-                            <span class="side-icon">📖</span>
-                            <span>새로쓰는 태교신기</span>
-                        </a>
-                        <a href="https://mothersbaby-ai.vercel.app/" target="_blank" class="side-menu-item">
-                            <span class="side-icon">👶</span>
-                            <span>맘곁 육아 컴패니언</span>
-                        </a>
-                        <a href="https://breastfeedingrealguide-10.replit.app" target="_blank" class="side-menu-item">
-                            <span class="side-icon">🤱</span>
-                            <span>모유수유 리얼 가이드</span>
-                        </a>
-                        <a href="https://www.mothersbaby.co.kr" target="_blank" class="side-menu-item">
-                            <span class="side-icon">🛒</span>
-                            <span>쇼핑몰</span>
-                        </a>
-                        
-                        <div class="side-divider"></div>
-                        
-                        <button class="side-menu-item" type="button" id="sideCalendar">
-                            <span class="side-icon">📅</span>
-                            <span>캘린더</span>
-                        </button>
-                        <button class="side-menu-item" type="button" id="sideHistory">
-                            <span class="side-icon">💬</span>
-                            <span>대화 기록</span>
-                        </button>
-                        <button class="side-menu-item" type="button" id="sideSaved">
-                            <span class="side-icon">⭐</span>
-                            <span>저장한 답변</span>
-                        </button>
-                        
-                        <div class="side-divider"></div>
-                        
-                        <button class="side-menu-item" type="button" id="sideSettings">
-                            <span class="side-icon">⚙️</span>
-                            <span>설정</span>
-                        </button>
-                        <button class="side-menu-item" type="button" id="sideLogout">
-                            <span class="side-icon">🚪</span>
-                            <span>로그아웃</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="home-indicator"></div>
+    <!-- 로그인 화면 -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <div class="login-logo">🔐</div>
+            <h1 class="login-title">맘곁 관리자</h1>
+            <p class="login-subtitle">관리자 비밀번호를 입력하세요</p>
+            <input type="password" class="login-input" id="passwordInput" placeholder="••••••" maxlength="10">
+            <button class="login-btn" id="loginBtn">로그인</button>
+            <p class="login-error" id="loginError">비밀번호가 올바르지 않습니다</p>
         </div>
     </div>
     
-    <script>
-        // 화면 전환 함수들
-        function hideAll() {
-            document.getElementById('introScreen').classList.add('hidden');
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('homeScreen').classList.add('hidden');
-            document.getElementById('onboardingScreen').classList.add('hidden');
-            document.getElementById('chatScreen').classList.add('hidden');
-            document.getElementById('calendarScreen').classList.add('hidden');
-            document.getElementById('myScreen').classList.add('hidden');
-            document.getElementById('notificationScreen').classList.add('hidden');
-            closeSideMenu();
-        }
+    <!-- 관리자 화면 -->
+    <div class="admin-screen" id="adminScreen">
+        <div class="admin-header">
+            <h1 class="admin-title">🌿 맘곁 관리자</h1>
+            <button class="logout-btn" id="logoutBtn">로그아웃</button>
+        </div>
         
-        // 온보딩 데이터
-        var onboardingData = {
-            saessak: {
-                name: '예비맘곁',
-                icon: '🌱',
-                questions: [
-                    {
-                        question: '임신 준비를 시작한 지\n얼마나 되셨나요?',
-                        subtitle: '맞춤 정보를 드리기 위해 여쭤봐요',
-                        options: [
-                            { icon: '🌟', title: '이제 막 시작했어요', sub: '1개월 이내' },
-                            { icon: '📅', title: '몇 개월 됐어요', sub: '1~6개월' },
-                            { icon: '⏰', title: '꽤 시간이 지났어요', sub: '6개월 이상' },
-                            { icon: '🤫', title: '말하기 어려워요', sub: '' }
-                        ]
-                    },
-                    {
-                        question: '지금 가장 궁금하거나\n힘든 부분이 있나요?',
-                        subtitle: '',
-                        options: [
-                            { icon: '📚', title: '임신 준비 정보가 궁금해요', sub: '건강, 영양, 검사 등' },
-                            { icon: '💝', title: '마음이 힘들어요', sub: '정서적 지지가 필요해요' },
-                            { icon: '💑', title: '부부 관계가 걱정돼요', sub: '대화, 소통' },
-                            { icon: '🏥', title: '병원/시술 정보가 궁금해요', sub: '' }
-                        ]
-                    },
-                    {
-                        question: '맘곁이 어떻게\n불러드릴까요?',
-                        subtitle: '편하게 불러드릴 이름을 알려주세요',
-                        type: 'input',
-                        placeholder: '예: 하늘, 보미, 엄마'
-                    }
-                ]
-            },
-            yebi: {
-                name: '임신맘곁',
-                icon: '🤰',
-                questions: [
-                    {
-                        question: '지금 임신 몇 주차이세요?',
-                        subtitle: '맞춤 정보를 드리기 위해 여쭤봐요',
-                        options: [
-                            { icon: '🌱', title: '초기예요', sub: '1~12주' },
-                            { icon: '🌿', title: '중기예요', sub: '13~27주' },
-                            { icon: '🌳', title: '후기예요', sub: '28주 이상' },
-                            { icon: '❓', title: '잘 모르겠어요', sub: '' }
-                        ]
-                    },
-                    {
-                        question: '첫 아이인가요?',
-                        subtitle: '',
-                        options: [
-                            { icon: '👶', title: '네, 첫 아이예요', sub: '' },
-                            { icon: '👨‍👩‍👧', title: '아니요, 둘째 이상이에요', sub: '' }
-                        ]
-                    },
-                    {
-                        question: '맘곁이 어떻게\n불러드릴까요?',
-                        subtitle: '태명이나 닉네임을 알려주세요',
-                        type: 'input',
-                        placeholder: '예: 콩이맘, 하늘, 보미'
-                    }
-                ]
-            },
-            agi: {
-                name: '초보맘곁',
-                icon: '👶',
-                questions: [
-                    {
-                        question: '아기가 태어난 지\n얼마나 됐나요?',
-                        subtitle: '맞춤 정보를 드리기 위해 여쭤봐요',
-                        options: [
-                            { icon: '🍼', title: '신생아예요', sub: '0~3개월' },
-                            { icon: '👶', title: '아직 어려요', sub: '4~6개월' },
-                            { icon: '🧒', title: '조금 컸어요', sub: '7~12개월' },
-                            { icon: '🚶', title: '돌이 지났어요', sub: '12개월 이상' }
-                        ]
-                    },
-                    {
-                        question: '지금 가장 힘든 부분이\n있으신가요?',
-                        subtitle: '',
-                        options: [
-                            { icon: '🤱', title: '수유가 힘들어요', sub: '모유수유, 분유, 젖병' },
-                            { icon: '😴', title: '수면이 부족해요', sub: '밤수유, 잠투정' },
-                            { icon: '📈', title: '발달이 걱정돼요', sub: '성장, 발달 체크' },
-                            { icon: '💪', title: '체력이 힘들어요', sub: '산후조리, 회복' }
-                        ]
-                    },
-                    {
-                        question: '맘곁이 어떻게\n불러드릴까요?',
-                        subtitle: '편하게 불러드릴 이름을 알려주세요',
-                        type: 'input',
-                        placeholder: '예: 콩이맘, 하늘맘'
-                    }
-                ]
-            }
-        };
+        <div class="tab-menu">
+            <button class="tab-btn active" data-tab="reservations">📅 상담예약</button>
+            <button class="tab-btn" data-tab="logs">📋 알림로그</button>
+        </div>
         
-        var currentOnboarding = {
-            type: null,
-            step: 0,
-            answers: []
-        };
-        
-        function startOnboarding(type) {
-            currentOnboarding.type = type;
-            currentOnboarding.step = 0;
-            currentOnboarding.answers = [];
-            
-            hideAll();
-            document.getElementById('onboardingScreen').classList.remove('hidden');
-            
-            var data = onboardingData[type];
-            document.getElementById('onboardingTotal').textContent = data.questions.length;
-            
-            renderOnboardingStep();
-        }
-        
-        function renderOnboardingStep() {
-            var data = onboardingData[currentOnboarding.type];
-            var question = data.questions[currentOnboarding.step];
-            var container = document.getElementById('onboardingContent');
-            
-            document.getElementById('onboardingStep').textContent = currentOnboarding.step + 1;
-            
-            var html = '<div class="onboarding-question">';
-            html += '<h2>' + question.question.replace(/\n/g, '<br>') + '</h2>';
-            if (question.subtitle) {
-                html += '<p>' + question.subtitle + '</p>';
-            }
-            html += '</div>';
-            
-            if (question.type === 'input') {
-                html += '<input type="text" class="onboarding-input" placeholder="' + question.placeholder + '" id="onboardingInput">';
-                html += '<button class="onboarding-next-btn" id="onboardingNextBtn" disabled>완료</button>';
-            } else {
-                html += '<div class="onboarding-options">';
-                question.options.forEach(function(opt, idx) {
-                    html += '<button class="onboarding-option" type="button" data-idx="' + idx + '">';
-                    html += '<span class="option-icon">' + opt.icon + '</span>';
-                    html += '<div class="option-text">';
-                    html += '<strong>' + opt.title + '</strong>';
-                    if (opt.sub) {
-                        html += '<span>' + opt.sub + '</span>';
-                    }
-                    html += '</div>';
-                    html += '</button>';
-                });
-                html += '</div>';
-            }
-            
-            container.innerHTML = html;
-            
-            // 이벤트 바인딩
-            if (question.type === 'input') {
-                var input = document.getElementById('onboardingInput');
-                var btn = document.getElementById('onboardingNextBtn');
-                
-                input.addEventListener('input', function() {
-                    btn.disabled = input.value.trim() === '';
-                });
-                
-                btn.addEventListener('click', function() {
-                    currentOnboarding.answers.push(input.value.trim());
-                    finishOnboarding();
-                });
-                
-                input.focus();
-            } else {
-                var options = container.querySelectorAll('.onboarding-option');
-                options.forEach(function(opt) {
-                    opt.addEventListener('click', function() {
-                        var idx = parseInt(opt.getAttribute('data-idx'));
-                        currentOnboarding.answers.push(question.options[idx].title);
-                        
-                        opt.classList.add('selected');
-                        
-                        setTimeout(function() {
-                            if (currentOnboarding.step < onboardingData[currentOnboarding.type].questions.length - 1) {
-                                currentOnboarding.step++;
-                                renderOnboardingStep();
-                            } else {
-                                finishOnboarding();
-                            }
-                        }, 300);
-                    });
-                });
-            }
-        }
-        
-        function finishOnboarding() {
-            var data = onboardingData[currentOnboarding.type];
-            var nickname = currentOnboarding.answers[currentOnboarding.answers.length - 1] || '맘';
-            
-            // 채팅 화면으로 이동
-            showChatWithContext(currentOnboarding.type, data.icon, data.name, nickname, currentOnboarding.answers);
-        }
-        
-        function showChatWithContext(type, icon, name, nickname, answers) {
-            hideAll();
-            document.getElementById('chatMateIcon').textContent = icon;
-            document.getElementById('chatMateName').textContent = name;
-            document.getElementById('chatScreen').classList.remove('hidden');
-            
-            // 맞춤 환영 메시지 생성
-            var welcomeMsg = '';
-            if (type === 'saessak') {
-                welcomeMsg = '<p>안녕하세요, ' + nickname + '님! 🌱</p>';
-                welcomeMsg += '<p>임신 준비 중이시군요. 함께 걸어갈게요.</p>';
-                welcomeMsg += '<p>궁금하거나 힘든 게 있으면 언제든 말씀해 주세요 💚</p>';
-            } else if (type === 'yebi') {
-                welcomeMsg = '<p>안녕하세요, ' + nickname + '님! 🤰</p>';
-                welcomeMsg += '<p>소중한 생명과 함께하는 시간이네요.</p>';
-                welcomeMsg += '<p>임신 기간 동안 옆에서 함께할게요 💕</p>';
-            } else if (type === 'agi') {
-                welcomeMsg = '<p>안녕하세요, ' + nickname + '님! 👶</p>';
-                welcomeMsg += '<p>육아, 정말 대단하세요!</p>';
-                welcomeMsg += '<p>힘들 땐 언제든 기대세요 💪</p>';
-            }
-            
-            var messagesDiv = document.querySelector('.chat-messages');
-            messagesDiv.innerHTML = '<div class="message bot"><div class="message-avatar">' + icon + '</div><div class="message-content">' + welcomeMsg + '</div></div>';
-        }
-        
-        function selectMate(type) {
-            if (type === 'expert') {
-                showExpert();
-                return;
-            }
-            startOnboarding(type);
-        }
-        
-        function showExpert() {
-            hideAll();
-            document.getElementById('expertScreen').classList.remove('hidden');
-        }
-        
-        function showIntro() {
-            hideAll();
-            document.getElementById('introScreen').classList.remove('hidden');
-        }
-        
-        function showLogin() {
-            hideAll();
-            document.getElementById('loginScreen').classList.remove('hidden');
-        }
-        
-        function showHome() {
-            hideAll();
-            document.getElementById('homeScreen').classList.remove('hidden');
-        }
-        
-        function showChat(type, icon, name) {
-            hideAll();
-            document.getElementById('chatMateIcon').textContent = icon;
-            document.getElementById('chatMateName').textContent = name;
-            document.getElementById('chatScreen').classList.remove('hidden');
-            
-            // 환영 메시지 업데이트
-            var welcomeMsg = document.querySelector('.chat-messages');
-            welcomeMsg.innerHTML = `
-                <div class="message bot">
-                    <div class="message-avatar">${icon}</div>
-                    <div class="message-content">
-                        <p>안녕하세요! ${name}이에요 😊</p>
-                        <p>무엇이든 편하게 물어보세요.</p>
-                    </div>
+        <!-- 상담예약 탭 -->
+        <div class="tab-content" id="reservationsTab">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number" id="statTotal">0</div>
+                    <div class="stat-label">전체</div>
                 </div>
-            `;
-        }
-        
-        function showCalendar() {
-            hideAll();
-            document.getElementById('calendarScreen').classList.remove('hidden');
-            generateCalendar();
-        }
-        
-        function showMyPage() {
-            hideAll();
-            document.getElementById('myScreen').classList.remove('hidden');
-        }
-        
-        function showNotification() {
-            hideAll();
-            document.getElementById('notificationScreen').classList.remove('hidden');
-        }
-        
-        // 사이드 메뉴
-        function openSideMenu() {
-            document.getElementById('sideMenu').classList.remove('hidden');
-        }
-        
-        function closeSideMenu() {
-            document.getElementById('sideMenu').classList.add('hidden');
-        }
-        
-        function guestLogin() {
-            document.getElementById('userName').textContent = '게스트님';
-            document.getElementById('profileName').textContent = '게스트님';
-            document.getElementById('sideName').textContent = '게스트님';
-            showHome();
-        }
-        
-        function loginWith(provider) {
-            alert(provider + ' 로그인은 준비 중이에요!');
-        }
-        
-        // 캘린더 생성
-        function generateCalendar() {
-            var container = document.getElementById('calendarDays');
-            var today = new Date();
-            var year = today.getFullYear();
-            var month = today.getMonth();
+                <div class="stat-card">
+                    <div class="stat-number" id="statPending">0</div>
+                    <div class="stat-label">대기중</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statCompleted">0</div>
+                    <div class="stat-label">완료</div>
+                </div>
+            </div>
             
-            var firstDay = new Date(year, month, 1).getDay();
-            var lastDate = new Date(year, month + 1, 0).getDate();
-            
-            var html = '';
-            
-            // 빈 칸
-            for (var i = 0; i < firstDay; i++) {
-                html += '<div class="calendar-day"></div>';
-            }
-            
-            // 날짜
-            for (var d = 1; d <= lastDate; d++) {
-                var isToday = d === today.getDate() ? 'today' : '';
-                var hasEvent = (d === 30 || d === 15) ? 'has-event' : '';
-                html += '<div class="calendar-day ' + isToday + ' ' + hasEvent + '">' + d + '</div>';
-            }
-            
-            container.innerHTML = html;
-        }
+            <div class="reservation-list">
+                <div class="list-header">
+                    <h2 class="list-title">예약 목록</h2>
+                    <button class="refresh-btn" id="refreshBtn">🔄 새로고침</button>
+                </div>
+                <div id="reservationList">
+                    <!-- 예약 카드들 -->
+                </div>
+            </div>
+        </div>
         
-        // ==================== RAG API 설정 ====================
-        // 맘곁 전용 API (Vercel 배포 후 활성화)
-        const RAG_API_URL = '/api/search';
-        
-        // Supabase 직접 연결 (API 배포 전 테스트용)
+        <!-- 알림로그 탭 -->
+        <div class="tab-content hidden" id="logsTab">
+            <div class="reservation-list">
+                <div class="list-header">
+                    <h2 class="list-title">알림 발송 로그</h2>
+                    <button class="refresh-btn" id="refreshLogsBtn">🔄 새로고침</button>
+                </div>
+                <div id="logList">
+                    <!-- 로그 아이템들 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase 설정
         const SUPABASE_URL = 'https://oeyhdglnqalgowvrxbsm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9leWhkZ2xucWFsZ293dnJ4YnNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk0MTkyNzgsImV4cCI6MjA4NDk5NTI3OH0.RRuEiT7EgLvvAUMB88lqNcN7bbUMupxSQd3EbmDIwt4';
         
-        // API 모드 (true: Vercel API 사용, false: Supabase 직접 연결)
-        const USE_API = true;
+        // 관리자 비밀번호 (간단한 보안)
+        const ADMIN_PASSWORD = '1234';
         
-        // 메시지 전송
-        async function sendMessage() {
-            var input = document.getElementById('chatInput');
-            var text = input.value.trim();
-            if (!text) return;
-            
-            var messages = document.getElementById('chatMessages');
-            var icon = document.getElementById('chatMateIcon').textContent;
-            
-            // 사용자 메시지 추가
-            messages.innerHTML += `
-                <div class="message user">
-                    <div class="message-content">
-                        <p>${escapeHtml(text)}</p>
-                    </div>
-                </div>
-            `;
-            
-            input.value = '';
-            messages.scrollTop = messages.scrollHeight;
-            
-            // 로딩 표시
-            var loadingId = 'loading-' + Date.now();
-            messages.innerHTML += `
-                <div class="message bot" id="${loadingId}">
-                    <div class="message-avatar">${icon}</div>
-                    <div class="message-content">
-                        <p class="typing-indicator">답변을 준비하고 있어요<span class="dots">...</span></p>
-                    </div>
-                </div>
-            `;
-            messages.scrollTop = messages.scrollHeight;
-            
-            try {
-                // RAG API 호출
-                var response = await fetchRAGResponse(text);
-                
-                // 로딩 제거
-                var loadingEl = document.getElementById(loadingId);
-                if (loadingEl) loadingEl.remove();
-                
-                // AI 응답 표시
-                if (response && response.content) {
-                    messages.innerHTML += formatBotMessage(icon, response);
-                } else {
-                    messages.innerHTML += `
-                        <div class="message bot">
-                            <div class="message-avatar">${icon}</div>
-                            <div class="message-content">
-                                <p>죄송해요, 관련 정보를 찾지 못했어요. 😢</p>
-                                <p>다른 방식으로 질문해 주시거나, 전문가 상담을 이용해 보세요!</p>
-                            </div>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                console.error('RAG API Error:', error);
-                var loadingEl = document.getElementById(loadingId);
-                if (loadingEl) loadingEl.remove();
-                
-                messages.innerHTML += `
-                    <div class="message bot">
-                        <div class="message-avatar">${icon}</div>
-                        <div class="message-content">
-                            <p>네트워크 오류가 발생했어요. 잠시 후 다시 시도해 주세요. 🙏</p>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            messages.scrollTop = messages.scrollHeight;
-        }
+        // 로그인 처리
+        document.getElementById('loginBtn').addEventListener('click', login);
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
         
-        // RAG API 호출 함수
-        async function fetchRAGResponse(query) {
-            try {
-                if (USE_API) {
-                    // Vercel API 사용
-                    var response = await fetch('/api/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            query: query,
-                            mateType: currentOnboarding.type || 'default',
-                            userInfo: {
-                                nickname: currentOnboarding.answers?.[currentOnboarding.answers.length - 1],
-                                answers: currentOnboarding.answers
-                            }
-                        })
-                    });
-                    
-                    if (!response.ok) throw new Error('API response not ok');
-                    
-                    var data = await response.json();
-                    return {
-                        title: '',
-                        content: data.answer,
-                        related: data.related || []
-                    };
-                } else {
-                    // Supabase 직접 연결
-                    return await searchSupabaseDirect(query);
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                return fallbackSearch(query);
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminScreen').style.display = 'block';
+                loadReservations();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
             }
         }
         
-        // Supabase 직접 검색 (API 배포 전 테스트용)
-        async function searchSupabaseDirect(query) {
-            const searchTerm = query.trim().toLowerCase();
-            
-            // 키워드 매핑
-            const keywordMap = {
-                '젖몸살': ['젖몸살', '울혈', '유방울혈', '통증'],
-                '유선염': ['유선염', '열', '감염', '항생제'],
-                '젖양': ['젖양', '모유량', '부족', '늘리기'],
-                '밤수유': ['밤수유', '야간수유', '수면'],
-                '이유식': ['이유식', '고형식', '시작'],
-                '복직': ['복직', '직장', '유축', '워킹맘'],
-                '입덧': ['입덧', '오심', '구토'],
-                '태교': ['태교', '태담'],
-                '산후우울': ['산후우울', '우울증'],
-                '황달': ['황달', '신생아'],
-                '유두': ['유두', '균열', '상처', '통증'],
-                '자세': ['자세', '래치', '물림']
-            };
-            
-            let expandedKeywords = [searchTerm];
-            for (const [key, values] of Object.entries(keywordMap)) {
-                if (searchTerm.includes(key)) {
-                    expandedKeywords = [...expandedKeywords, ...values];
-                }
-            }
-            
+        // 로그아웃
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            document.getElementById('adminScreen').style.display = 'none';
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('loginError').style.display = 'none';
+        });
+        
+        // 탭 전환
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const tab = this.dataset.tab;
+                document.getElementById('reservationsTab').classList.toggle('hidden', tab !== 'reservations');
+                document.getElementById('logsTab').classList.toggle('hidden', tab !== 'logs');
+                
+                if (tab === 'logs') loadLogs();
+            });
+        });
+        
+        // 새로고침
+        document.getElementById('refreshBtn').addEventListener('click', loadReservations);
+        document.getElementById('refreshLogsBtn').addEventListener('click', loadLogs);
+        
+        // 예약 목록 불러오기
+        async function loadReservations() {
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/knowledge_units?select=*`, {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/consultation_reservations?select=*&order=created_at.desc`, {
                     headers: {
-                        'Content-Type': 'application/json',
                         'apikey': SUPABASE_ANON_KEY,
                         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                     }
                 });
                 
-                if (!response.ok) throw new Error('Supabase error');
-                
-                let results = await response.json();
-                
-                // 점수 계산
-                results = results.map(item => {
-                    let score = 0;
-                    const title = (item.title || '').toLowerCase();
-                    const content = (item.content || '').toLowerCase();
-                    const keywords = Array.isArray(item.keywords) ? item.keywords.join(' ').toLowerCase() : '';
-                    
-                    for (const kw of expandedKeywords) {
-                        if (title.includes(kw)) score += 10;
-                        if (content.includes(kw)) score += 5;
-                        if (keywords.includes(kw)) score += 8;
-                    }
-                    
-                    if (item.urgency === '즉시대응필요') score += 3;
-                    
-                    return { ...item, score };
-                });
-                
-                // 필터링 및 정렬
-                results = results
-                    .filter(item => item.score > 0 && item.content && item.content.length >= 50)
-                    .sort((a, b) => b.score - a.score);
-                
-                if (results.length > 0) {
-                    const top = results[0];
-                    return {
-                        title: top.title || '',
-                        content: top.content || '',
-                        related: results.slice(1, 4).map(r => r.title)
-                    };
-                }
-                
-                return null;
+                const data = await response.json();
+                renderReservations(data);
+                updateStats(data);
             } catch (error) {
-                console.error('Supabase direct search error:', error);
-                return null;
+                console.error('예약 로드 오류:', error);
+                document.getElementById('reservationList').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>데이터를 불러올 수 없습니다</p></div>';
             }
         }
         
-        // 폴백 검색 (RAG 실패 시 로컬 키워드 매칭)
-        function fallbackSearch(query) {
-            var keywords = {
-                '젖몸살': { title: '젖몸살 대처법', content: '젖몸살은 수유 초기에 흔히 겪는 증상이에요. 자주 수유하고, 따뜻한 찜질 후 수유하면 도움이 됩니다. 심한 경우 전문가 상담을 권해요.' },
-                '모유': { title: '모유수유 기본 가이드', content: '모유수유는 아기와 엄마 모두에게 좋아요. 올바른 젖물림과 편안한 자세가 중요합니다.' },
-                '밤수유': { title: '밤수유 줄이기', content: '아기가 4-6개월이 되면 밤수유를 점차 줄일 수 있어요. 낮 동안 충분히 먹이고, 취침 루틴을 만들어 보세요.' },
-                '이유식': { title: '이유식 시작하기', content: '이유식은 보통 만 6개월 전후에 시작해요. 쌀 미음부터 시작해서 점차 다양한 식재료를 시도해 보세요.' },
-                '복직': { title: '복직 준비하기', content: '복직 2-4주 전부터 유축기 사용을 연습하고, 모유 저장을 시작하세요. 직장 내 수유실 위치도 미리 확인해 두세요.' }
-            };
+        // 예약 목록 렌더링
+        function renderReservations(reservations) {
+            const container = document.getElementById('reservationList');
             
-            for (var key in keywords) {
-                if (query.includes(key)) {
-                    return keywords[key];
-                }
+            if (!reservations || reservations.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>예약이 없습니다</p></div>';
+                return;
             }
             
-            return null;
-        }
-        
-        // 봇 메시지 포맷팅
-        function formatBotMessage(icon, response) {
-            var content = response.content || '';
-            var title = response.title || '';
-            var relatedTopics = response.related || [];
-            
-            var html = `
-                <div class="message bot">
-                    <div class="message-avatar">${icon}</div>
-                    <div class="message-content">
-            `;
-            
-            if (title) {
-                html += `<p class="answer-title"><strong>${escapeHtml(title)}</strong></p>`;
-            }
-            
-            // 내용을 문단으로 분리
-            var paragraphs = content.split('\n').filter(function(p) { return p.trim(); });
-            paragraphs.forEach(function(p) {
-                html += `<p>${escapeHtml(p)}</p>`;
-            });
-            
-            // 관련 주제
-            if (relatedTopics.length > 0) {
-                html += `<div class="related-topics">`;
-                html += `<p class="related-label">관련 정보:</p>`;
-                relatedTopics.forEach(function(topic) {
-                    html += `<button class="related-btn" onclick="searchRelated('${escapeHtml(topic)}')">${escapeHtml(topic)}</button>`;
-                });
-                html += `</div>`;
-            }
-            
-            html += `
+            container.innerHTML = reservations.map(r => {
+                const statusClass = r.status === 'completed' ? 'status-completed' : 
+                                   r.status === 'cancelled' ? 'status-cancelled' : 'status-pending';
+                const statusText = r.status === 'completed' ? '완료' : 
+                                  r.status === 'cancelled' ? '취소' : '대기중';
+                const date = new Date(r.created_at).toLocaleString('ko-KR');
+                
+                return `
+                    <div class="reservation-card" data-id="${r.id}">
+                        <div class="reservation-header">
+                            <div class="reservation-info">
+                                <h3>${r.nickname}</h3>
+                                <p>${date}</p>
+                            </div>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="reservation-details">
+                            <div class="detail-item">
+                                <span class="detail-label">📞 연락처: </span>
+                                <span class="detail-value">${r.phone}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">👶 아기: </span>
+                                <span class="detail-value">${r.baby_name || '-'}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">📋 분야: </span>
+                                <span class="detail-value">${r.category}</span>
+                            </div>
+                        </div>
+                        ${r.memo ? `<div class="reservation-memo">💬 ${r.memo}</div>` : ''}
+                        <div class="reservation-actions">
+                            <button class="action-btn btn-call" onclick="callUser('${r.phone}')">📞 전화</button>
+                            ${r.status === 'pending' ? `
+                                <button class="action-btn btn-complete" onclick="updateStatus(${r.id}, 'completed')">✅ 완료</button>
+                                <button class="action-btn btn-cancel" onclick="updateStatus(${r.id}, 'cancelled')">❌ 취소</button>
+                            ` : ''}
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            }).join('');
+        }
+        
+        // 통계 업데이트
+        function updateStats(reservations) {
+            const total = reservations.length;
+            const pending = reservations.filter(r => r.status === 'pending').length;
+            const completed = reservations.filter(r => r.status === 'completed').length;
             
-            return html;
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statCompleted').textContent = completed;
         }
         
-        // 관련 주제 검색
-        function searchRelated(topic) {
-            document.getElementById('chatInput').value = topic;
-            sendMessage();
+        // 전화 걸기
+        function callUser(phone) {
+            window.location.href = `tel:${phone.replace(/-/g, '')}`;
         }
         
-        // HTML 이스케이프
-        function escapeHtml(text) {
-            var div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        // ==================== 음성 인식 ====================
-        var recognition = null;
-        var isRecording = false;
-        
-        function initSpeechRecognition() {
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                recognition = new SpeechRecognition();
-                recognition.lang = 'ko-KR';
-                recognition.continuous = false;
-                recognition.interimResults = true;
+        // 상태 업데이트
+        async function updateStatus(id, status) {
+            const confirmMsg = status === 'completed' ? '상담 완료 처리하시겠습니까?' : '예약을 취소하시겠습니까?';
+            if (!confirm(confirmMsg)) return;
+            
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/consultation_reservations?id=eq.${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({ status: status })
+                });
                 
-                recognition.onstart = function() {
-                    isRecording = true;
-                    document.getElementById('micBtn').classList.add('recording');
-                    document.getElementById('recordingIndicator').classList.add('active');
-                    document.getElementById('chatInput').placeholder = '말씀하세요...';
-                };
-                
-                recognition.onresult = function(event) {
-                    var finalTranscript = '';
-                    var interimTranscript = '';
-                    
-                    for (var i = event.resultIndex; i < event.results.length; i++) {
-                        var transcript = event.results[i][0].transcript;
-                        if (event.results[i].isFinal) {
-                            finalTranscript += transcript;
-                        } else {
-                            interimTranscript += transcript;
-                        }
+                loadReservations();
+            } catch (error) {
+                console.error('상태 업데이트 오류:', error);
+                alert('처리 중 오류가 발생했습니다.');
+            }
+        }
+        
+        // 알림 로그 불러오기
+        async function loadLogs() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/notification_logs?select=*&order=created_at.desc&limit=50`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                     }
-                    
-                    // 입력창에 실시간 표시
-                    document.getElementById('chatInput').value = finalTranscript || interimTranscript;
-                };
+                });
                 
-                recognition.onend = function() {
-                    isRecording = false;
-                    document.getElementById('micBtn').classList.remove('recording');
-                    document.getElementById('recordingIndicator').classList.remove('active');
-                    document.getElementById('chatInput').placeholder = '메시지를 입력하세요...';
-                    document.getElementById('chatInput').focus();
-                    
-                    // 텍스트가 있으면 자동 전송 (선택사항)
-                    // var text = document.getElementById('chatInput').value.trim();
-                    // if (text) sendMessage();
-                };
-                
-                recognition.onerror = function(event) {
-                    console.error('Speech recognition error:', event.error);
-                    isRecording = false;
-                    document.getElementById('micBtn').classList.remove('recording');
-                    document.getElementById('recordingIndicator').classList.remove('active');
-                    document.getElementById('chatInput').placeholder = '메시지를 입력하세요...';
-                    
-                    var message = '다시 시도해주세요';
-                    if (event.error === 'not-allowed') {
-                        message = '마이크 권한을 허용해주세요';
-                    } else if (event.error === 'no-speech') {
-                        message = '음성이 감지되지 않았어요';
-                    } else if (event.error === 'audio-capture') {
-                        message = '마이크를 확인해주세요';
-                    }
-                    alert(message);
-                };
-                
-                return true;
-            }
-            return false;
-        }
-        
-        function toggleRecording() {
-            if (!recognition) {
-                if (!initSpeechRecognition()) {
-                    alert('이 브라우저에서는 음성 입력을 지원하지 않아요');
-                    return;
-                }
-            }
-            
-            if (isRecording) {
-                recognition.stop();
-            } else {
-                try {
-                    recognition.start();
-                } catch (e) {
-                    recognition.stop();
-                    setTimeout(function() {
-                        recognition.start();
-                    }, 100);
-                }
+                const data = await response.json();
+                renderLogs(data);
+            } catch (error) {
+                console.error('로그 로드 오류:', error);
             }
         }
         
-        // 이벤트 리스너 등록 (DOM 로드 후)
-        document.addEventListener('DOMContentLoaded', function() {
-            // 인트로 → 로그인
-            document.querySelector('.intro-btn').addEventListener('click', showLogin);
+        // 로그 렌더링
+        function renderLogs(logs) {
+            const container = document.getElementById('logList');
             
-            // 로그인 화면 뒤로가기
-            document.querySelector('.login-screen .back-btn').addEventListener('click', showIntro);
-            
-            // 게스트 로그인
-            document.querySelector('.login-btn-guest').addEventListener('click', guestLogin);
-            
-            // 소셜 로그인
-            document.querySelector('.login-btn-kakao').addEventListener('click', function() { loginWith('카카오'); });
-            document.querySelector('.login-btn-google').addEventListener('click', function() { loginWith('Google'); });
-            document.querySelector('.login-btn-apple').addEventListener('click', function() { loginWith('Apple'); });
-            
-            // 맘곁 카드들 - 온보딩으로 연결
-            document.getElementById('cardSaessak').addEventListener('click', function() {
-                selectMate('saessak');
-            });
-            document.getElementById('cardYebi').addEventListener('click', function() {
-                selectMate('yebi');
-            });
-            document.getElementById('cardAgi').addEventListener('click', function() {
-                selectMate('agi');
-            });
-            document.getElementById('cardExpert').addEventListener('click', function() {
-                selectMate('expert');
-            });
-            
-            // 온보딩 뒤로가기
-            document.getElementById('onboardingBackBtn').addEventListener('click', function() {
-                if (currentOnboarding.step > 0) {
-                    currentOnboarding.step--;
-                    currentOnboarding.answers.pop();
-                    renderOnboardingStep();
-                } else {
-                    showHome();
-                }
-            });
-            
-            // 채팅 뒤로가기
-            document.getElementById('chatBackBtn').addEventListener('click', showHome);
-            
-            // 메시지 전송
-            document.getElementById('sendBtn').addEventListener('click', sendMessage);
-            document.getElementById('chatInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') sendMessage();
-            });
-            
-            // 마이크 버튼 (음성 인식)
-            document.getElementById('micBtn').addEventListener('click', toggleRecording);
-            
-            // ===== 홈 화면 네비게이션 =====
-            document.getElementById('navHome').addEventListener('click', showHome);
-            document.getElementById('navCalendar').addEventListener('click', showCalendar);
-            document.getElementById('navChat').addEventListener('click', function() {
-                showChat('default', '🤱', '맘곁');
-            });
-            document.getElementById('navMy').addEventListener('click', showMyPage);
-            
-            // 홈 헤더 아이콘 (햄버거, 알림)
-            document.getElementById('homeMenuBtn').addEventListener('click', openSideMenu);
-            document.getElementById('homeNotiBtn').addEventListener('click', showNotification);
-            
-            // ===== 캘린더 화면 네비게이션 =====
-            document.getElementById('calNavHome').addEventListener('click', showHome);
-            document.getElementById('calNavCalendar').addEventListener('click', showCalendar);
-            document.getElementById('calNavChat').addEventListener('click', function() {
-                showChat('default', '🤱', '맘곁');
-            });
-            document.getElementById('calNavMy').addEventListener('click', showMyPage);
-            document.getElementById('calMenuBtn').addEventListener('click', openSideMenu);
-            document.getElementById('calNotiBtn').addEventListener('click', showNotification);
-            
-            // ===== 마이페이지 네비게이션 =====
-            document.getElementById('myNavHome').addEventListener('click', showHome);
-            document.getElementById('myNavCalendar').addEventListener('click', showCalendar);
-            document.getElementById('myNavChat').addEventListener('click', function() {
-                showChat('default', '🤱', '맘곁');
-            });
-            document.getElementById('myNavMy').addEventListener('click', showMyPage);
-            document.getElementById('myMenuBtn').addEventListener('click', openSideMenu);
-            document.getElementById('myNotiBtn').addEventListener('click', showNotification);
-            
-            // ===== 알림 화면 뒤로가기 =====
-            document.getElementById('notiBackBtn').addEventListener('click', showHome);
-            
-            // ===== 알림 아이템 클릭 =====
-            document.getElementById('notiChat').addEventListener('click', function() {
-                showChat('default', '🤱', '맘곁');
-            });
-            document.getElementById('notiCalendar').addEventListener('click', showCalendar);
-            document.getElementById('notiWelcome').addEventListener('click', showHome);
-            
-            // ===== 사이드 메뉴 =====
-            document.getElementById('closeMenuBtn').addEventListener('click', closeSideMenu);
-            document.getElementById('sideMenuOverlay').addEventListener('click', closeSideMenu);
-            
-            document.getElementById('sideHome').addEventListener('click', showHome);
-            document.getElementById('sideCalendar').addEventListener('click', showCalendar);
-            
-            // 대화 기록
-            document.getElementById('sideHistory').addEventListener('click', function() {
-                closeSideMenu();
-                alert('대화 기록 기능은 준비 중이에요!');
-            });
-            
-            // 저장한 답변
-            document.getElementById('sideSaved').addEventListener('click', function() {
-                closeSideMenu();
-                alert('저장한 답변 기능은 준비 중이에요!');
-            });
-            
-            // 설정
-            document.getElementById('sideSettings').addEventListener('click', function() {
-                closeSideMenu();
-                alert('설정 화면은 준비 중이에요!');
-            });
-            
-            // 로그아웃
-            document.getElementById('sideLogout').addEventListener('click', function() {
-                closeSideMenu();
-                if (confirm('로그아웃 하시겠어요?')) {
-                    showIntro();
-                }
-            });
-            
-            // 전문가 연결 화면 이벤트
-            document.getElementById('expertBackBtn').addEventListener('click', showHome);
-            document.getElementById('expertNavHome').addEventListener('click', showHome);
-            document.getElementById('expertNavCalendar').addEventListener('click', showCalendar);
-            document.getElementById('expertNavChat').addEventListener('click', function() {
-                // 마지막 사용한 채팅으로 이동 또는 홈
-                showHome();
-            });
-            document.getElementById('expertNavMy').addEventListener('click', showMyPage);
-            
-            // 상담 예약 버튼 - 모달 열기
-            document.getElementById('reservationBtn').addEventListener('click', function() {
-                document.getElementById('reservationModal').classList.remove('hidden');
-            });
-            
-            // 상담 예약 모달 닫기
-            document.getElementById('closeReservationBtn').addEventListener('click', closeReservationModal);
-            document.getElementById('reservationOverlay').addEventListener('click', closeReservationModal);
-            
-            function closeReservationModal() {
-                document.getElementById('reservationModal').classList.add('hidden');
-                document.getElementById('reservationForm').reset();
+            if (!logs || logs.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>알림 로그가 없습니다</p></div>';
+                return;
             }
             
-            // 전화번호 자동 포맷
-            document.getElementById('resPhone').addEventListener('input', function(e) {
-                let value = e.target.value.replace(/[^0-9]/g, '');
-                if (value.length > 3 && value.length <= 7) {
-                    value = value.slice(0, 3) + '-' + value.slice(3);
-                } else if (value.length > 7) {
-                    value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
-                }
-                e.target.value = value;
-            });
-            
-            // 상담 예약 폼 제출
-            document.getElementById('reservationForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const phone = document.getElementById('resPhone').value.trim();
-                const nickname = document.getElementById('resNickname').value.trim();
-                const babyName = document.getElementById('resBabyName').value.trim();
-                const category = document.getElementById('resCategory').value;
-                const memo = document.getElementById('resMemo').value.trim();
-                
-                // 유효성 검사
-                if (!phone || phone.length < 12) {
-                    alert('올바른 연락처를 입력해주세요.');
-                    return;
-                }
-                if (!nickname) {
-                    alert('닉네임을 입력해주세요.');
-                    return;
-                }
-                
-                const submitBtn = document.getElementById('submitReservation');
-                submitBtn.disabled = true;
-                submitBtn.textContent = '예약 중...';
-                
-                try {
-                    // Supabase에 예약 데이터 저장
-                    const reservationData = {
-                        phone: phone,
-                        nickname: nickname,
-                        baby_name: babyName || null,
-                        category: category,
-                        memo: memo || null,
-                        status: 'pending',
-                        created_at: new Date().toISOString()
-                    };
-                    
-                    const response = await fetch(`${SUPABASE_URL}/rest/v1/consultation_reservations`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                            'Prefer': 'return=representation'
-                        },
-                        body: JSON.stringify(reservationData)
-                    });
-                    
-                    if (response.ok) {
-                        // SMS 알림 발송 (전문가에게)
-                        await sendExpertNotification(nickname, phone, category, babyName);
-                        
-                        closeReservationModal();
-                        alert('✅ 상담 예약이 완료되었습니다!\n\n평일 기준 24시간 이내에\n전문 상담사가 연락드릴게요. 💕');
-                    } else {
-                        throw new Error('예약 저장 실패');
-                    }
-                } catch (error) {
-                    console.error('예약 오류:', error);
-                    alert('예약 중 오류가 발생했어요.\n잠시 후 다시 시도해주세요.');
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = '예약 신청하기';
-                }
-            });
-            
-            // 전문가에게 SMS 알림 발송
-            async function sendExpertNotification(nickname, phone, category, babyName) {
-                const expertPhone = '01080202334'; // 테스트용 전화번호
-                const message = `[맘곁 상담예약]\n닉네임: ${nickname}\n연락처: ${phone}\n분야: ${category}${babyName ? '\n아기: ' + babyName : ''}\n\n24시간 내 연락 부탁드립니다.`;
-                
-                try {
-                    // Supabase Edge Function 또는 외부 SMS API 호출
-                    // 여기서는 알림 로그만 저장 (실제 SMS는 서버사이드에서 처리)
-                    await fetch(`${SUPABASE_URL}/rest/v1/notification_logs`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                        },
-                        body: JSON.stringify({
-                            type: 'sms',
-                            recipient: expertPhone,
-                            message: message,
-                            status: 'pending',
-                            created_at: new Date().toISOString()
-                        })
-                    });
-                } catch (error) {
-                    console.error('알림 발송 오류:', error);
-                }
-            }
-        });
+            container.innerHTML = logs.map(log => {
+                const date = new Date(log.created_at).toLocaleString('ko-KR');
+                return `
+                    <div class="log-item">
+                        <div class="log-time">${date} | ${log.type} → ${log.recipient}</div>
+                        <div class="log-message">${log.message}</div>
+                    </div>
+                `;
+            }).join('');
+        }
     </script>
 </body>
 </html>
