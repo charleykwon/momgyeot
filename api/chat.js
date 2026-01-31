@@ -1,6 +1,19 @@
 // Vercel Serverless Function for AI Chat with Claude
 const https = require('https');
 
+// mateType 정규화 함수 (프론트엔드 키 -> API 키)
+function normalizeMateType(type) {
+    const mapping = {
+        'saessak': 'preparing',    // 예비맘곁 (임신준비)
+        'yebi': 'pregnant',        // 임신맘곁 (임신중)
+        'chobo': 'newborn',        // 초보맘곁 (모유수유)
+        'preparing': 'preparing',
+        'pregnant': 'pregnant', 
+        'newborn': 'newborn'
+    };
+    return mapping[type] || 'newborn';
+}
+
 module.exports = async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -15,7 +28,8 @@ module.exports = async function handler(req, res) {
     }
     
     try {
-        const { query, mateType, userInfo } = req.body;
+        const { query, mateType: rawMateType, userInfo } = req.body;
+        const mateType = normalizeMateType(rawMateType);
         
         if (!query) {
             return res.status(400).json({ error: 'query required' });
@@ -38,23 +52,26 @@ module.exports = async function handler(req, res) {
         // 2. 응답 생성
         let answer = '';
         
-        if (ragContext.length > 0) {
-            // Claude AI가 있으면 자연스러운 답변 생성
-            if (ANTHROPIC_API_KEY) {
-                try {
-                    answer = await generateClaudeResponse(query, ragContext, mateType, userInfo, ANTHROPIC_API_KEY);
-                } catch (e) {
-                    console.error('Claude error:', e.message);
-                    // Claude 실패시 RAG 결과 직접 사용
+        // Claude AI가 있으면 자연스러운 답변 생성 (RAG 결과 유무와 관계없이)
+        if (ANTHROPIC_API_KEY) {
+            try {
+                answer = await generateClaudeResponse(query, ragContext, mateType, userInfo, ANTHROPIC_API_KEY);
+            } catch (e) {
+                console.error('Claude error:', e.message);
+                // Claude 실패시 RAG 결과 직접 사용 또는 기본 메시지
+                if (ragContext.length > 0) {
                     const item = ragContext[0];
                     answer = item.title ? `**${item.title}**\n\n${item.content}` : item.content;
+                } else {
+                    answer = '죄송해요, 지금 답변을 드리기 어려운 상황이에요. 😢\n\n잠시 후 다시 시도해주시거나, 전문가 상담을 이용해 보세요!';
                 }
-            } else {
-                // Claude 없으면 RAG 결과 직접 사용
-                const item = ragContext[0];
-                answer = item.title ? `**${item.title}**\n\n${item.content}` : item.content;
             }
+        } else if (ragContext.length > 0) {
+            // Claude 없고 RAG 결과 있으면 직접 사용
+            const item = ragContext[0];
+            answer = item.title ? `**${item.title}**\n\n${item.content}` : item.content;
         } else {
+            // Claude도 없고 RAG도 없으면 기본 메시지
             answer = '죄송해요, 관련 정보를 찾지 못했어요. 😢\n\n다른 방식으로 질문해 주시거나, 전문가 상담을 이용해 보세요!';
         }
         
@@ -100,55 +117,71 @@ function httpsRequest(url, options, postData) {
 }
 
 async function generateClaudeResponse(query, ragContext, mateType, userInfo, apiKey) {
-    // 메이트 타입별 페르소나
+    // 메이트 타입별 페르소나 (역할과 전문 분야 명확화)
     const personas = {
         'preparing': {
             name: '예비맘곁',
             emoji: '🌱',
-            description: '임신을 준비하는 예비 엄마들을 위한 따뜻한 길잡이'
+            description: '임신을 준비하는 예비 엄마들을 위한 따뜻한 길잡이',
+            specialty: '임신 준비, 난임 상담, 배란 체크, 영양제(엽산 등), 기초체온, 병원/시술 정보',
+            focus: '임신 준비 과정의 어려움을 공감하고, 정서적 지지와 실질적인 정보를 제공합니다.'
         },
         'pregnant': {
             name: '임신맘곁',
             emoji: '🤰',
-            description: '임신 중인 엄마들의 든든한 동반자'
+            description: '임신 중인 엄마들의 든든한 동반자',
+            specialty: '임신 주차별 변화, 입덧, 태동, 태교, 출산 준비, 임신성 당뇨/고혈압',
+            focus: '임신 기간 동안의 신체적, 정서적 변화를 함께 하며 건강한 출산을 응원합니다.'
         },
         'newborn': {
             name: '초보맘곁',
             emoji: '👶',
-            description: '모유수유와 신생아 케어를 돕는 친근한 도우미'
+            description: '모유수유와 신생아 케어를 돕는 친근한 도우미',
+            specialty: '모유수유, 젖몸살, 유선염, 젖양 조절, 밤수유, 이유식, 신생아 케어',
+            focus: '출산 후 모유수유와 육아의 어려움을 함께 해결해나갑니다.'
         }
     };
     
     const persona = personas[mateType] || personas['newborn'];
     
     // RAG 컨텍스트를 문자열로 변환
-    const contextStr = ragContext.map((item, i) => 
-        `[참고자료 ${i + 1}]\n제목: ${item.title}\n내용: ${item.content}`
-    ).join('\n\n');
+    let contextStr = '';
+    if (ragContext && ragContext.length > 0) {
+        contextStr = ragContext.map((item, i) => 
+            `[참고자료 ${i + 1}]\n제목: ${item.title}\n내용: ${item.content}`
+        ).join('\n\n');
+    }
     
     // 사용자 정보 문자열
     let userInfoStr = '';
     if (userInfo) {
-        if (userInfo.nickname) userInfoStr += `사용자 닉네임: ${userInfo.nickname}\n`;
+        if (userInfo.nickname) userInfoStr += `사용자 닉네임: ${userInfo.nickname}님\n`;
         if (userInfo.babyAge) userInfoStr += `아기 월령: ${userInfo.babyAge}개월\n`;
         if (userInfo.pregnancyWeek) userInfoStr += `임신 주차: ${userInfo.pregnancyWeek}주\n`;
+        if (userInfo.answers && userInfo.answers.length > 0) {
+            userInfoStr += `온보딩 답변: ${userInfo.answers.join(', ')}\n`;
+        }
     }
     
-    const systemPrompt = `당신은 "${persona.name}" ${persona.emoji}입니다. ${persona.description}입니다.
+    const systemPrompt = `당신은 "${persona.name}" ${persona.emoji}입니다.
+${persona.description}
 
-## 답변 규칙
-1. 따뜻하고 공감적인 말투로 답변하세요
-2. 반말이 아닌 존댓말을 사용하세요 (예: ~해요, ~이에요, ~세요)
-3. 적절한 이모지를 사용하세요 (과하지 않게)
-4. 의학적 조언은 참고자료에 기반하여 정확하게 전달하세요
-5. 심각한 증상은 반드시 병원 방문을 권유하세요
-6. 답변은 300자 이내로 간결하게 해주세요
-7. 엄마를 응원하고 격려하는 메시지를 포함하세요
+## 당신의 역할
+- 전문 분야: ${persona.specialty}
+- 역할 집중: ${persona.focus}
+
+## 중요한 답변 규칙
+1. **정체성 유지**: 당신은 오직 "${persona.name}"입니다. 다른 맘곁(예비맘곁, 임신맘곁, 초보맘곁)을 언급하지 마세요.
+2. **전문 분야 외 질문**: 당신의 전문 분야가 아닌 질문이라도, 정서적 공감과 위로를 먼저 제공하고, 적절한 전문가(산부인과, 난임전문의, 소아과 등) 상담을 권유하세요.
+3. 따뜻하고 공감적인 말투로 답변하세요
+4. 존댓말을 사용하세요 (예: ~해요, ~이에요, ~세요)
+5. 적절한 이모지를 자연스럽게 사용하세요
+6. 답변은 200-400자로 적절하게 해주세요
+7. 힘든 상황이라면 먼저 공감하고 위로해주세요
 
 ${userInfoStr ? `## 사용자 정보\n${userInfoStr}` : ''}
 
-## 참고자료
-${contextStr}`;
+${contextStr ? `## 참고자료 (답변에 활용하세요)\n${contextStr}` : '## 참고자료 없음\n참고자료가 없더라도 공감과 일반적인 조언을 제공해주세요.'}`;
 
     const postData = JSON.stringify({
         model: 'claude-sonnet-4-20250514',
